@@ -1,3 +1,5 @@
+export const runtime = "nodejs";
+
 import { connects } from "@/dbconfig/dbconfig";
 import Task from "@/models/task";
 import Worker from "@/models/Worker";
