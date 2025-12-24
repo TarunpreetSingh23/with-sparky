@@ -2,7 +2,6 @@ export const runtime = "nodejs";
 
 import { connects } from "@/dbconfig/dbconfig";
 import Task from "@/models/task";
-import Worker from "@/models/Worker";
 import { generateInvoice } from "@/lib/generateInvoice";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -32,14 +31,6 @@ export async function POST(req) {
       );
     }
 
-    /* ---------- CATEGORY PREFIX ---------- */
-    const category = body.cart[0]?.category?.toLowerCase();
-    let prefix = "OR";
-
-    if (category?.includes("woman") || category?.includes("makeup")) prefix = "MU";
-    else if (category?.includes("event") || category?.includes("decor")) prefix = "ED";
-    else if (category?.includes("clean")) prefix = "CL";
-
     /* ---------- CREATE TASK ---------- */
     const task = await Task.create({
       ...body,
@@ -49,24 +40,42 @@ export async function POST(req) {
     /* ---------- GENERATE PDF ---------- */
     const pdfBuffer = await generateInvoice(task.toObject());
 
-    /* ---------- UPLOAD PDF ---------- */
-    const invoiceUpload = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream(
+    if (!Buffer.isBuffer(pdfBuffer)) {
+      throw new Error("Invoice generation failed (not a buffer)");
+    }
+
+    /* ---------- UPLOAD TO CLOUDINARY ---------- */
+    await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
         {
           resource_type: "raw",
           folder: "invoices",
           public_id: task.order_id,
+          format: "pdf",
+          use_filename: true,
+          unique_filename: false,
         },
-        (error, result) => {
+        (error) => {
           if (error) reject(error);
-          else resolve(result);
+          else resolve();
         }
-      ).end(pdfBuffer);
+      );
+
+      stream.end(pdfBuffer);
     });
+
+    /* ---------- GENERATE DOWNLOADABLE URL ---------- */
+    const invoiceUrl = cloudinary.url(
+      `invoices/${task.order_id}.pdf`,
+      {
+        resource_type: "raw",
+        flags: "attachment",
+      }
+    );
 
     /* ---------- SAVE URL ---------- */
     await Task.findByIdAndUpdate(task._id, {
-      invoiceUrl: invoiceUpload.secure_url,
+      invoiceUrl,
       invoiceGeneratedAt: new Date(),
     });
 
@@ -75,15 +84,14 @@ export async function POST(req) {
       {
         success: true,
         orderId: task.order_id,
-        invoiceUrl: invoiceUpload.secure_url,
-        task,
+        invoiceUrl,
       },
       { status: 201 }
     );
   } catch (err) {
     console.error("❌ Error creating task:", err);
     return Response.json(
-      { success: false, message: "Server Error" },
+      { success: false, message: err.message || "Server Error" },
       { status: 500 }
     );
   }

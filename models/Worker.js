@@ -8,14 +8,11 @@ const WorkerSchema = new mongoose.Schema(
       unique: true,
     },
 
-    name: {
-      type: String,
-      trim: true,
-    },
+    name: String,
 
     phone: {
       type: String,
-      required: true,
+    
       unique: true,
       index: true,
     },
@@ -23,7 +20,7 @@ const WorkerSchema = new mongoose.Schema(
     email: {
       type: String,
       unique: true,
-      sparse: true, // optional
+      sparse: true,
     },
 
     role: {
@@ -38,10 +35,14 @@ const WorkerSchema = new mongoose.Schema(
       default: "AVAILABLE",
     },
 
-    pushToken: {
-      type: String,
-      default: null,
-    },
+    pushToken: String,
+
+    /* ⭐ RATING SYSTEM */
+   rating: {
+  average: { type: Number, default: 0 },
+  count: { type: Number, default: 0 },
+},
+
   },
   { timestamps: true }
 );

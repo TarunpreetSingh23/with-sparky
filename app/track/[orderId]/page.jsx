@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import RateWorker from "@/components/AssignedWorker";
+
 import {
   Calendar,
   Clock,
@@ -10,6 +12,7 @@ import {
   Download,
   XCircle,
   PlusCircle,
+  Star
 } from "lucide-react";
 
 export default function TrackBookingPage() {
@@ -119,6 +122,7 @@ export default function TrackBookingPage() {
     );
   }
 
+
   const acceptedWorkers =
     task.assignedWorkers?.filter((w) => w.status === "accepted") || [];
 
@@ -140,7 +144,8 @@ export default function TrackBookingPage() {
       <Services task={task} />
 
       {/* Assigned Worker */}
-      <AssignedWorkers workers={acceptedWorkers} />
+     <AssignedWorkers workers={acceptedWorkers} task={task} />
+
 
       {/* 🔹 ADD-ONS */}
       {addons.length > 0 && (
@@ -235,7 +240,7 @@ function Services({ task }) {
   );
 }
 
-function AssignedWorkers({ workers }) {
+function AssignedWorkers({ workers, task }) {
   return (
     <div className="bg-[#111827] p-6 rounded-3xl border border-white/10">
       <h3 className="text-sm font-black uppercase tracking-widest text-gray-400 mb-4">
@@ -250,18 +255,26 @@ function AssignedWorkers({ workers }) {
         workers.map((w, i) => (
           <div
             key={i}
-            className="flex justify-between items-center bg-white/5 rounded-xl px-4 py-3 mb-2"
+            className="bg-white/5 rounded-xl px-4 py-3 mb-2"
           >
-            <span className="font-bold text-sm">{w.workerId}</span>
-            <span className="text-emerald-400 font-black uppercase text-xs">
-              Accepted
-            </span>
+            <div className="flex justify-between items-center">
+              <span className="font-bold text-sm">{w.workerId}</span>
+              <span className="text-emerald-400 font-black uppercase text-xs">
+                Accepted
+              </span>
+            </div>
+
+            {/* ⭐ RATE AFTER COMPLETION */}
+            {task.is_completed && (
+              <RateWorker workerId={w.workerId} />
+            )}
           </div>
         ))
       )}
     </div>
   );
 }
+
 
 function Info({ icon, label, value }) {
   return (
