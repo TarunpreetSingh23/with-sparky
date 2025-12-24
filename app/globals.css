@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+
+
+
+@keyframes scrollText {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.scroll-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: scrollText 15s linear infinite;
+}
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+/* Custom Scrollbar */
+/* ::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f3f4f6; /* light gray */
+  /* border-radius: 10px; */
+
+
+/* ::-webkit-scrollbar-thumb {
+  background-color: #5d7afc; /* purple */
+  /* border-radius: 10px; */
+  /* border: 2px solid #f3f4f6; */
+
+
+/* ::-webkit-scrollbar-thumb:hover { */
+  /* background-color: #5d7afc; darker purple */
+/* } */ 
+@keyframes loaderLine {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+.animate-loaderLine {
+  animation: loaderLine 2s ease-in-out forwards;
+}
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.animate-slideUp {
+  animation: slideUp 0.4s ease-out;
+}
+/*
+  Required CSS for the unique "modern-card-tilt" effect.
+  It uses CSS variables to simulate a slight 3D rotation and perspective
+  without requiring a complex JavaScript library.
+*/
+
+.modern-card-tilt {
+  /* Set perspective for 3D effect */
+  perspective: 1000px; 
+  /* Initial transform state */
+  transform: rotateX(0deg) rotateY(0deg); 
+  /* Ensure children are rendered in 3D space */
+  transform-style: preserve-3d;
+}
+
+.modern-card-tilt:hover {
+  /* Subtle tilt on hover (adjust degrees for more or less tilt) */
+  transform: rotateX(1deg) rotateY(-1deg); 
+}
+
+/* Glassmorphism Effect on the background
+  We make the card background slightly translucent and blurry on hover.
+*/
+.modern-card-tilt:hover {
+  background-color: rgba(255, 255, 255, 0.7); /* More transparent white */
+  backdrop-filter: blur(8px); /* Add blur effect */
+}
+
+/* A custom shadow class, optional but makes the hover look stronger */
+.shadow-4xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 40px rgba(40, 86, 194, 0.5); /* Adds a dark shadow AND a blue glow */
+}
+/* Add to your globals.css or equivalent */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; /* A smooth, custom curve */
+}
+
+/* Ensure the loader animation is also defined if it's not already */
+@keyframes loaderLine {
+    0% { width: 0; }
+    100% { width: 100%; }
+}
+.animate-loaderLine {
+    animation: loaderLine 2s ease-in-out forwards;
+}
+/* 🔒 Disable system font scaling (WebView safe) */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
