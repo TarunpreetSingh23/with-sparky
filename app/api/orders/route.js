@@ -2,8 +2,13 @@ import { connects } from "@/dbconfig/dbconfig";
 import Task from "@/models/task";
 import Worker from "@/models/Worker";
 import { generateInvoice } from "@/lib/generateInvoice";
-import fs from "fs";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 export async function POST(req) {
   try {
@@ -33,54 +38,42 @@ export async function POST(req) {
     else if (category?.includes("event") || category?.includes("decor")) prefix = "ED";
     else if (category?.includes("clean")) prefix = "CL";
 
-    /* ---------- FIND WORKERS ---------- */
-    const workers = await Worker.find({
-      workerId: new RegExp(`^${prefix}`),
-    }).select("workerId");
-
-    const assignedWorkers = workers.map((w) => ({
-      workerId: w.workerId,
-      status: "pending",
-    }));
-
     /* ---------- CREATE TASK ---------- */
- /* ---------- CREATE TASK ---------- */
-const task = await Task.create({
-  ...body,
-  paymentMethod: body.paymentMethod || "Pay After Service",
-});
+    const task = await Task.create({
+      ...body,
+      paymentMethod: body.paymentMethod || "Pay After Service",
+    });
 
-/* ---------- GENERATE INVOICE ---------- */
-const pdf = await generateInvoice(task.toObject());
+    /* ---------- GENERATE PDF ---------- */
+    const pdfBuffer = await generateInvoice(task.toObject());
 
-const invoiceDir = path.join(process.cwd(), "public/invoices");
-if (!fs.existsSync(invoiceDir)) {
-  fs.mkdirSync(invoiceDir, { recursive: true });
-}
+    /* ---------- UPLOAD PDF ---------- */
+    const invoiceUpload = await new Promise((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        {
+          resource_type: "raw",
+          folder: "invoices",
+          public_id: task.order_id,
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        }
+      ).end(pdfBuffer);
+    });
 
-const invoiceFileName = `${task.order_id}.pdf`;
-const invoicePath = path.join(invoiceDir, invoiceFileName);
-const invoiceUrl = `/invoices/${invoiceFileName}`;
-
-fs.writeFileSync(invoicePath, pdf);
-
-/* ---------- SAVE INVOICE SAFELY ---------- */
-await Task.findByIdAndUpdate(
-  task._id,
-  {
-    invoiceUrl,
-    invoiceGeneratedAt: new Date(),
-  },
-  { new: true }
-);
-
+    /* ---------- SAVE URL ---------- */
+    await Task.findByIdAndUpdate(task._id, {
+      invoiceUrl: invoiceUpload.secure_url,
+      invoiceGeneratedAt: new Date(),
+    });
 
     /* ---------- RESPONSE ---------- */
     return Response.json(
       {
         success: true,
         orderId: task.order_id,
-        invoiceUrl,
+        invoiceUrl: invoiceUpload.secure_url,
         task,
       },
       { status: 201 }
