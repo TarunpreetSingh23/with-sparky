@@ -25,7 +25,7 @@ function PageLoader() {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#030712] z-[100]">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative flex flex-col items-center">
-        <Image src="LOGO.jpg" alt="Logo" width={180} height={60} className="mb-10 rounded-2xl shadow-2xl" />
+        <Image src="/LOGO.jpg" alt="Logo" width={180} height={60} className="mb-10 rounded-2xl shadow-2xl" />
         <div className="w-56 h-[2px] bg-gray-800 rounded-full overflow-hidden">
           <motion.div
             initial={{ x: "-100%" }}
@@ -256,9 +256,14 @@ export default function ServiceDetailPage() {
                   <div className="flex-1">
                     <h3 className="font-black text-lg group-hover:text-blue-400 transition-colors">{w.name}</h3>
                     <div className="flex items-center gap-4 text-[11px] text-gray-400 mt-1 font-bold">
-                      <span className="flex items-center gap-1 text-yellow-500">
-                        <Star size={12} fill="currentColor" /> {w.rating || "4.8"}
-                      </span>
+                     <span className="flex items-center gap-1 text-yellow-500">
+  <Star size={12} fill="currentColor" />
+  {w.rating?.average?.toFixed(1) ?? "4.8"}
+  <span className="text-gray-400 text-[10px] ml-1">
+    ({w.rating?.count ?? 0})
+  </span>
+</span>
+
                       <span>{w.experience || 2}+ Yrs Exp</span>
                     </div>
                   </div>

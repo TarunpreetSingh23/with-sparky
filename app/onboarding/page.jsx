@@ -58,7 +58,7 @@ export default function OnboardingPage() {
 
   return (
     // 📱 MOBILE ONLY
-    <div className="md:hidden relative min-h-screen bg-white overflow-hidden flex flex-col">
+    <div className="md:hidden relative min-h-screen bg-white overflow-hidden flex flex-col gap-4">
       
       {/* Background Shape */}
       <div
@@ -67,7 +67,7 @@ export default function OnboardingPage() {
       />
 
       {/* Header */}
-      <div className="flex justify-between items-center px-6 pt-12">
+      <div className="flex justify-between items-center px-6 pt-13 pb-10">
         <span className="text-sm font-semibold text-gray-500">
           {index + 1}/{slides.length}
         </span>
@@ -80,7 +80,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center px-6">
+      <div className="flex-1 flex mt-9 justify-center px-6">
         <AnimatePresence mode="wait">
           <motion.div
             key={index}
@@ -91,7 +91,7 @@ export default function OnboardingPage() {
             className="flex flex-col items-center text-center"
           >
             {/* Image */}
-            <div className="relative w-[280px] h-[280px] mb-10 rounded-3xl overflow-hidden shadow-xl bg-white">
+            <div className="relative w-[280px] h-[280px] mb-5 rounded-3xl overflow-hidden shadow-xl bg-white">
               <img
                 src={slides[index].image}
                 alt={slides[index].title}
@@ -111,7 +111,7 @@ export default function OnboardingPage() {
       </div>
 
       {/* Bottom Controls */}
-      <div className="px-6 pb-10">
+      <div className="px-6 pb-19">
         <div className="flex items-center justify-between">
           
           {/* Dots */}
