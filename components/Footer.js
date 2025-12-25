@@ -29,7 +29,7 @@ export default function Footer() {
           >
             <Link href="/" className="inline-block mb-4">
               <Image
-                src="/images/LOGO (2).jpg" 
+                src="/LOGO.jpg" 
                 alt="Company Logo"
                 width={170}
                 height={30}
@@ -54,7 +54,7 @@ export default function Footer() {
             <h3 className={headingClass}>Quick Links</h3>
             <ul className="space-y-3 text-sm">
               <li><Link href="/about" className={linkClass}>About Us</Link></li>
-              <li><Link href="/services" className={linkClass}>All Services</Link></li>
+              <li><Link href="/beauty" className={linkClass}>All Services</Link></li>
               <li><Link href="/careers" className={linkClass}>Careers</Link></li>
               <li><Link href="/blog" className={linkClass}>Blog & Tips</Link></li>
             </ul>
