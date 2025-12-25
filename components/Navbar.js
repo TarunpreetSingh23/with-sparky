@@ -155,7 +155,7 @@ export default function Navbar() {
           <GiHamburgerMenu className="text-2xl text-gray-300" />
         </button>
         <Link href="/">
-          <Image src="/images/LOGO (2).jpg" alt="Logo" width={120} height={30} className="rounded-md" />
+          <Image src="/LOGO.jpg" alt="Logo" width={120} height={30} className="rounded-md" />
         </Link>
         <Link href="/cart" className="relative p-2">
           <IoBagHandleOutline className="text-2xl text-gray-300" />
@@ -208,7 +208,7 @@ export default function Navbar() {
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
             >
               <div className="flex justify-between items-center mb-10">
-                <Image src="/images/LOGO (2).jpg" alt="Logo" width={120} height={30} className="rounded" />
+                <Image src="/LOGO.jpg" alt="Logo" width={120} height={30} className="rounded" />
                 <button onClick={() => setMenuOpen(false)} className="text-gray-400 p-2">
                   <IoClose className="text-3xl" />
                 </button>

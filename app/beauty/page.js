@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 function PageLoader() {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#030712] z-[100]">
-      <Image src="/images/LOGO (2).jpg" alt="Logo" width={150} height={50} className="mb-8 rounded-xl" />
+      <Image src="LOGO.jpg" alt="Logo" width={150} height={50} className="mb-8 rounded-xl" />
       <div className="w-32 h-[2px] bg-gray-800 overflow-hidden relative">
         <div className="absolute inset-0 h-full bg-blue-500 w-1/2 animate-shimmer"></div>
       </div>
