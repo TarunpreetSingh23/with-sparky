@@ -43,8 +43,21 @@ const TaskSchema = new mongoose.Schema({
   is_rejected: { type: Boolean, default: false },
   is_completed: { type: Boolean, default: false },
   is_canceled: { type: Boolean, default: false },
+  is_requested: { type: Boolean, default: false },
   invoiceUrl: {
   type: String,
+},
+serviceOtp: {
+  code: {
+    type: String,
+  },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+  generatedAt: {
+    type: Date,
+  },
 },
 
 invoiceGeneratedAt: {
