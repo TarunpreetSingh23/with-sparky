@@ -16,83 +16,53 @@ export async function POST(req) {
     await connects();
     const body = await req.json();
 
-    /* ---------- VALIDATION ---------- */
-    if (
-      !body.customerName ||
-      !body.phone ||
-      !body.address ||
-      !body.date ||
-      !body.timeSlot ||
-      !body.cart?.length
-    ) {
-      return Response.json(
-        { message: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    /* ---------- CREATE TASK ---------- */
     const task = await Task.create({
       ...body,
       paymentMethod: body.paymentMethod || "Pay After Service",
     });
 
-    /* ---------- GENERATE PDF ---------- */
     const pdfBuffer = await generateInvoice(task.toObject());
 
     if (!Buffer.isBuffer(pdfBuffer)) {
-      throw new Error("Invoice generation failed (not a buffer)");
+      throw new Error("Invalid PDF buffer");
     }
 
-    /* ---------- UPLOAD TO CLOUDINARY ---------- */
     await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         {
-          resource_type: "raw",
+          resource_type: "image",
           folder: "invoices",
           public_id: task.order_id,
           format: "pdf",
+          type: "upload",
           use_filename: true,
           unique_filename: false,
         },
-        (error) => {
-          if (error) reject(error);
-          else resolve();
-        }
+        (err) => (err ? reject(err) : resolve())
       );
-
       stream.end(pdfBuffer);
     });
 
-    /* ---------- GENERATE DOWNLOADABLE URL ---------- */
     const invoiceUrl = cloudinary.url(
       `invoices/${task.order_id}.pdf`,
       {
         resource_type: "raw",
-        flags: "attachment",
+        type: "upload",
+        flags: "inline", // ✅ THIS FIXES IT
       }
     );
 
-    /* ---------- SAVE URL ---------- */
     await Task.findByIdAndUpdate(task._id, {
       invoiceUrl,
       invoiceGeneratedAt: new Date(),
     });
 
-    /* ---------- RESPONSE ---------- */
     return Response.json(
-      {
-        success: true,
-        orderId: task.order_id,
-        invoiceUrl,
-      },
+      { success: true, invoiceUrl },
       { status: 201 }
     );
   } catch (err) {
-    console.error("❌ Error creating task:", err);
-    return Response.json(
-      { success: false, message: err.message || "Server Error" },
-      { status: 500 }
-    );
+    console.error(err);
+    return Response.json({ message: err.message }, { status: 500 });
   }
 }

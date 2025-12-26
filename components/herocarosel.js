@@ -14,12 +14,12 @@ import {
 import { useRouter } from "next/navigation";
 
 const STATIC_SERVICES = [
-  { title: "Manicure", price: 499, image: "/images/manicure.jpg", link: "/services/manicure" },
-  { title: "Pedicure", price: 599, image: "/images/pedicure.jpg", link: "/services/pedicure" },
-  { title: "Facial", price: 999, image: "/images/mpm.jpg", link: "/services/facial" },
-  { title: "Waxing", price: 699, image: "/images/waxing.jpg", link: "/services/waxing" },
+  { title: "Manicure", price: 499, image: "/images/vee5.jpg", link: "/services/manicure" },
+  { title: "Pedicure", price: 599, image: "/images/mpm.jpg", link: "/services/pedicure" },
+  { title: "Facial", price: 999, image: "/images/vee2.jpg", link: "/services/facial" },
+  { title: "Waxing", price: 699, image: "/images/wm.jpg", link: "/services/waxing" },
   { title: "Cleaning", price: 799, image: "/images/kc.jpg", link: "/services/cleaning" },
-  { title: "Geyser Repair", price: 499, image: "/images/wm.jpg", link: "/services/geyser" },
+  { title: "Geyser Repair", price: 499, image: "/images/massage.jpeg", link: "/services/geyser" },
 ];
 
 export default function HeroCarousel() {
@@ -57,7 +57,7 @@ export default function HeroCarousel() {
     <div className="md:hidden w-full pt-4 px-5 pb-8 bg-[#030712] flex flex-col font-sans">
       
       {/* 🔍 SEARCH ENGINE COMPONENT */}
-      <div ref={searchRef} className="relative mb-6 z-50">
+      <div ref={searchRef} className="relative mb-6 z-10">
         <div className={`flex items-center gap-3 bg-[#111827]/60 backdrop-blur-xl rounded-2xl px-5 py-4 border transition-all duration-300 ${open ? 'border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.15)]' : 'border-white/5'}`}>
           {loading ? (
             <Loader2 className="animate-spin text-blue-500" size={18} />

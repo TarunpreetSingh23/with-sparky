@@ -136,8 +136,8 @@ function PageLoader() {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#030712] z-[100]">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative flex flex-col items-center">
-        <Image src="/LOGO.jpg" alt="Logo" width={180} height={60} className="mb-10 rounded-2xl shadow-2xl" />
-        <div className="w-56 h-[2px] bg-gray-800 rounded-full overflow-hidden">
+        <Image src="/LOGO.jpg" alt="Logo" width={180} height={60} className="mb-3 rounded-2xl shadow-2xl" />
+        <div className="w-54 h-[2px] bg-gray-800 rounded-full overflow-hidden">
           <motion.div 
             initial={{ x: "-100%" }}
             animate={{ x: "100%" }}

@@ -4,22 +4,24 @@ import toast from "react-hot-toast";
 import { X, ShoppingCart, Eye, Trash2, Star, ShieldCheck, Zap } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+
 
 // --- Custom CSS Loader ---
 function PageLoader() {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#030712] z-[100]">
-      <Image src="/LOGO.jpg" alt="Logo" width={150} height={50} className="mb-8 rounded-xl" />
-      <div className="w-32 h-[2px] bg-gray-800 overflow-hidden relative">
-        <div className="absolute inset-0 h-full bg-blue-500 w-1/2 animate-shimmer"></div>
-      </div>
-      <style jsx>{`
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(200%); }
-        }
-        .animate-shimmer { animation: shimmer 1.5s infinite linear; }
-      `}</style>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative flex flex-col items-center">
+        <Image src="/LOGO.jpg" alt="Logo" width={180} height={60} className="mb-3 rounded-2xl shadow-2xl" />
+        <div className="w-54 h-[2px] bg-gray-800 rounded-full overflow-hidden">
+          <motion.div 
+            initial={{ x: "-100%" }}
+            animate={{ x: "100%" }}
+            transition={{ repeat: Infinity, duration: 1.2, ease: "circIn" }}
+            className="h-full w-full bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+          />
+        </div>
+      </motion.div>
     </div>
   );
 }

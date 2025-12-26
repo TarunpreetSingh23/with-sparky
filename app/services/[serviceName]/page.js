@@ -25,8 +25,8 @@ function PageLoader() {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#030712] z-[100]">
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="relative flex flex-col items-center">
-        <Image src="/LOGO.jpg" alt="Logo" width={180} height={60} className="mb-10 rounded-2xl shadow-2xl" />
-        <div className="w-56 h-[2px] bg-gray-800 rounded-full overflow-hidden">
+        <Image src="/LOGO.jpg" alt="Logo" width={180} height={60} className="mb-3 rounded-2xl shadow-2xl" />
+        <div className="w-54 h-[2px] bg-gray-800 rounded-full overflow-hidden">
           <motion.div
             initial={{ x: "-100%" }}
             animate={{ x: "100%" }}
@@ -140,7 +140,7 @@ export default function ServiceDetailPage() {
     <div className="min-h-screen bg-[#030712] text-gray-100 pb-40 font-sans selection:bg-blue-500/30">
       
       {/* --- Sticky Header --- */}
-      <nav className="sticky top-0 z-50 bg-[#030712]/80 backdrop-blur-xl border-b border-white/5 px-4 py-4">
+      {/* <nav className="sticky top-0 z-10 bg-[#030712]/80 backdrop-blur-xl border-b border-white/5 px-4 py-4">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <button 
             onClick={() => router.push("/")} 
@@ -153,7 +153,7 @@ export default function ServiceDetailPage() {
           </p>
           <div className="w-10" />
         </div>
-      </nav>
+      </nav> */}
 
       {/* --- Hero Image --- */}
       <div className="relative w-full h-[40vh] md:h-[55vh] overflow-hidden">

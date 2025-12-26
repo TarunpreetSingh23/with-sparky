@@ -147,7 +147,7 @@ setOrderId(data.orderId);
 localStorage.removeItem("cart");
 setCart([]);
 
-      
+      router.push("/");
     } catch (err) {
       alert("Failed to place order: " + (err.message || "An unknown error occurred."));
     } finally {

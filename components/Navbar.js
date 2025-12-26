@@ -155,7 +155,7 @@ export default function Navbar() {
           <GiHamburgerMenu className="text-2xl text-gray-300" />
         </button>
         <Link href="/">
-          <Image src="/LOGO.jpg" alt="Logo" width={120} height={30} className="rounded-md" />
+          <Image src="/images/lOGO.jpg" alt="Logo" width={120} height={30} className="rounded-md" />
         </Link>
         <Link href="/cart" className="relative p-2">
           <IoBagHandleOutline className="text-2xl text-gray-300" />
