@@ -33,7 +33,7 @@ const TaskSchema = new mongoose.Schema({
       workerId: { type: String, required: true },
       status: {
         type: String,
-        enum: ["pending", "accepted", "rejected"],
+        enum: ["pending", "accepted","In Progress", "rejected"],
         default: "pending",
       },
     },

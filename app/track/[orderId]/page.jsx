@@ -42,6 +42,22 @@ export default function TrackBookingPage() {
       setLoading(false);
     }
   };
+const getProgressWidth = (task) => {
+  if (task.is_completed) return "100%";
+
+  switch (task.status) {
+    case "Waiting for approval":
+      return "10%";
+    case "Accepted":
+      return "30%";
+    case "In Progress":
+      return "70%";
+    case "Completed":
+      return "100%";
+    default:
+      return "0%";
+  }
+};
 
   useEffect(() => {
     fetchOrder();
@@ -144,26 +160,32 @@ export default function TrackBookingPage() {
       <main className="max-w-2xl mx-auto px-6 pt-8 space-y-6">
         
         {/* Live Status Card */}
-        <section className="bg-gradient-to-br from-blue-600/20 to-transparent p-6 rounded-[2.5rem] border border-blue-500/20 shadow-2xl">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h2 className="text-2xl font-black tracking-tight text-white mb-1">
-                {task.is_completed ? "Service Completed" : task.status}
-              </h2>
-              <p className="text-xs text-blue-400 font-bold uppercase tracking-widest">Live Updates Enabled</p>
-            </div>
-            <div className="bg-blue-500 p-3 rounded-2xl shadow-lg shadow-blue-500/40">
-              <CheckCircle2 size={24} className="text-white" />
-            </div>
-          </div>
-          <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
-             <motion.div 
-               initial={{ width: 0 }} 
-               animate={{ width: task.is_completed ? "100%" : "60%" }} 
-               className="h-full bg-blue-500 shadow-[0_0_10px_#3b82f6]" 
-             />
-          </div>
-        </section>
+      <section className="bg-gradient-to-br from-blue-600/20 to-transparent p-6 rounded-[2.5rem] border border-blue-500/20 shadow-2xl">
+  <div className="flex justify-between items-start mb-6">
+    <div>
+      <h2 className="text-2xl font-black tracking-tight text-white mb-1">
+        {task.is_completed ? "Service Completed" : task.status}
+      </h2>
+      <p className="text-xs text-blue-400 font-bold uppercase tracking-widest">
+        Live Updates Enabled
+      </p>
+    </div>
+
+    <div className="bg-blue-500 p-3 rounded-2xl shadow-lg shadow-blue-500/40">
+      <CheckCircle2 size={24} className="text-white" />
+    </div>
+  </div>
+
+  <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+    <motion.div
+      initial={{ width: 0 }}
+      animate={{ width: getProgressWidth(task) }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="h-full bg-blue-500 shadow-[0_0_10px_#3b82f6]"
+    />
+  </div>
+</section>
+
 
         {/* --- SERVICE OTP SECTION --- */}
         <AnimatePresence>
