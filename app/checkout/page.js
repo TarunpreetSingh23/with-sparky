@@ -14,8 +14,8 @@ const UserMap = dynamic(() => import("@/components/UserMap"), { ssr: false });
 /* ------------------ Professional Input Component ------------------ */
 const InputField = ({ label, type = "text", value, onChange, error, placeholder, icon: Icon, disabled }) => (
   <div className="flex flex-col group w-full">
-    <label className="text-gray-400 mb-2.5 text-[11px] font-bold uppercase tracking-[0.15em] flex items-center gap-2">
-      {Icon && <Icon size={13} />} {label}
+    <label className="text-gray-400 mb-2 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+      {Icon && <Icon size={12} className="text-blue-600" />} {label}
     </label>
     <input
       type={type}
@@ -23,22 +23,18 @@ const InputField = ({ label, type = "text", value, onChange, error, placeholder,
       onChange={onChange}
       placeholder={placeholder}
       disabled={disabled}
-      className={`w-full px-5 py-4 rounded-2xl border bg-[#111827]/50 text-[15px] font-medium outline-none transition-all duration-300
-        ${error ? "border-red-500/50" : "border-white/10 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"}
-        ${disabled ? "opacity-70 cursor-not-allowed" : ""}
+      className={`w-full px-5 py-3.5 rounded-2xl border bg-white text-[15px] font-bold text-[#030712] outline-none transition-all duration-300
+        ${error ? "border-red-500" : "border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5"}
+        ${disabled ? "bg-gray-50 text-gray-400 cursor-not-allowed border-gray-100" : ""}
       `}
     />
-    {error && <span className="text-red-500 text-[10px] mt-2 ml-1 font-bold uppercase">{error}</span>}
+    {error && <span className="text-red-500 text-[9px] mt-1.5 font-black uppercase ml-1">{error}</span>}
   </div>
 );
 
 export default function Checkout() {
   const router = useRouter();
-
-  /* ================= JWT USER ================= */
   const [user, setUser] = useState(null);
-
-  /* ================= STATE ================= */
   const [step, setStep] = useState(1);
   const [cart, setCart] = useState([]);
   const [showMap, setShowMap] = useState(false);
@@ -52,15 +48,10 @@ export default function Checkout() {
   const [timeSlot, setTimeSlot] = useState("");
   const [errors, setErrors] = useState({});
   const [orderSuccess, setOrderSuccess] = useState(false);
-const [invoiceUrl, setInvoiceUrl] = useState("");
-const [orderId, setOrderId] = useState("");
+  const [invoiceUrl, setInvoiceUrl] = useState("");
+  const [orderId, setOrderId] = useState("");
 
-//    useEffect(() => {
-//       if (!loading) {
-//         window.scrollTo(0, 0);
-//       }
-//     }, [loading]);
-  /* ================= AUTH CHECK (JWT) ================= */
+  /* ================= AUTH CHECK ================= */
   useEffect(() => {
     fetch("/api/me")
       .then(res => res.json())
@@ -81,18 +72,16 @@ const [orderId, setOrderId] = useState("");
     if (saved) setCart(JSON.parse(saved));
   }, []);
 
-  /* ================= PRICE ================= */
   const subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
   const discount = subtotal * 0.1;
   const total = subtotal - discount;
 
-  /* ================= VALIDATION ================= */
   const validateStep = () => {
     const e = {};
     if (step === 1 && !name.trim()) e.name = "Name is required";
     if (step === 2) {
       if (!address.trim()) e.address = "Address is required";
-      if (!/^\d{6}$/.test(pincode)) e.pincode = "6-digit PIN required";
+      if (!/^\d{6}$/.test(pincode)) e.pincode = "Invalid PIN";
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -101,20 +90,17 @@ const [orderId, setOrderId] = useState("");
   const nextStep = () => validateStep() && setStep(s => s + 1);
   const prevStep = () => setStep(s => s - 1);
 
-  /* ================= CONFIRM ================= */
   const handleConfirm = async () => {
     if (!validateStep()) return;
-    if (!cart.length) return alert("Cart is empty");
-    if (!user) return router.push("/login");
-    if (!date || !timeSlot) return alert("Please select date and time slot");
+    if (!cart.length) return;
+    if (!date || !timeSlot) return alert("Select Date & Time");
 
     setIsPlacingOrder(true);
-
     const formattedCart = cart.map((item) => ({
-      name: item.title || item.serviceName,
-      price: item.price || item.cost || 0,
+      name: item.title || item.name,
+      price: item.price,
       quantity: item.quantity || 1,
-      category: item.category || "general",
+      category:item.category
     }));
 
     try {
@@ -122,249 +108,196 @@ const [orderId, setOrderId] = useState("");
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          cart: formattedCart,
-          subtotal,
-          discount,
-          total,
-          customerName: name,
-          phone: user.phone,
-          address,
-          pincode,
-          date,
-          timeSlot,
-          paymentMethod: "Pay After Service",
-          status: "pending",
+          cart: formattedCart, subtotal, discount, total,
+          customerName: name, phone: user.phone, address, pincode,
+          date, timeSlot, paymentMethod: "COD", status: "pending",
+
         }),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to create order");
+      if (!res.ok) throw new Error();
 
-     setOrderSuccess(true);
-setInvoiceUrl(data.invoiceUrl);
-setOrderId(data.orderId);
-
-localStorage.removeItem("cart");
-setCart([]);
-
-      router.push("/");
+      setOrderSuccess(true);
+      setInvoiceUrl(data.invoiceUrl);
+      setOrderId(data.orderId);
+      localStorage.removeItem("cart");
     } catch (err) {
-      alert("Failed to place order: " + (err.message || "An unknown error occurred."));
+      alert("Error placing order");
     } finally {
       setIsPlacingOrder(false);
     }
   };
 
-  /* ================= TIME LOGIC ================= */
-  const isSlotDisabled = (slot) => {
-    if (date !== format(new Date(), "yyyy-MM-dd")) return false;
-    const [_, end] = slot.split(" - ");
-    const [h, m] = end.split(":").map(Number);
-    const endTime = new Date();
-    endTime.setHours(h, m, 0, 0);
-    return endTime <= new Date(Date.now() + 30 * 60000);
-  };
-
   const next5Days = Array.from({ length: 5 }, (_, i) => addDays(new Date(), i));
-  const slots = [
-    "09:00 - 10:00", "10:30 - 11:30", "12:00 - 13:00",
-    "13:30 - 14:30", "15:00 - 16:00", "16:30 - 17:30"
-  ];
+  const slots = ["09:00 - 10:00", "10:30 - 11:30", "12:00 - 13:00", "15:00 - 16:00", "16:30 - 17:30"];
 
   return (
-    <div className="min-h-screen bg-[#030712] pb-20 font-sans text-white overflow-x-hidden selection:bg-blue-500/30">
-      {orderSuccess && (
-  <div className="fixed inset-0 z-[100] bg-[#030712] flex items-center justify-center px-6">
-    <div className="max-w-md w-full bg-[#111827] border border-white/10 rounded-[32px] p-8 text-center shadow-2xl">
+    <div className="min-h-screen bg-[#F3F4F6] pb-32 font-sans text-[#030712] selection:bg-blue-100">
       
-      <div className="mx-auto w-16 h-16 rounded-full bg-emerald-500/20 flex items-center justify-center mb-6">
-        <CheckCircle2 size={32} className="text-emerald-500" />
-      </div>
+      {/* 🟢 Success Overlay */}
+      {orderSuccess && (
+        <div className="fixed inset-0 z-[100] bg-white flex items-center justify-center px-6">
+          <div className="max-w-sm w-full text-center">
+            <div className="mx-auto w-20 h-20 rounded-full bg-emerald-50 flex items-center justify-center mb-6">
+              <CheckCircle2 size={40} className="text-emerald-500" />
+            </div>
+            <h2 className="text-2xl font-black mb-2 tracking-tighter">Booking Confirmed!</h2>
+            <p className="text-gray-500 text-sm mb-8 px-4 font-medium">Your request for <span className="font-bold text-black">{orderId}</span> is scheduled.</p>
+            <a href={invoiceUrl} target="_blank" className="block w-full py-4 bg-[#030712] text-white rounded-2xl font-black uppercase text-[12px] tracking-widest shadow-xl text-center">Download Receipt</a>
+            <button onClick={() => router.push("/")} className="w-full mt-4 py-4 text-gray-400 font-bold uppercase text-[10px] tracking-widest text-center">Go to Home</button>
+          </div>
+        </div>
+      )}
 
-      <h2 className="text-2xl font-black mb-2">Order Confirmed</h2>
-      <p className="text-gray-400 text-sm mb-6">
-        Your order <span className="font-bold text-white">{orderId}</span> has been placed successfully.
-      </p>
-
-      {/* DOWNLOAD INVOICE */}
-      <a
-        href={invoiceUrl}
-        target="_blank"
-        className="block w-full py-4 mb-4 bg-blue-600 hover:bg-blue-500 rounded-2xl font-black uppercase tracking-widest text-[13px] transition-all"
-      >
-        Download Invoice
-      </a>
-
-      {/* GO HOME */}
-      <button
-        onClick={() => router.push("/")}
-        className="w-full py-3 text-gray-400 hover:text-white font-bold uppercase tracking-widest text-[11px]"
-      >
-        Go to Home
-      </button>
-    </div>
-  </div>
-)}
-
-      {/* 💎 Stepper Header */}
-      <div className="bg-[#030712]/95 backdrop-blur-xl border-b border-white/5 sticky top-0 z-40 px-4 py-4">
-        <div className="max-w-xl mx-auto flex items-center justify-between relative">
-          <div className="absolute left-0 w-full h-[2px] bg-white/5 top-[20px] -z-10" />
+      {/* 💎 App-Style Header Stepper */}
+      <div className="bg-white sticky top-0 z-40 px-4 py-5 border-b border-gray-100 shadow-sm">
+        <div className="max-w-md mx-auto flex items-center justify-between px-6">
           {[1, 2, 3].map((s) => (
-            <div key={s} className="flex flex-col items-center gap-2">
-              <div 
-                className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-300
-                ${step === s ? "bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.3)] scale-110" : step > s ? "bg-emerald-500 text-white" : "bg-gray-800 text-gray-400 opacity-40"}`}>
-                {step > s ? <CheckCircle2 size={18}/> : s}
+            <div key={s} className="flex flex-col items-center gap-1.5">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-xs transition-all duration-300
+                ${step === s ? "bg-blue-600 text-white shadow-lg shadow-blue-200 scale-110" : step > s ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-400"}`}>
+                {step > s ? <CheckCircle2 size={16}/> : s}
               </div>
-              <span className={`text-[10px] font-black uppercase tracking-wider ${step === s ? "text-blue-500" : "text-gray-600"}`}>
-                {s === 1 ? "User" : s === 2 ? "Spot" : "Time"}
+              <span className={`text-[9px] font-black uppercase tracking-tighter ${step === s ? "text-blue-600" : "text-gray-400"}`}>
+                {s === 1 ? "Details" : s === 2 ? "Location" : "Schedule"}
               </span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-16 mt-8">
+      <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
         
-        {/* 🚀 Step Forms */}
-        <div className="lg:col-span-2">
+        {/* 🚀 Forms Section */}
+        <div className="lg:col-span-2 space-y-6">
           {step === 1 && (
-            <div className="space-y-5">
-                 <button onClick={nextStep} className="w-full py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-[13px] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
-                Next: Set Location <ArrowRight size={18}/>
-              </button>
-              <div className="space-y-3">
-                <h2 className="text-2xl text-center font-bold tracking-tight">Customer Information</h2>
-                {/* <p className="text-gray-500 text-[15px] font-medium">Verify your contact details for service coordination.</p> */}
+            <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-black tracking-tight">Personal Info</h2>
+                <div className="bg-blue-50 text-blue-600 p-2 rounded-xl"><User size={20}/></div>
               </div>
-              <div className="bg-[#111827]/40 rounded-[32px] p-6 md:p-8 border border-white/5 space-y-10">
-                <InputField label="Full Name" value={name} onChange={(e) => setName(e.target.value)} error={errors.name} placeholder="Enter your name" icon={User} />
+              <div className="space-y-6">
+                <InputField label="Full Name" value={name} onChange={(e) => setName(e.target.value)} error={errors.name} placeholder="Type your name" />
                 <InputField label="Mobile Number" type="tel" value={phone} disabled={true} icon={Phone} />
               </div>
-              {/* <button onClick={nextStep} className="w-full py-5 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-[13px] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
-                Next: Set Location <ArrowRight size={18}/>
-              </button> */}
+              <button onClick={nextStep} className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] shadow-lg shadow-blue-100 flex items-center justify-center gap-3 active:scale-95 transition-all text-center">
+                Continue to Address <ArrowRight size={18}/>
+              </button>
             </div>
           )}
 
           {step === 2 && (
-            <div className="space-y-4">
-              <button onClick={prevStep} className="flex items-center gap-2 text-gray-500 font-bold text-[11px] uppercase tracking-widest hover:text-white mb-2 transition-colors">
-                <ChevronLeft size={16}/> Back
+            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <button onClick={prevStep} className="flex items-center gap-1.5 text-gray-400 font-black text-[10px] uppercase tracking-widest hover:text-blue-600 ml-2">
+                <ChevronLeft size={14}/> Back
               </button>
-               <button onClick={nextStep} className="w-full py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-[13px] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
-                Next: Select Time <ArrowRight size={18}/>
-              </button>
-            
-              <div className="space-y-3">
-                <h2 className="text-2xl text-center font-bold tracking-tight">Address Details</h2>
-                {/* <p className="text-gray-500 text-[15px] font-medium">Where should our professional arrive?</p> */}
-              </div>
-              <div className="bg-[#111827]/40 rounded-[32px] p-8 md:p-10 border border-white/5 space-y-10">
-                <div className="space-y-3">
-                  <label className="text-[11px] font-bold uppercase tracking-[0.15em] text-gray-400">Complete Address</label>
-                  <textarea rows={4} value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Apt, Landmark, Area..." 
-                    className="w-full p-6 rounded-2xl bg-[#111827]/80 border border-white/10 focus:border-blue-500 outline-none font-medium transition-all text-[15px] text-white" />
-                  {errors.address && <span className="text-red-500 text-[10px] font-bold uppercase">{errors.address}</span>}
+              <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 space-y-8">
+                <h2 className="text-xl font-black tracking-tight">Service Address</h2>
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Complete Address</label>
+                  <textarea rows={3} value={address} onChange={(e) => setAddress(e.target.value)} placeholder="House No, Landmark, Area..." 
+                    className="w-full p-4 rounded-2xl bg-gray-50 border border-gray-100 focus:border-blue-500 focus:bg-white outline-none font-bold text-[#030712] transition-all text-sm" />
+                  {errors.address && <span className="text-red-500 text-[9px] font-black uppercase">{errors.address}</span>}
                 </div>
                 <InputField label="Pincode" value={pincode} onChange={(e) => setPincode(e.target.value)} error={errors.pincode} placeholder="6-digit PIN" icon={MapPin} />
-                <button onClick={() => setShowMap(!showMap)} className="w-full py-4 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
-                  {showMap ? "Hide Map View" : "Pin precise location on Map"}
+                <button onClick={() => setShowMap(!showMap)} className="w-full py-3 bg-gray-50 text-[#030712] border border-gray-200 rounded-xl font-black text-[11px] uppercase tracking-widest hover:bg-gray-100 text-center">
+                  {showMap ? "Hide Map" : "Open Map Selection"}
                 </button>
-                {showMap && <div className="h-full rounded-3xl overflow-hidden border border-white/10 transition-all"><UserMap setAddress={setAddress}/></div>}
+                {showMap && <div className="rounded-2xl overflow-hidden border border-gray-100 h-64"><UserMap setAddress={setAddress}/></div>}
+                <button onClick={nextStep} className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] shadow-lg flex items-center justify-center gap-3 text-center">
+                  Continue to Schedule <ArrowRight size={18}/>
+                </button>
               </div>
-             
             </div>
           )}
 
           {step === 3 && (
-            <div className="space-y-5">
-              <button onClick={prevStep} className="flex items-center gap-2 text-gray-500 font-bold text-[11px] uppercase tracking-widest hover:text-white mb-2 transition-colors">
-                <ChevronLeft size={16}/> Back
+            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <button onClick={prevStep} className="flex items-center gap-1.5 text-gray-400 font-black text-[10px] uppercase tracking-widest ml-2">
+                <ChevronLeft size={14}/> Back
               </button>
-                            <button onClick={handleConfirm} disabled={isPlacingOrder} className="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] shadow-2xl active:scale-[0.98] transition-all flex items-center justify-center gap-3">
-                {isPlacingOrder ? "Placing Order..." : <>Confirm & Reserve <CheckCircle2 size={18}/></>}
-              </button>
-              <div className="space-y-3">
-                <h2 className="text-2xl text-center font-bold tracking-tight">Booking Window</h2>
-                {/* <p className="text-gray-500 text-[15px] font-medium">Select a time that suits your schedule.</p> */}
-              </div>
-              <div className="bg-[#111827]/40 rounded-[32px] p-8 md:p-10 border border-white/5 space-y-12">
-                <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
-                  {next5Days.map((d, i) => {
-                    const formatted = format(d, "yyyy-MM-dd");
-                    const activeDate = date === formatted;
-                    return (
-                      <button key={i} onClick={() => setDate(formatted)}
-                        className={`flex-shrink-0 w-15 h-19 rounded-3xl flex flex-col items-center justify-center transition-all border duration-300
-                        ${activeDate ? "bg-blue-600 border-blue-500 shadow-xl" : "bg-[#030712] border-white/10 text-gray-500 hover:border-white/20"}`}>
-                        <span className="text-[10px] font-bold uppercase mb-1">{format(d, "EEE")}</span>
-                        <span className="text-2xl font-black">{format(d, "dd")}</span>
-                      </button>
-                    );
-                  })}
+              <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 space-y-10">
+                <h2 className="text-xl font-black tracking-tight">Select Slot</h2>
+                
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase text-gray-400 ml-1">Available Dates</p>
+                  <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                    {next5Days.map((d, i) => {
+                      const formatted = format(d, "yyyy-MM-dd");
+                      const isActive = date === formatted;
+                      return (
+                        <button key={i} onClick={() => setDate(formatted)}
+                          className={`flex-shrink-0 w-16 h-20 rounded-2xl flex flex-col items-center justify-center transition-all border text-center
+                          ${isActive ? "bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-100" : "bg-white border-gray-100 text-gray-400 hover:border-blue-200"}`}>
+                          <span className="text-[9px] font-black uppercase mb-1">{format(d, "EEE")}</span>
+                          <span className="text-xl font-black">{format(d, "dd")}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {slots.map((slot, i) => {
-                    const disabled = isSlotDisabled(slot);
-                    const activeSlot = timeSlot === slot;
-                    return (
-                      <button key={i} disabled={disabled} onClick={() => setTimeSlot(slot)}
-                        className={`py-4 rounded-2xl font-bold text-[12px] transition-all border duration-300
-                        ${disabled ? "opacity-10 cursor-not-allowed" : activeSlot ? "bg-emerald-600 border-emerald-500 shadow-lg shadow-emerald-500/10" 
-                        : "bg-[#030712] border-white/10 text-gray-400 hover:border-blue-500"}`}>
+
+                <div className="space-y-4">
+                  <p className="text-[10px] font-black uppercase text-gray-400 ml-1">Preferred Time</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {slots.map((slot, i) => (
+                      <button key={i} onClick={() => setTimeSlot(slot)}
+                        className={`py-3.5 rounded-xl font-bold text-[12px] transition-all border text-center
+                        ${timeSlot === slot ? "bg-[#030712] border-[#030712] text-white shadow-lg shadow-gray-200" : "bg-white border-gray-100 text-gray-500"}`}>
                         {slot}
                       </button>
-                    );
-                  })}
+                    ))}
+                  </div>
                 </div>
+
+                <button onClick={handleConfirm} disabled={isPlacingOrder} className="w-full py-4 bg-emerald-500 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] shadow-lg flex items-center justify-center gap-3 text-center">
+                  {isPlacingOrder ? "Working..." : <>Confirm & Reserve <CheckCircle2 size={18}/></>}
+                </button>
               </div>
-              {/* <button onClick={handleConfirm} disabled={isPlacingOrder} className="w-full py-5 bg-emerald-600 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] shadow-2xl active:scale-[0.98] transition-all flex items-center justify-center gap-3">
-                {isPlacingOrder ? "Placing Order..." : <>Confirm & Reserve <CheckCircle2 size={18}/></>}
-              </button> */}
             </div>
           )}
         </div>
 
-        {/* 🧾 Sidebar Summary */}
+        {/* 🧾 Compact Sidebar Summary */}
         <div className="lg:col-span-1">
-          <div className="sticky top-40 space-y-8">
-            <div className="bg-[#111827] rounded-[32px] p-8 border border-white/5 relative overflow-hidden shadow-2xl">
-              <h2 className="text-xl font-bold mb-8 flex items-center gap-3">
-                <ShoppingCart size={20} className="text-blue-500" /> Cart Summary
+          <div className="sticky top-28 space-y-6">
+            <div className="bg-white rounded-[32px] p-6 border border-gray-100 shadow-sm">
+              <h2 className="text-sm font-black mb-6 flex items-center gap-2 uppercase tracking-widest text-gray-400">
+                <ShoppingCart size={16} className="text-blue-600" /> Cart Summary
               </h2>
-              <div className="space-y-6">
-                <div className="max-h-56 overflow-y-auto space-y-5 pr-2 custom-scrollbar">
+              <div className="space-y-4">
+                <div className="max-h-48 overflow-y-auto space-y-4 pr-1 custom-scrollbar">
                   {cart.map((item, i) => (
-                    <div key={i} className="flex justify-between items-start">
-                      <div className="w-3/4">
-                        <p className="font-bold text-[13px] text-gray-200 line-clamp-1 uppercase tracking-tight">{item.name || item.title}</p>
-                        <p className="text-[10px] text-gray-500 font-black uppercase mt-1">Verified Pro Session</p>
+                    <div key={i} className="flex justify-between items-center">
+                      <div className="flex-1">
+                        <p className="font-bold text-[12px] text-[#030712] truncate">{item.name || item.title}</p>
+                        <p className="text-[9px] text-blue-600 font-black uppercase mt-0.5">Professional Session</p>
                       </div>
-                      <span className="font-black text-blue-400 text-sm">₹{item.price}</span>
+                      <span className="font-black text-[#030712] text-sm ml-4">₹{item.price}</span>
                     </div>
                   ))}
                 </div>
-                <div className="pt-8 space-y-4 border-t border-white/5 font-medium">
-                  <div className="flex justify-between text-[11px] text-gray-500 uppercase font-black">
+                <div className="pt-6 space-y-3 border-t border-gray-50 font-bold">
+                  <div className="flex justify-between text-[11px] text-gray-400 uppercase font-black">
                     <span>Subtotal</span>
                     <span>₹{subtotal.toFixed(0)}</span>
                   </div>
-                  <div className="flex justify-between text-[11px] text-emerald-400 uppercase font-black">
-                    <span className="flex items-center gap-1.5"><Tag size={12}/> Applied Promo</span>
+                  <div className="flex justify-between text-[11px] text-emerald-500 uppercase font-black">
+                    <span className="flex items-center gap-1.5"><Tag size={12}/> Savings</span>
                     <span>-₹{discount.toFixed(0)}</span>
                   </div>
-                  <div className="flex justify-between items-center pt-4 border-t border-white/10">
-                    <span className="text-[11px] font-black uppercase text-gray-400">Total</span>
-                    <span className="text-4xl font-black tracking-tighter">₹{total.toFixed(0)}</span>
+                  <div className="flex justify-between items-center pt-3 border-t border-gray-100 font-black">
+                    <span className="text-[11px] font-black uppercase text-gray-400">Grand Total</span>
+                    <span className="text-3xl font-black tracking-tighter text-[#030712]">₹{total.toFixed(0)}</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="bg-blue-600/5 p-8 rounded-[32px] border border-blue-500/10 flex items-center gap-5 transition-colors hover:bg-blue-600/10">
-              <div className="bg-blue-600/20 p-3.5 rounded-2xl"><ShieldCheck size={22} className="text-blue-500"/></div>
-              <p className="text-[11px] font-bold text-blue-400 uppercase tracking-widest leading-relaxed">Safety protocols active: Professional ID verification required.</p>
+            
+            <div className="bg-blue-50/50 p-6 rounded-[28px] border border-blue-100 flex items-center gap-4">
+              <div className="bg-white p-2 rounded-xl shadow-sm"><ShieldCheck size={20} className="text-blue-600"/></div>
+              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-tight leading-relaxed italic">Expert Pros • Safe Service • Verified ID</p>
             </div>
           </div>
         </div>

@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body
-        className={`${inter.variable} antialiased bg-[#030712] overflow-x-hidden`}
+        className={`${inter.variable} antialiased bg-[#edf4ff] overflow-x-hidden`}
       >
         <RegisterSW />
 

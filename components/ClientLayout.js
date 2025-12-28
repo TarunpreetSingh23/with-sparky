@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
-  const hideLayout = pathname === "/onboarding";
+  const hideLayout = pathname === "/cartu";
 
   return (
     <>
@@ -15,7 +15,7 @@ export default function ClientLayout({ children }) {
 
       <main
         className={
-          !hideLayout ? "pt-[62px] md:pt-[70px] pb-[72px] md:pb-0" : ""
+          !hideLayout ? "pt-[66px] md:pt-[70px] pb-[72px] md:pb-0" : ""
         }
       >
         {children}

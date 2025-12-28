@@ -7,124 +7,126 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Icons
 import { GiHamburgerMenu } from "react-icons/gi";
-import { IoClose, IoHomeSharp, IoBagHandleOutline } from "react-icons/io5";
+import {
+  IoClose,
+  IoHomeSharp,
+  IoBagHandleOutline,
+} from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
-import { FaCirclePlus } from "react-icons/fa6";
-import { BsShieldCheck } from "react-icons/bs"; // This is your imported shield icon
+import { BsShieldCheck } from "react-icons/bs";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [active, setActive] = useState("Home");
   const [scrolled, setScrolled] = useState(false);
-
-  // JWT User (phone-based login)
   const [user, setUser] = useState(null);
 
-  /* ================= CHECK LOGIN SESSION ================= */
+  /* ================= AUTH ================= */
   useEffect(() => {
     fetch("/api/me")
       .then((res) => res.json())
-      .then((data) => {
-        if (data?.user) setUser(data.user);
-        else setUser(null);
-      })
+      .then((data) => setUser(data?.user || null))
       .catch(() => setUser(null));
   }, []);
 
   /* ================= SCROLL EFFECT ================= */
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* ================= CART COUNT ================= */
+  /* ================= CART ================= */
   useEffect(() => {
     const updateCart = () => {
-      const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
-      setCartCount(savedCart.length);
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      setCartCount(cart.length);
     };
     updateCart();
     window.addEventListener("storage", updateCart);
     return () => window.removeEventListener("storage", updateCart);
   }, []);
 
-  /* ================= MENU ITEMS ================= */
+  const desktopLinks = ["Home", "Clean", "Beauty", "Event Decor", "About"];
+
   const mobileMenuItems = [
     { name: "Home", href: "/", icon: <IoHomeSharp /> },
     { name: "Explore", href: "/beauty", icon: <GiHamburgerMenu /> },
-    { name: "About", href: "/about", icon: <IoMdInformationCircleOutline /> },
-    { name: "Support", href: "/contact", icon: <FaPhoneAlt /> },
+    // { name: "About", href: "/about", icon: <IoMdInformationCircleOutline /> },
+    // { name: "Support", href: "/contact", icon: <FaPhoneAlt /> },
     {
-      name: user ? "Profile" : "Profile",
+      name: "Profile",
       href: user ? "/user" : "/login",
-      icon: user ? <CgProfile /> : <CgProfile />,
+      icon: <CgProfile />,
     },
   ];
-
-  const desktopLinks = ["Home", "Clean", "Beauty", "Event Decor", "About"];
-
-  /* ================= NAV ANIMATION ================= */
-  const navVariants = {
-    hidden: { y: -30, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-    },
-  };
+  const sliderItems = [
+    { name: "About Sparky", href: "/about", icon: <IoHomeSharp /> },
+    { name: "Support", href: "/contact", icon: <GiHamburgerMenu /> },
+    { name: "terms & conditions", href: "/t&c", icon: <IoMdInformationCircleOutline /> },
+    { name: "Privacy Policy", href: "/privacy", icon: <FaPhoneAlt /> },
+      { name: "Cancellation Policy", href: "/refund", icon: <FaPhoneAlt /> },
+    // {
+    //   name: "Profile",
+    //   href: user ? "/user" : "/login",
+    //   icon: <CgProfile />,
+    // },
+  ];
 
   return (
     <>
-      {/* ================= DESKTOP FLOATING NAV ================= */}
+      {/* ================= DESKTOP NAV ================= */}
       <motion.nav
-        initial="hidden"
-        animate="visible"
-        variants={navVariants}
-        className={`hidden md:flex fixed top-4 left-1/2 -translate-x-1/2 w-[94%] max-w-7xl transition-all duration-500 z-50 px-8 items-center justify-between rounded-2xl border ${
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className={`hidden md:flex fixed top-4 left-1/2 -translate-x-1/2 w-[94%] max-w-7xl px-8 py-4 z-50 rounded-2xl border transition-all ${
           scrolled
-            ? "bg-gray-900/80 backdrop-blur-xl border-white/10 h-[74px] shadow-[0_20px_50px_rgba(0,0,0,0.7)]"
-            : "bg-gray-900 h-[85px] border-transparent"
+            ? "bg-white/80 backdrop-blur-xl border-blue-100 shadow-lg"
+            : "bg-white border-transparent"
         }`}
       >
-        <Link href="/" className="active:scale-95 transition-transform">
+        {/* Logo */}
+        <Link href="/" className="flex items-center">
           <Image
-            src="/images/LOGO (2).jpg"
+            src="/images/wLogo.png"
             alt="Logo"
-            width={150}
-            height={40}
-            className="rounded-lg object-contain"
+            width={140}
+            height={34}
+            className="object-contain"
           />
         </Link>
 
         {/* Center Menu */}
-        <div className="flex gap-2 bg-black/20 p-1.5 rounded-xl border border-white/5">
+        <div className="mx-auto flex gap-1 bg-blue-50 p-1.5 rounded-xl border border-blue-100">
           {desktopLinks.map((item) => (
             <Link
               key={item}
               href={item === "Home" ? "/" : `/${item.toLowerCase().replace(/\s/g, "")}`}
               onClick={() => setActive(item)}
-              className={`text-[13px] px-6 py-2.5 rounded-lg font-semibold tracking-wide transition-all duration-300 relative group ${
-                active === item ? "text-white" : "text-gray-400 hover:text-gray-200"
+              className={`relative px-6 py-2.5 rounded-lg text-sm font-semibold transition ${
+                active === item
+                  ? "text-white"
+                  : "text-gray-600 hover:text-blue-600"
               }`}
             >
-              <span className="relative z-10">{item}</span>
               {active === item && (
                 <motion.div
                   layoutId="active-pill"
-                  className="absolute inset-0 bg-blue-600 rounded-lg shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+                  className="absolute inset-0 bg-blue-600 rounded-lg"
                 />
               )}
+              <span className="relative z-10">{item}</span>
             </Link>
           ))}
         </div>
 
-        {/* Right Section */}
-        <div className="flex items-center gap-6">
-          <Link href="/cart" className="relative p-2 text-gray-400 hover:text-white">
+        {/* Right Actions */}
+        <div className="flex items-center gap-5">
+          <Link href="/cart" className="relative text-gray-600 hover:text-blue-600">
             <IoBagHandleOutline className="text-2xl" />
             <AnimatePresence>
               {cartCount > 0 && (
@@ -132,7 +134,7 @@ export default function Navbar() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="absolute -top-1 -right-1 bg-blue-500 text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold text-white ring-2 ring-gray-900"
+                  className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold"
                 >
                   {cartCount}
                 </motion.span>
@@ -142,58 +144,77 @@ export default function Navbar() {
 
           <Link
             href={user ? "/user" : "/login"}
-            className="bg-white text-gray-950 px-8 py-2.5 rounded-xl text-sm font-black tracking-tight hover:bg-blue-50 transition-all active:scale-95 shadow-lg"
+            className="bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-black tracking-tight hover:bg-blue-700 transition"
           >
-            {user ? "ACCOUNT" : "GET STARTED"}
+            {user ? "Account" : "Get Started"}
           </Link>
         </div>
       </motion.nav>
 
       {/* ================= MOBILE TOP NAV ================= */}
-      <div className="md:hidden fixed top-0 left-0 w-full h-[74px] bg-[#030712] backdrop-blur-lg flex items-center justify-between px-5 z-50 border-b border-white/5">
-        <button onClick={() => setMenuOpen(true)} className="p-2 active:scale-90">
-          <GiHamburgerMenu className="text-2xl text-gray-300" />
+      <div className="md:hidden fixed top-0 left-0 w-full h-[72px] bg-white backdrop-blur border-b border-blue-100 flex items-center justify-between px-5 z-50">
+        <button onClick={() => setMenuOpen(true)}>
+          <GiHamburgerMenu className="text-2xl text-gray-700" />
         </button>
+
         <Link href="/">
-          <Image src="/LOGO.jpg" alt="Logo" width={120} height={30} className="rounded-md" />
+          <Image src="/images/wLogo.png" alt="Logo" width={120} height={30} />
         </Link>
-        <Link href="/cart" className="relative p-2">
-          <IoBagHandleOutline className="text-2xl text-gray-300" />
+
+        <Link href="/cart" className="relative">
+          <IoBagHandleOutline className="text-2xl text-gray-700" />
           {cartCount > 0 && (
-            <span className="absolute top-1 right-1 bg-blue-500 text-[10px] w-4 h-4 flex items-center justify-center rounded-full text-white font-bold ring-2 ring-gray-900">
+            <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
               {cartCount}
             </span>
           )}
         </Link>
       </div>
 
-      {/* ================= MOBILE BOTTOM DOCK ================= */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#030712] backdrop-blur-lg border-t border-white/5 px-4 py-2 flex justify-around z-40">
-        {mobileMenuItems.map((item) => (
-          <Link
-            key={item.name}
-            href={item.href}
-            onClick={() => setActive(item.name)}
-            className="flex flex-col items-center min-w-[60px]"
-          >
-            <span className={`text-2xl mb-1 ${active === item.name ? "text-blue-400" : "text-gray-200"}`}>
-              {item.icon}
-            </span>
-            <span className={`text-[10px] font-bold uppercase ${
-              active === item.name ? "text-blue-400" : "text-gray-500"
-            }`}>
-              {item.name}
-            </span>
-          </Link>
-        ))}
-      </nav>
+      {/* ================= MOBILE BOTTOM NAV ================= */}
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-2 py-3 flex justify-around items-center z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
+    {mobileMenuItems.map((item) => (
+      <Link
+        key={item.name}
+        href={item.href}
+        onClick={() => setActive(item.name)}
+        className="flex flex-col items-center justify-center min-w-[70px] transition-all active:scale-95"
+      >
+        {/* Icon Container */}
+        <div
+          className={`mb-1 transition-colors duration-200 ${
+            active === item.name ? "text-gray-900" : "text-gray-400"
+          }`}
+        >
+          {/* Ensure your icons are passed with a strokeWidth of 1.5 to 2 to match the "Outlined" look */}
+          <span className="text-2xl">
+            {item.icon}
+          </span>
+        </div>
+
+        {/* Label Styling */}
+        <span
+          className={`text-[12px] font-bold tracking-tight transition-colors duration-200 ${
+            active === item.name ? "text-[#334155]" : "text-[#64748b]"
+          }`}
+        >
+          {item.name}
+        </span>
+
+        {/* Optional Active Indicator (the black bar seen at the top of 'Home' in screenshots) */}
+        {active === item.name && (
+          <div className="absolute top-0 w-8 h-[3px] bg-gray-900 rounded-b-full" />
+        )}
+      </Link>
+    ))}
+  </nav>
 
       {/* ================= MOBILE SIDEBAR ================= */}
       <AnimatePresence>
         {menuOpen && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
+              className="fixed inset-0 bg-black/40 z-[60]"
               onClick={() => setMenuOpen(false)}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -201,41 +222,44 @@ export default function Navbar() {
             />
 
             <motion.div
-              className="fixed top-0 left-0 h-full w-[80%] max-w-[320px] bg-gray-950 z-[70] p-8 shadow-2xl border-r border-gray-800"
+              className="fixed top-0 left-0 h-full w-[80%] max-w-[320px] bg-white z-[70] p-8 border-r border-blue-100 shadow-2xl"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              transition={{ type: "spring", damping: 24 }}
             >
               <div className="flex justify-between items-center mb-10">
-                <Image src="/LOGO.jpg" alt="Logo" width={120} height={30} className="rounded" />
-                <button onClick={() => setMenuOpen(false)} className="text-gray-400 p-2">
-                  <IoClose className="text-3xl" />
+                <Image src="/images/wLogo.png" alt="Logo" width={120} height={30} />
+                <button onClick={() => setMenuOpen(false)}>
+                  <IoClose className="text-3xl text-gray-500" />
                 </button>
               </div>
 
               <div className="space-y-6">
-                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">Main Categories</p>
-                {["Home Deep Cleaning", "Bridal Makeup", "Salon for Men", "Wedding Decor"].map((item) => (
+                <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">
+                  Quick Links
+                </p>
+                {sliderItems.map((item) => (
                   <Link
                     key={item}
-                    href="/"
+                    href={item.href}
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center justify-between group"
+                    className="flex justify-between items-center text-gray-700 font-medium hover:text-blue-600"
                   >
-                    <span className="text-gray-200 text-lg font-medium group-hover:text-blue-400 transition-colors">{item}</span>
-                    <span className="text-gray-600">→</span>
+                    {item.name}
+                    <span className="text-gray-400">→</span>
                   </Link>
                 ))}
               </div>
 
-              <div className="absolute bottom-10 left-8 right-8 p-4 bg-gray-900 rounded-2xl border border-gray-800">
-                <div className="flex items-center gap-3 text-blue-400 mb-2">
-                  {/* FIXED: Changed from FaShieldCheck to BsShieldCheck */}
-                  <BsShieldCheck /> 
-                  <span className="text-xs font-bold text-white">Pro Verified</span>
+              <div className="absolute bottom-10 left-8 right-8 p-4 bg-blue-50 rounded-2xl border border-blue-100">
+                <div className="flex items-center gap-2 text-blue-600 mb-2">
+                  <BsShieldCheck />
+                  <span className="text-xs font-bold">Verified Professionals</span>
                 </div>
-                <p className="text-[10px] text-gray-500">All our partners are background verified professionals.</p>
+                <p className="text-[10px] text-gray-500">
+                  All partners are background verified.
+                </p>
               </div>
             </motion.div>
           </>
