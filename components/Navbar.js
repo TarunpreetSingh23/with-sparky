@@ -172,7 +172,7 @@ export default function Navbar() {
       </div>
 
       {/* ================= MOBILE BOTTOM NAV ================= */}
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 px-2 py-3 flex justify-around items-center z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#030712] border-t border-gray-100 px-2 py-3 flex justify-around items-center z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
     {mobileMenuItems.map((item) => (
       <Link
         key={item.name}
@@ -183,7 +183,7 @@ export default function Navbar() {
         {/* Icon Container */}
         <div
           className={`mb-1 transition-colors duration-200 ${
-            active === item.name ? "text-gray-900" : "text-gray-400"
+            active === item.name ? "text-white" : "text-white"
           }`}
         >
           {/* Ensure your icons are passed with a strokeWidth of 1.5 to 2 to match the "Outlined" look */}
@@ -195,7 +195,7 @@ export default function Navbar() {
         {/* Label Styling */}
         <span
           className={`text-[12px] font-bold tracking-tight transition-colors duration-200 ${
-            active === item.name ? "text-[#334155]" : "text-[#64748b]"
+            active === item.name ? "text-white" : "text-[#64748b]"
           }`}
         >
           {item.name}
@@ -203,7 +203,7 @@ export default function Navbar() {
 
         {/* Optional Active Indicator (the black bar seen at the top of 'Home' in screenshots) */}
         {active === item.name && (
-          <div className="absolute top-0 w-8 h-[3px] bg-gray-900 rounded-b-full" />
+          <div className="absolute top-0 w-8 h-[3px] bg-white rounded-b-full" />
         )}
       </Link>
     ))}
