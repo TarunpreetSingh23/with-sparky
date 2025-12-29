@@ -152,17 +152,17 @@ export default function Navbar() {
       </motion.nav>
 
       {/* ================= MOBILE TOP NAV ================= */}
-      <div className="md:hidden fixed top-0 left-0 w-full h-[72px] bg-white backdrop-blur border-b border-blue-100 flex items-center justify-between px-5 z-50">
+      <div className="md:hidden fixed top-0 left-0 w-full h-[72px] bg-[#030712] backdrop-blur border-b-4 border-grey-200 shadow-xl flex items-center justify-between px-5 z-50">
         <button onClick={() => setMenuOpen(true)}>
-          <GiHamburgerMenu className="text-2xl text-gray-700" />
+          <GiHamburgerMenu className="text-2xl text-white" />
         </button>
 
         <Link href="/">
-          <Image src="/images/wLogo.png" alt="Logo" width={120} height={30} />
+          <Image src="/LOGO.jpg" alt="Logo" width={120} height={30} />
         </Link>
 
         <Link href="/cart" className="relative">
-          <IoBagHandleOutline className="text-2xl text-gray-700" />
+          <IoBagHandleOutline className="text-2xl text-white" />
           {cartCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
               {cartCount}

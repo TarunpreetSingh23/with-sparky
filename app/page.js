@@ -147,7 +147,7 @@ export default function SparkyServiceApp() {
     <div className="min-h-screen bg-[#edf4ff] text-[#111827] pb-32 font-sans overflow-x-hidden">
       
       {/* ================= HEADER ================= */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-blue-50 px-4 pt-4 pb-3 space-y-3">
+      <header className="sticky top-0 z-40 bg-gradient-to-b from-[#030712] via-[#a3b7d6] to-[#edf4ff] backdrop-blur-md border-b border-blue-50 px-4 pt-4 pb-3 space-y-3">
         {/* <div className="flex justify-between items-center">
           <Link href="/" className="active:scale-95 transition-transform">
             <Image src="/images/wLogo.png" alt="Logo" width={110} height={28} />
@@ -159,7 +159,7 @@ export default function SparkyServiceApp() {
 
         {/* Search Bar */}
         <div ref={searchRef} className="relative">
-          <div className="flex items-center bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 shadow-sm focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-100 transition-all">
+          <div className="flex items-center bg-gray-50  rounded-2xl px-4 py-3 ">
             <Search size={18} className="text-gray-400 mr-3" />
             <input
               value={query}
