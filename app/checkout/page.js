@@ -40,9 +40,11 @@ export default function Checkout() {
   const [showMap, setShowMap] = useState(false);
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
 
+  // Form States
   const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState(""); // Now editable
   const [address, setAddress] = useState("");
+  const [loginPhone, setloginPhone] = useState("");
   const [pincode, setPincode] = useState("");
   const [date, setDate] = useState("");
   const [timeSlot, setTimeSlot] = useState("");
@@ -51,7 +53,7 @@ export default function Checkout() {
   const [invoiceUrl, setInvoiceUrl] = useState("");
   const [orderId, setOrderId] = useState("");
 
-  /* ================= AUTH CHECK ================= */
+  /* ================= AUTH CHECK & COOKIE SYNC ================= */
   useEffect(() => {
     fetch("/api/me")
       .then(res => res.json())
@@ -60,7 +62,10 @@ export default function Checkout() {
           router.push("/login");
         } else {
           setUser(data.user);
-          setPhone(data.user.phone);
+          // Set initial values from cookie data
+          setName(data.user.name || "");
+          setPhone(data.user.phone || ""); 
+          setloginPhone(data.user.phone);
         }
       })
       .catch(() => router.push("/login"));
@@ -76,9 +81,13 @@ export default function Checkout() {
   const discount = subtotal * 0.1;
   const total = subtotal - discount;
 
+  /* ================= VALIDATION ================= */
   const validateStep = () => {
     const e = {};
-    if (step === 1 && !name.trim()) e.name = "Name is required";
+    if (step === 1) {
+      if (!name.trim()) e.name = "Name is required";
+      if (!/^\d{10}$/.test(phone)) e.phone = "Enter a valid 10-digit number";
+    }
     if (step === 2) {
       if (!address.trim()) e.address = "Address is required";
       if (!/^\d{6}$/.test(pincode)) e.pincode = "Invalid PIN";
@@ -100,7 +109,7 @@ export default function Checkout() {
       name: item.title || item.name,
       price: item.price,
       quantity: item.quantity || 1,
-      category:item.category
+      category: item.category
     }));
 
     try {
@@ -109,9 +118,9 @@ export default function Checkout() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           cart: formattedCart, subtotal, discount, total,
-          customerName: name, phone: user.phone, address, pincode,
+          customerName: name,loginPhone:loginPhone, phone: phone, // Uses the current (potentially edited) state
+          address, pincode,
           date, timeSlot, paymentMethod: "COD", status: "pending",
-
         }),
       });
 
@@ -135,7 +144,7 @@ export default function Checkout() {
   return (
     <div className="min-h-screen bg-[#F3F4F6] pb-32 font-sans text-[#030712] selection:bg-blue-100">
       
-      {/* 🟢 Success Overlay */}
+      {/* Success Overlay */}
       {orderSuccess && (
         <div className="fixed inset-0 z-[100] bg-white flex items-center justify-center px-6">
           <div className="max-w-sm w-full text-center">
@@ -150,7 +159,7 @@ export default function Checkout() {
         </div>
       )}
 
-      {/* 💎 App-Style Header Stepper */}
+      {/* Header Stepper */}
       <div className="bg-white sticky top-0 z-40 px-4 py-5 border-b border-gray-100 shadow-sm">
         <div className="max-w-md mx-auto flex items-center justify-between px-6">
           {[1, 2, 3].map((s) => (
@@ -168,18 +177,31 @@ export default function Checkout() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-        
-        {/* 🚀 Forms Section */}
         <div className="lg:col-span-2 space-y-6">
           {step === 1 && (
-            <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 space-y-8">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-black tracking-tight">Personal Info</h2>
                 <div className="bg-blue-50 text-blue-600 p-2 rounded-xl"><User size={20}/></div>
               </div>
               <div className="space-y-6">
-                <InputField label="Full Name" value={name} onChange={(e) => setName(e.target.value)} error={errors.name} placeholder="Type your name" />
-                <InputField label="Mobile Number" type="tel" value={phone} disabled={true} icon={Phone} />
+                <InputField 
+                  label="Full Name" 
+                  value={name} 
+                  onChange={(e) => setName(e.target.value)} 
+                  error={errors.name} 
+                  placeholder="Type your name" 
+                  icon={User}
+                />
+                <InputField 
+                  label="Mobile Number" 
+                  type="tel" 
+                  value={phone} 
+                  onChange={(e) => setPhone(e.target.value)} // User can now edit this
+                  error={errors.phone}
+                  placeholder="10-digit mobile number" 
+                  icon={Phone} 
+                />
               </div>
               <button onClick={nextStep} className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] shadow-lg shadow-blue-100 flex items-center justify-center gap-3 active:scale-95 transition-all text-center">
                 Continue to Address <ArrowRight size={18}/>
@@ -188,7 +210,7 @@ export default function Checkout() {
           )}
 
           {step === 2 && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-4">
               <button onClick={prevStep} className="flex items-center gap-1.5 text-gray-400 font-black text-[10px] uppercase tracking-widest hover:text-blue-600 ml-2">
                 <ChevronLeft size={14}/> Back
               </button>
@@ -213,44 +235,31 @@ export default function Checkout() {
           )}
 
           {step === 3 && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-4">
               <button onClick={prevStep} className="flex items-center gap-1.5 text-gray-400 font-black text-[10px] uppercase tracking-widest ml-2">
                 <ChevronLeft size={14}/> Back
               </button>
               <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 space-y-10">
                 <h2 className="text-xl font-black tracking-tight">Select Slot</h2>
-                
-                <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase text-gray-400 ml-1">Available Dates</p>
-                  <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
-                    {next5Days.map((d, i) => {
-                      const formatted = format(d, "yyyy-MM-dd");
-                      const isActive = date === formatted;
-                      return (
-                        <button key={i} onClick={() => setDate(formatted)}
-                          className={`flex-shrink-0 w-16 h-20 rounded-2xl flex flex-col items-center justify-center transition-all border text-center
-                          ${isActive ? "bg-blue-600 border-blue-600 text-white shadow-xl shadow-blue-100" : "bg-white border-gray-100 text-gray-400 hover:border-blue-200"}`}>
-                          <span className="text-[9px] font-black uppercase mb-1">{format(d, "EEE")}</span>
-                          <span className="text-xl font-black">{format(d, "dd")}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+                  {next5Days.map((d, i) => (
+                    <button key={i} onClick={() => setDate(format(d, "yyyy-MM-dd"))}
+                      className={`flex-shrink-0 w-16 h-20 rounded-2xl flex flex-col items-center justify-center border text-center transition-all
+                      ${date === format(d, "yyyy-MM-dd") ? "bg-blue-600 border-blue-600 text-white shadow-lg" : "bg-white border-gray-100 text-gray-400"}`}>
+                      <span className="text-[9px] font-black uppercase mb-1">{format(d, "EEE")}</span>
+                      <span className="text-xl font-black">{format(d, "dd")}</span>
+                    </button>
+                  ))}
                 </div>
-
-                <div className="space-y-4">
-                  <p className="text-[10px] font-black uppercase text-gray-400 ml-1">Preferred Time</p>
-                  <div className="grid grid-cols-2 gap-3">
-                    {slots.map((slot, i) => (
-                      <button key={i} onClick={() => setTimeSlot(slot)}
-                        className={`py-3.5 rounded-xl font-bold text-[12px] transition-all border text-center
-                        ${timeSlot === slot ? "bg-[#030712] border-[#030712] text-white shadow-lg shadow-gray-200" : "bg-white border-gray-100 text-gray-500"}`}>
-                        {slot}
-                      </button>
-                    ))}
-                  </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {slots.map((slot, i) => (
+                    <button key={i} onClick={() => setTimeSlot(slot)}
+                      className={`py-3.5 rounded-xl font-bold text-[12px] border text-center transition-all
+                      ${timeSlot === slot ? "bg-[#030712] text-white" : "bg-white border-gray-100 text-gray-500"}`}>
+                      {slot}
+                    </button>
+                  ))}
                 </div>
-
                 <button onClick={handleConfirm} disabled={isPlacingOrder} className="w-full py-4 bg-emerald-500 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] shadow-lg flex items-center justify-center gap-3 text-center">
                   {isPlacingOrder ? "Working..." : <>Confirm & Reserve <CheckCircle2 size={18}/></>}
                 </button>
@@ -259,7 +268,7 @@ export default function Checkout() {
           )}
         </div>
 
-        {/* 🧾 Compact Sidebar Summary */}
+        {/* Sidebar Summary */}
         <div className="lg:col-span-1">
           <div className="sticky top-28 space-y-6">
             <div className="bg-white rounded-[32px] p-6 border border-gray-100 shadow-sm">
@@ -267,37 +276,23 @@ export default function Checkout() {
                 <ShoppingCart size={16} className="text-blue-600" /> Cart Summary
               </h2>
               <div className="space-y-4">
-                <div className="max-h-48 overflow-y-auto space-y-4 pr-1 custom-scrollbar">
-                  {cart.map((item, i) => (
-                    <div key={i} className="flex justify-between items-center">
-                      <div className="flex-1">
-                        <p className="font-bold text-[12px] text-[#030712] truncate">{item.name || item.title}</p>
-                        <p className="text-[9px] text-blue-600 font-black uppercase mt-0.5">Professional Session</p>
-                      </div>
-                      <span className="font-black text-[#030712] text-sm ml-4">₹{item.price}</span>
-                    </div>
-                  ))}
-                </div>
-                <div className="pt-6 space-y-3 border-t border-gray-50 font-bold">
-                  <div className="flex justify-between text-[11px] text-gray-400 uppercase font-black">
-                    <span>Subtotal</span>
-                    <span>₹{subtotal.toFixed(0)}</span>
+                {cart.map((item, i) => (
+                  <div key={i} className="flex justify-between items-center">
+                    <div className="flex-1"><p className="font-bold text-[12px] text-[#030712] truncate">{item.name || item.title}</p></div>
+                    <span className="font-black text-[#030712] text-sm ml-4">₹{item.price}</span>
                   </div>
-                  <div className="flex justify-between text-[11px] text-emerald-500 uppercase font-black">
-                    <span className="flex items-center gap-1.5"><Tag size={12}/> Savings</span>
-                    <span>-₹{discount.toFixed(0)}</span>
-                  </div>
-                  <div className="flex justify-between items-center pt-3 border-t border-gray-100 font-black">
-                    <span className="text-[11px] font-black uppercase text-gray-400">Grand Total</span>
-                    <span className="text-3xl font-black tracking-tighter text-[#030712]">₹{total.toFixed(0)}</span>
+                ))}
+                <div className="pt-6 space-y-3 border-t border-gray-50">
+                  <div className="flex justify-between items-center font-black">
+                    <span className="text-[11px] uppercase text-gray-400">Grand Total</span>
+                    <span className="text-3xl tracking-tighter text-[#030712]">₹{total.toFixed(0)}</span>
                   </div>
                 </div>
               </div>
             </div>
-            
             <div className="bg-blue-50/50 p-6 rounded-[28px] border border-blue-100 flex items-center gap-4">
               <div className="bg-white p-2 rounded-xl shadow-sm"><ShieldCheck size={20} className="text-blue-600"/></div>
-              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-tight leading-relaxed italic">Expert Pros • Safe Service • Verified ID</p>
+              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-tight">Verified Pros • Safe Service</p>
             </div>
           </div>
         </div>

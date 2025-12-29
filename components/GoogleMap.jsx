@@ -1,37 +1,53 @@
 "use client";
 
 import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { useEffect, useState } from "react";
 
 const containerStyle = {
   width: "100%",
   height: "400px",
 };
 
-const defaultCenter = {
-  lat: 28.6139, // Delhi example
-  lng: 77.2090,
-};
+export default function GoogleMapComponent({ onLocationDetected }) {
+  const [location, setLocation] = useState(null);
 
-export default function Map({ center = defaultCenter, marker = true }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
 
-  if (!isLoaded) {
-    return (
-      <div className="flex items-center justify-center h-[400px]">
-        Loading map...
-      </div>
+  // 📍 Get user's current location
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      alert("Geolocation not supported");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const loc = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setLocation(loc);
+        onLocationDetected?.(loc); // send to parent
+      },
+      () => {
+        alert("Location permission denied");
+      }
     );
-  }
+  }, []);
+
+  if (!isLoaded) return <p>Loading Map...</p>;
+
+  if (!location) return <p>Detecting location...</p>;
 
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={center}
+      center={location}
       zoom={15}
     >
-      {marker && <Marker position={center} />}
+      <Marker position={location} />
     </GoogleMap>
   );
 }

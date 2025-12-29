@@ -1,4 +1,5 @@
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import SessionWrapper from "@/components/SessionWrapper";
 import ClientLayout from "@/components/ClientLayout";
@@ -11,7 +12,7 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-/* ✅ ONLY HERE */
+/* ✅ VIEWPORT */
 export const viewport = {
   width: "device-width",
   initialScale: 1,
@@ -19,7 +20,7 @@ export const viewport = {
   themeColor: "#030712",
 };
 
-/* ✅ CLEAN METADATA */
+/* ✅ METADATA */
 export const metadata = {
   title: "Shop ON",
   description: "Leading ecommerce platform",
@@ -30,7 +31,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* iOS PWA support */}
+        {/* ✅ iOS PWA SUPPORT */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black" />
         <meta name="apple-mobile-web-app-title" content="Shop ON" />
@@ -40,6 +41,12 @@ export default function RootLayout({ children }) {
       <body
         className={`${inter.variable} antialiased bg-[#edf4ff] overflow-x-hidden`}
       >
+        {/* ✅ GOOGLE MAPS – LOAD ONCE, CLIENT ONLY */}
+        <Script
+          src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
+          strategy="afterInteractive"
+        />
+
         <RegisterSW />
 
         <SessionWrapper>

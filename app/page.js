@@ -16,7 +16,7 @@ import {
   X,
   Star,
   ArrowRight,
-  LayoutGrid // Added the missing import here
+  LayoutGrid
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -32,29 +32,30 @@ const CATEGORIES = [
 const CRAZY_DEAL = {
   name: "Gold Facial",
   originalPrice: "₹1,875",
-  price: "₹999",
+  price: 999, // Changed to number for logic
   image: "/images/vee.jpg",
   discount: "45% OFF",
+  link: "/services/facial"
 };
 
 const QUICK_SERVICES = [
-  { title: "Suit Stitching", discount: "30% OFF", image: "/images/stitching.jpg", price: "₹1299" },
-  { title: "AC Repair", discount: "₹200 OFF", image: "/images/ac.jpg", price: "₹499" },
-  { title: "Deep Cleanup", discount: "50% OFF", image: "/images/cleanup.jpg", price: "₹799" },
-  { title: "Electrician", discount: "Starts ₹199", image: "/images/electrician.jpg", price: "₹199" },
+  { title: "Suit Stitching", discount: "30% OFF", image: "/images/stitching.jpg", price: 1299, link: "/services/stitching" },
+  { title: "AC Repair", discount: "₹200 OFF", image: "/images/ac.jpg", price: 499, link: "/services/ac-repair" },
+  { title: "Deep Cleanup", discount: "50% OFF", image: "/images/cleanup.jpg", price: 799, link: "/services/cleaning" },
+  { title: "Electrician", discount: "Starts ₹199", image: "/images/electrician.jpg", price: 199, link: "/services/electrician" },
 ];
 
 const BESTSELLERS = [
-  { id: 1, name: "Manicure", image: "/images/mpm.jpg", count: "+120 more", price: "₹499", link: "/services/manicure"},
-  { id: 2, name: "Plumbing", image: "/images/plumbing.jpg", count: "+80 more", price: "₹299", link: "/services/plumbing" },
-  { id: 3, name: "Facial", image: "/images/makeup.jpg", count: "+150 more", price: "₹1499", link: "/services/facial" },
+  { id: 1, name: "Manicure", image: "/images/mpm.jpg", count: "+120 more", price: 499, link: "/services/manicure",category:"Woman Services" },
+  { id: 2, name: "Plumbing", image: "/images/plumbing.jpg", count: "+80 more", price: 299, link: "/services/plumbing" },
+  { id: 3, name: "Makeup", image: "/images/makeup.jpg", count: "+150 more", price: 1499, link: "/services/makeup" ,category:"Woman Services" },
 ];
 
 const STATIC_SERVICES = [
-  { title: "Manicure", price: 499, image: "/images/mpm.jpg", link: "/services/manicure" },
-  { title: "Pedicure", price: 599, image: "/images/vee.jpg", link: "/services/pedicure" },
-  { title: "Facial", price: 999, image: "/images/vee2.jpg", link: "/services/facial" },
-  { title: "Waxing", price: 699, image: "/images/wm.jpg", link: "/services/waxing" },
+  { title: "Manicure", price: 499, image: "/images/mpm.jpg", link: "/services/manicure",category:"Woman Services" },
+  { title: "Pedicure", price: 599, image: "/images/vee.jpg", link: "/services/pedicure",category:"Woman Services" },
+  { title: "Facial", price: 999, image: "/images/vee2.jpg", link: "/services/facial",category:"Woman Services" },
+  { title: "Waxing", price: 699, image: "/images/wm.jpg", link: "/services/waxing",category:"Woman Services" },
   { title: "Cleaning", price: 799, image: "/images/cleanup.jpg", link: "/services/cleaning" },
   { title: "AC Repair", price: 499, image: "/images/ac.jpg", link: "/services/ac-repair" },
 ];
@@ -75,6 +76,29 @@ export default function SparkyServiceApp() {
   const [selectedService, setSelectedService] = useState(null);
 
   const refs = { beautyRef, beatiqueRef, techRef };
+
+  // Helper function to add to cart and redirect
+  const handleBooking = (service) => {
+    // 1. Prepare the item object
+    const itemToAdd = {
+      title: service.name || service.title,
+      price: typeof service.price === 'string' ? parseInt(service.price.replace('₹', '')) : service.price,
+      image: service.image,
+      quantity: 1,
+      category:service.category
+      
+    };
+ console.log(itemToAdd);
+    // 2. Get existing cart or initialize
+    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+    
+    // 3. Add to cart
+    existingCart.push(itemToAdd);
+    localStorage.setItem("cart", JSON.stringify(existingCart));
+
+    // 4. Redirect to checkout
+    router.push("/checkout");
+  };
 
   // Search Logic
   useEffect(() => {
@@ -193,7 +217,7 @@ export default function SparkyServiceApp() {
           <div onClick={() => setSelectedService(CRAZY_DEAL)} className="col-span-5 bg-blue-100 p-5 relative overflow-hidden shadow-sm border border-blue-200 cursor-pointer rounded-3xl">
             <span className="bg-white/80 backdrop-blur-sm text-blue-700 text-[10px] font-black px-3 py-1.5 rounded-full">CRAZY DEAL</span>
             <div className="mt-4 relative z-10">
-              <p className="text-2xl font-black tracking-tighter text-blue-900">{CRAZY_DEAL.price}</p>
+              <p className="text-2xl font-black tracking-tighter text-blue-900">₹{CRAZY_DEAL.price}</p>
               <p className="text-xs line-through text-blue-900/40 font-bold">{CRAZY_DEAL.originalPrice}</p>
               <p className="text-sm font-black mt-1 leading-tight">{CRAZY_DEAL.name}</p>
             </div>
@@ -289,7 +313,7 @@ export default function SparkyServiceApp() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-black text-blue-600 tracking-tighter">{selectedService.price || "₹799"}</p>
+                    <p className="text-2xl font-black text-blue-600 tracking-tighter">₹{selectedService.price || "799"}</p>
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest text-[9px]">Base Price</p>
                   </div>
                 </div>
@@ -297,10 +321,10 @@ export default function SparkyServiceApp() {
                   Indulge in a premium service experience. Our certified professionals ensure top-tier hygiene and salon-grade results in the comfort of your home. 
                 </p>
                 <div className="flex gap-4">
-                  <button className="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                  <button onClick={() => handleBooking(selectedService)} className="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
                     Book Now <ArrowRight size={16} />
                   </button>
-                  <button onClick={()=>{router.push(selectedService.link)}} className="flex-1 bg-gray-50 text-gray-800 border border-gray-100 py-4 rounded-2xl font-black text-xs uppercase tracking-widest active:scale-[0.98] transition-all">
+                  <button onClick={() => { if(selectedService.link) router.push(selectedService.link) }} className="flex-1 bg-gray-50 text-gray-800 border border-gray-100 py-4 rounded-2xl font-black text-xs uppercase tracking-widest active:scale-[0.98] transition-all">
                     View Info
                   </button>
                 </div>
@@ -310,13 +334,6 @@ export default function SparkyServiceApp() {
         )}
       </AnimatePresence>
 
-      {/* ================= FIXED BOTTOM NAV ================= */}
-      {/* <footer className="fixed bottom-6 left-6 right-6 bg-white border border-gray-100 rounded-[2.5rem] shadow-[0_10px_30px_rgba(0,0,0,0.08)] flex justify-around py-4 z-50">
-        <NavIcon icon={<MapPin size={22} />} label="Home" active />
-        <NavIcon icon={<Clock size={22} />} label="Bookings" />
-        <NavIcon icon={<LayoutGrid size={22} />} label="Catalog" />
-        <NavIcon icon={<User size={22} />} label="Profile" />
-      </footer> */}
     </div>
   );
 }

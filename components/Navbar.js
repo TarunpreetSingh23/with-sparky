@@ -55,8 +55,8 @@ export default function Navbar() {
   const mobileMenuItems = [
     { name: "Home", href: "/", icon: <IoHomeSharp /> },
     { name: "Explore", href: "/beauty", icon: <GiHamburgerMenu /> },
-    // { name: "About", href: "/about", icon: <IoMdInformationCircleOutline /> },
-    // { name: "Support", href: "/contact", icon: <FaPhoneAlt /> },
+    // { name: "Support", href: "/about", icon: <IoMdInformationCircleOutline /> },
+    { name: "Support", href: "/contact", icon: <FaPhoneAlt /> },
     {
       name: "Profile",
       href: user ? "/user" : "/login",
