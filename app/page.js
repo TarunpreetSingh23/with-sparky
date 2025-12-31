@@ -33,16 +33,16 @@ const CRAZY_DEAL = {
   name: "Gold Facial",
   originalPrice: "₹1,875",
   price: 999, // Changed to number for logic
-  image: "/images/vee.jpg",
+  image: "/images/goldfacial.jpg",
   discount: "45% OFF",
   link: "/services/facial"
 };
 
 const QUICK_SERVICES = [
   { title: "Suit Stitching", discount: "30% OFF", image: "/images/stitching.jpg", price: 1299, link: "/services/stitching" },
-  { title: "AC Repair", discount: "₹200 OFF", image: "/images/ac.jpg", price: 499, link: "/services/ac-repair" },
-  { title: "Deep Cleanup", discount: "50% OFF", image: "/images/cleanup.jpg", price: 799, link: "/services/cleaning" },
-  { title: "Electrician", discount: "Starts ₹199", image: "/images/electrician.jpg", price: 199, link: "/services/electrician" },
+  { title: "AC Repair", discount: "₹200 OFF", image: "/images/crazyAc.avif", price: 499, link: "/services/ac-repair" },
+  { title: "Deep Cleanup", discount: "50% OFF", image: "/images/deepc.webp", price: 799, link: "/services/cleaning" },
+  { title: "Manicure", discount: "Starts ₹199", image: "/images/mpm.jpg", price: 199, link: "/services/manicure" },
 ];
 
 const BESTSELLERS = [
@@ -68,7 +68,8 @@ export default function SparkyServiceApp() {
   const techRef = useRef(null);
   const searchRef = useRef(null);
   const router = useRouter();
-
+  const [services, setServices] = useState([]);
+const [cart, setCart] = useState([]);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
@@ -76,7 +77,22 @@ export default function SparkyServiceApp() {
   const [selectedService, setSelectedService] = useState(null);
 
   const refs = { beautyRef, beatiqueRef, techRef };
-
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const res = await fetch("/api/services");
+        const data = await res.json();
+        setServices(data);
+      } catch (error) {
+        console.error("Error fetching services:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchServices();
+    const saved = localStorage.getItem("cart");
+    if (saved) setCart(JSON.parse(saved));
+  }, []);
   // Helper function to add to cart and redirect
   const handleBooking = (service) => {
     // 1. Prepare the item object
@@ -215,23 +231,23 @@ export default function SparkyServiceApp() {
         {/* Crazy Deals Section */}
         <div className="grid grid-cols-12 gap-3 h-72">
           <div onClick={() => setSelectedService(CRAZY_DEAL)} className="col-span-5 bg-blue-100 p-5 relative overflow-hidden shadow-sm border border-blue-200 cursor-pointer rounded-3xl">
-            <span className="bg-white/80 backdrop-blur-sm text-blue-700 text-[10px] font-black px-3 py-1.5 rounded-full">CRAZY DEAL</span>
-            <div className="mt-4 relative z-10">
+            {/* <span className="bg-white/80 backdrop-blur-sm text-blue-700 text-[10px] font-black px-3  rounded-full">CRAZY DEAL</span>
+            <div className=" ml-7.5  relative z-10">
               <p className="text-2xl font-black tracking-tighter text-blue-900">₹{CRAZY_DEAL.price}</p>
-              <p className="text-xs line-through text-blue-900/40 font-bold">{CRAZY_DEAL.originalPrice}</p>
+              <p className="text-xs line-through text-blue-900/50 font-bold">{CRAZY_DEAL.originalPrice}</p>
               <p className="text-sm font-black mt-1 leading-tight">{CRAZY_DEAL.name}</p>
-            </div>
-            <div className="absolute bottom-0 right-0 w-full h-32">
+            </div> */}
+            <div className="absolute bottom-0 right-0 w-full h-full">
               <Image src={CRAZY_DEAL.image} fill className="object-cover object-top" alt="" />
             </div>
           </div>
 
           <div className="col-span-7 grid grid-cols-2 gap-3">
             {QUICK_SERVICES.map((d, i) => (
-              <div key={i} onClick={() => setSelectedService(d)} className="bg-gray-50 border border-gray-100 rounded-3xl p-3 relative flex flex-col justify-between overflow-hidden cursor-pointer active:scale-95 transition-all">
-                <span className="absolute top-2 right-2 bg-white/90 text-[8px] font-black px-2 py-1 rounded-lg border border-gray-100">{d.discount}</span>
-                <p className="text-[11px] font-black leading-tight pr-4">{d.title}</p>
-                <div className="self-end w-10 h-10 relative">
+              <div key={i} onClick={() => setSelectedService(d)} className="bg-gray-50 border border-gray-100 rounded-3xl  relative flex flex-col justify-between overflow-hidden cursor-pointer active:scale-95 transition-all">
+                {/* <span className="absolute top-2 right-2 bg-white/90 text-[8px] font-black px-2 py-1 rounded-lg border border-gray-100">{d.discount}</span>
+                <p className="text-[11px] font-black leading-tight pr-4">{d.title}</p> */}
+                <div className=" w-full h-full relative">
                   <Image src={d.image} fill className="object-cover rounded-xl shadow-sm" alt="" />
                 </div>
               </div>
@@ -240,16 +256,20 @@ export default function SparkyServiceApp() {
         </div>
 
         {/* Dynamic Sections */}
-        <section ref={beautyRef} className="pt-2">
-          <SectionTitle title="Beauty Sanctuary" />
-          <div className="grid grid-cols-3 gap-3">
-            {BESTSELLERS.map((item) => (
-              <div key={item.id} onClick={() => setSelectedService(item)}>
-                <ServiceAppCard item={item} />
-              </div>
-            ))}
-          </div>
-        </section>
+<section ref={beautyRef} className="pt-2">
+  <SectionTitle title="Beauty Services" />
+
+  <div className="grid grid-cols-3 gap-3">
+    {services
+      .filter(item => item.category === "Woman Services")
+      .map(item => (
+        <div key={item.id} onClick={() => setSelectedService(item)}>
+          <ServiceAppCard item={item} />
+        </div>
+      ))}
+  </div>
+</section>
+
 
         <section ref={beatiqueRef} className="pt-4">
           <SectionTitle title="The Beatique" />
@@ -324,7 +344,7 @@ export default function SparkyServiceApp() {
                   <button onClick={() => handleBooking(selectedService)} className="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
                     Book Now <ArrowRight size={16} />
                   </button>
-                  <button onClick={() => { if(selectedService.link) router.push(selectedService.link) }} className="flex-1 bg-gray-50 text-gray-800 border border-gray-100 py-4 rounded-2xl font-black text-xs uppercase tracking-widest active:scale-[0.98] transition-all">
+                  <button onClick={() => {  router.push(`services/${selectedService.title}`) }} className="flex-1 bg-gray-50 text-gray-800 border border-gray-100 py-4 rounded-2xl font-black text-xs uppercase tracking-widest active:scale-[0.98] transition-all">
                     View Info
                   </button>
                 </div>
@@ -360,8 +380,8 @@ function ServiceAppCard({ item }) {
       <div className="w-full aspect-square relative mb-3 overflow-hidden rounded-[1.5rem] border border-gray-50">
         <Image src={item.image} fill className="object-cover" alt={item.name} />
       </div>
-      <span className="text-[11px] font-black text-gray-800 text-center truncate w-full mb-1 px-1 leading-tight">{item.name}</span>
-      <div className="bg-blue-50 text-blue-600 rounded-full py-0.5 px-2 text-[8px] font-black uppercase tracking-tighter">{item.count}</div>
+      <span className="text-[11px] font-black text-gray-800 text-center truncate w-full mb-1 px-1 leading-tight">{item.title}</span>
+      <div className="bg-blue-50 text-blue-600 rounded-full py-0.5 px-2 text-[8px] font-black uppercase tracking-tighter">{item.price}</div>
     </div>
   );
 }

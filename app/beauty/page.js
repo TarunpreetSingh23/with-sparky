@@ -1,25 +1,26 @@
 "use client";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { X, ShoppingCart, Trash2, Star, ShieldCheck, Zap, ChevronRight } from "lucide-react";
+import { X, ShoppingCart, Trash2, Star, ShieldCheck, Zap, ChevronRight, ChevronLeft, Share2, Search, Clock, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
-// --- Custom Loader ---
+// --- Custom "Out of this World" Loader ---
 function PageLoader() {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-[100]">
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center">
-        <Image src="/LOGO.jpg" alt="Logo" width={140} height={50} className="mb-6 opacity-80" />
-        <div className="w-48 h-1 bg-gray-100 rounded-full overflow-hidden">
+      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center">
+        <Image src="/images/wLogo.png" alt="Logo" width={120} height={40} className="mb-8 object-contain" />
+        <div className="relative w-48 h-[2px] bg-slate-100 rounded-full overflow-hidden">
           <motion.div 
-            initial={{ x: "-100%" }}
-            animate={{ x: "100%" }}
-            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-            className="h-full w-full bg-blue-600"
+            initial={{ left: "-100%" }}
+            animate={{ left: "100%" }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+            className="absolute h-full w-1/2 bg-gradient-to-r from-transparent via-blue-600 to-transparent"
           />
         </div>
+        <span className="mt-4 text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">Refining Experience</span>
       </motion.div>
     </div>
   );
@@ -60,8 +61,8 @@ export default function CleaningPage() {
     existingCart.push({ ...newItem, quantity: 1 });
     localStorage.setItem("cart", JSON.stringify(existingCart));
     setCart(existingCart);
-    toast.success("Added to your booking", {
-      style: { background: "#ffffff", color: "#030712", borderRadius: "16px", fontWeight: "bold", border: "1px solid #e5e7eb" }
+    toast.success("Added to ritual", {
+      style: { background: "#030712", color: "#fff", borderRadius: "15px", fontSize: "10px", fontWeight: "bold" }
     });
   };
 
@@ -80,19 +81,40 @@ export default function CleaningPage() {
   if (loading) return <PageLoader />;
 
   return (
-    <div className="bg-[#f3f4f6] min-h-screen text-[#030712] font-sans selection:bg-blue-100">
+    <div className="bg-[#fcfcfd] min-h-screen text-[#030712] font-sans selection:bg-blue-100 overflow-x-hidden">
       
-      {/* 🔹 STICKY APP HEADER */}
-      <div className="sticky top-0 bg-white shadow-sm z-40 border-b border-gray-100 py-4 overflow-x-auto no-scrollbar">
-        <div className="flex px-4 gap-3">
+      {/* 🔮 Mesh Gradients */}
+      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-100/40 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] bg-indigo-50/50 blur-[100px] rounded-full" />
+      </div>
+
+      {/* 📍 Glass Header */}
+      <div className="sticky top-0 bg-white/70 backdrop-blur-2xl z-40 border-b border-white/20">
+        <div className="flex items-center justify-between px-5 py-3">
+          <div>
+
+            <button onClick={() => router.back()} className="p-1.5 hover:bg-slate-100 rounded-full transition-colors"><ChevronLeft size={20}/></button>
+          </div>
+            <div className="text-center">
+                <h1 className="text-[14px] font-black tracking-tighter uppercase italic leading-none">{selectedCategory === "ALL" ? "Bestsellers" : selectedCategory}</h1>
+                <p className="text-[7px] font-bold text-blue-600 uppercase tracking-widest mt-0.5">Curated</p>
+            </div>
+            <div>
+
+            {/* <button className="p-1.5 hover:bg-slate-100 rounded-full transition-colors"><Search size={18}/></button> */}
+            </div>
+        </div>
+        
+        <div className="flex px-5 gap-2 pb-4 overflow-x-auto no-scrollbar">
           {["ALL", "FACIAL", "CLEANSING", "WAXING", "MAKEUP"].map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-6 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest whitespace-nowrap transition-all border ${
+              className={`px-4 py-1.5 rounded-xl text-[8px] font-black uppercase tracking-[0.1em] whitespace-nowrap transition-all border ${
                 selectedCategory === cat 
-                ? "bg-[#030712] border-[#030712] text-white shadow-lg shadow-gray-200" 
-                : "bg-gray-50 border-gray-100 text-gray-400 hover:bg-gray-100"
+                ? "bg-[#030712] border-[#030712] text-white shadow-sm" 
+                : "bg-white/50 border-slate-200 text-slate-400"
               }`}
             >
               {cat}
@@ -101,130 +123,139 @@ export default function CleaningPage() {
         </div>
       </div>
 
-      {/* 🔹 SERVICE LIST */}
-      <main className="max-w-3xl mx-auto px-4 py-8 space-y-4 pb-32">
-        {filteredServices.map((service) => (
-          <motion.div 
-            whileTap={{ scale: 0.98 }}
-            key={service._id} 
-            className="flex h-36 bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer group"
-            onClick={() => setSelectedService(service)}
-          >
-            <div className="relative w-36 h-full flex-shrink-0">
-              <Image src={service.image} alt={service.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-              {service.discount && (
-                <div className="absolute top-3 left-3 bg-red-500 text-white text-[8px] font-black px-2 py-1 rounded-lg">
-                  {service.discount} OFF
+      {/* 🔹 Bento Grid Service List */}
+      <main className="max-w-4xl mx-auto px-5 py-6 grid grid-cols-2 gap-4 pb-44 relative z-10">
+        <AnimatePresence mode="popLayout">
+          {filteredServices.map((service, idx) => (
+            <motion.div 
+              layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.03 }} whileTap={{ scale: 0.97 }}
+              key={service._id} 
+              className="bg-white/80 backdrop-blur-md border border-white rounded-[2rem] overflow-hidden shadow-sm flex flex-col group relative"
+              onClick={() => setSelectedService(service)}
+            >
+              <div className="relative aspect-[4/5] w-full bg-slate-50">
+                <Image src={service.image} alt={service.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                
+                <div className="absolute bottom-2 right-2">
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); addToCart(service); }}
+                    className="bg-white text-[#030712] border border-slate-100 px-3 py-1.5 rounded-xl font-black text-[8px] shadow-lg hover:bg-black hover:text-white transition-all uppercase tracking-widest"
+                  >
+                    Add
+                  </button>
                 </div>
-              )}
-            </div>
 
-            <div className="flex-1 p-5 flex flex-col justify-between">
-              <div>
-                <div className="flex justify-between items-start">
-                  <h3 className="text-[15px] font-black tracking-tight text-[#030712] line-clamp-1 uppercase">{service.title}</h3>
-                  <div className="flex items-center gap-1 bg-yellow-50 px-2 py-0.5 rounded-lg border border-yellow-100">
-                    <Star size={10} className="text-yellow-600 fill-yellow-600" />
-                    <span className="text-[10px] font-black text-yellow-700">{service.rating?.average || "4.8"}</span>
+                <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-md border border-white px-1.5 py-0.5 rounded-lg flex items-center gap-1 shadow-sm">
+                   <Clock size={10} className="text-blue-500" />
+                   <span className="text-[7px] font-black text-slate-700 uppercase">8 mins</span>
+                </div>
+              </div>
+
+              <div className="p-3 flex flex-col flex-1">
+                <div className="flex justify-between items-start mb-1">
+                    <h3 className="text-[10px] font-black tracking-tight text-[#1a1a1a] line-clamp-1 uppercase italic">
+                        {service.title}
+                    </h3>
+                    <div className="flex items-center gap-0.5 ml-1">
+                        <Star size={8} className="text-amber-400 fill-amber-400" />
+                        <span className="text-[8px] font-black text-slate-400">{service.rating?.average || "4.8"}</span>
+                    </div>
+                </div>
+                
+                <div className="mt-auto pt-2 flex items-end justify-between border-t border-slate-50/50">
+                  <div className="flex flex-col">
+                    <p className="text-[9px] text-blue-600 font-black tracking-tighter italic leading-none">₹{service.price}</p>
+                    <p className="text-[7px] text-slate-300 line-through mt-0.5">₹{service.price + 150}</p>
                   </div>
+                  <Sparkles size={10} className="text-blue-200" />
                 </div>
-                <p className="text-[11px] text-gray-400 mt-1 font-medium line-clamp-2 leading-tight uppercase tracking-tighter">{service.description}</p>
               </div>
-
-              <div className="flex justify-between items-end">
-                <div>
-                  <p className="text-[9px] text-blue-600 font-black uppercase tracking-widest">Base Rate</p>
-                  <p className="text-xl font-black text-[#030712] tracking-tighter leading-none">₹{service.price}</p>
-                </div>
-                <button 
-                  onClick={(e) => { e.stopPropagation(); addToCart(service); }}
-                  className="bg-blue-600 hover:bg-blue-700 p-3 rounded-2xl text-white shadow-lg shadow-blue-100 transition-all active:scale-90"
-                >
-                  <ShoppingCart size={18} strokeWidth={3} />
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </main>
 
-      {/* 🔹 BLINKIT-STYLE CHECKOUT DOCK */}
+      {/* 🚀 Floating Checkout Pill */}
       <AnimatePresence>
         {cart.length > 0 && (
           <motion.div 
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md z-50"
+            initial={{ y: 100, x: "-50%", opacity: 0 }} animate={{ y: 0, x: "-50%", opacity: 1 }} exit={{ y: 100, x: "-50%", opacity: 0 }}
+            className="fixed bottom-6 left-1/2 w-[85%] max-w-sm z-50"
           >
             <div 
               onClick={() => setCartOpen(true)}
-              className="bg-[#030712] text-white p-4 rounded-[2.5rem] shadow-2xl flex items-center justify-between border-2 border-white/10 cursor-pointer active:scale-95 transition-transform"
+              className="bg-[#030712] text-white p-2 pr-4 rounded-[1.8rem] shadow-xl flex items-center justify-between border border-white/10 cursor-pointer"
             >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center relative">
-                  <ShoppingCart size={22} className="text-blue-400" />
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-black w-5 h-5 flex items-center justify-center rounded-full border-2 border-[#030712]">{cart.length}</span>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center relative shadow-lg">
+                  <ShoppingCart size={18} className="text-white" />
+                  <span className="absolute -top-1 -right-1 bg-white text-black text-[8px] font-black w-4 h-4 flex items-center justify-center rounded-full">{cart.length}</span>
                 </div>
-                <div>
-                    <span className="text-[10px] block font-black uppercase tracking-widest text-gray-400">Total Items</span>
-                    <span className="text-sm font-black uppercase tracking-widest">Checkout</span>
+                <div className="flex flex-col">
+                    <span className="text-[14px] font-black tracking-tighter italic leading-none">₹{cart.reduce((s, i) => s + i.price, 0)}</span>
+                    <span className="text-[7px] font-bold uppercase opacity-50 tracking-widest mt-0.5">Cart</span>
                 </div>
               </div>
-              <div className="text-right">
-                <span className="text-2xl font-black tracking-tighter italic">₹{cart.reduce((s, i) => s + i.price, 0)}</span>
-                <ChevronRight size={20} className="inline-block ml-2 text-blue-400" />
+              <div className="flex items-center gap-1.5 bg-white/5 py-2 px-3 rounded-xl">
+                <span className="text-[9px] font-black uppercase tracking-widest">View</span>
+                <ChevronRight size={14} className="text-blue-400" />
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* 🔹 BOTTOM-SHEET STYLE MODAL */}
+      {/* 📱 Detail Modal */}
       <AnimatePresence>
         {selectedService && (
           <div className="fixed inset-0 z-[60] flex items-end justify-center">
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/40 backdrop-blur-sm" 
-              onClick={() => setSelectedService(null)} 
+              className="absolute inset-0 bg-[#030712]/40 backdrop-blur-sm" onClick={() => setSelectedService(null)} 
             />
             <motion.div 
               initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-2xl bg-white rounded-t-[3.5rem] shadow-3xl max-h-[90vh] overflow-hidden flex flex-col"
+              className="relative w-full max-w-xl bg-white rounded-t-[3rem] shadow-2xl max-h-[85vh] overflow-hidden flex flex-col border-t border-white"
             >
-              <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mt-6 mb-2" />
-              <div className="overflow-y-auto p-8 pt-4 space-y-8 pb-32">
-                <div className="relative h-72 rounded-[2.5rem] overflow-hidden shadow-inner border border-gray-100">
+              <div className="w-12 h-1 bg-slate-100 rounded-full mx-auto mt-4 mb-2" />
+              <div className="overflow-y-auto p-6 pt-2 space-y-6 pb-32">
+                <div className="relative h-[280px] rounded-[2.5rem] overflow-hidden border-2 border-slate-50">
                   <Image src={selectedService.image} alt={selectedService.title} fill className="object-cover" />
+                  <button onClick={() => setSelectedService(null)} className="absolute top-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full text-white border border-white/30"><X size={18}/></button>
                 </div>
-                <div>
-                  <span className="text-blue-600 text-[10px] font-black uppercase tracking-[0.4em]">Expert Session</span>
-                  <h3 className="text-4xl font-black tracking-tight mb-3 uppercase italic">{selectedService.title}</h3>
-                  <p className="text-gray-500 font-medium leading-relaxed">{selectedService.description}</p>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-5 bg-blue-50/50 rounded-[2rem] border border-blue-100 flex items-center gap-4">
-                    <div className="p-2 bg-white rounded-xl"><Zap className="text-blue-600" size={20}/></div>
-                    <span className="text-[11px] font-black uppercase tracking-widest text-[#030712]">Instant Fix</span>
+                
+                <div className="px-1">
+                  <div className="flex items-center gap-2 mb-3">
+                     <span className="bg-blue-50 text-blue-700 px-3 py-1 rounded-lg text-[8px] font-black tracking-widest uppercase italic">Elite</span>
+                     <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-lg text-[8px] font-black tracking-widest uppercase">Verified</span>
                   </div>
-                  <div className="p-5 bg-emerald-50/50 rounded-[2rem] border border-emerald-100 flex items-center gap-4">
-                    <div className="p-2 bg-white rounded-xl"><ShieldCheck className="text-emerald-600" size={20}/></div>
-                    <span className="text-[11px] font-black uppercase tracking-widest text-[#030712]">Verified Safe</span>
+                  <h3 className="text-3xl font-black tracking-tighter mb-3 uppercase italic leading-[0.85] text-slate-900">{selectedService.title}</h3>
+                  <p className="text-slate-500 font-medium leading-relaxed text-xs">{selectedService.description || "Signature experience designed for perfection."}</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 px-1">
+                  <div className="p-4 bg-slate-50 rounded-3xl flex items-center gap-3">
+                    <Zap className="text-blue-600" size={18}/>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-[#030712]">Instant Fix</span>
+                  </div>
+                  <div className="p-4 bg-slate-50 rounded-3xl flex items-center gap-3">
+                    <ShieldCheck className="text-emerald-600" size={18}/>
+                    <span className="text-[9px] font-black uppercase tracking-widest text-[#030712]">Verified Safe</span>
                   </div>
                 </div>
               </div>
-              <div className="absolute bottom-0 left-0 right-0 p-8 border-t border-gray-50 bg-white/80 backdrop-blur-md flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Payable</p>
-                  <p className="text-4xl font-black text-[#030712] tracking-tighter leading-none">₹{selectedService.price}</p>
+
+              <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-50 bg-white/90 backdrop-blur-md flex items-center justify-between">
+                <div className="flex flex-col">
+                  <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Total</p>
+                  <p className="text-2xl font-black text-[#030712] tracking-tighter italic leading-none">₹{selectedService.price}</p>
                 </div>
                 <button 
                   onClick={() => { addToCart(selectedService); setSelectedService(null); }}
-                  className="bg-[#030712] text-white px-12 py-5 rounded-[2rem] font-black uppercase text-[12px] tracking-widest shadow-xl active:scale-95 transition-all"
+                  className="bg-[#030712] text-white px-8 py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all"
                 >
-                  Add to Cart
+                  Confirm Choice
                 </button>
               </div>
             </motion.div>
@@ -232,38 +263,48 @@ export default function CleaningPage() {
         )}
       </AnimatePresence>
 
-      {/* 🔹 CART SIDE PANEL */}
-      <div className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white z-[70] shadow-2xl transition-transform duration-500 border-l border-gray-100 ${cartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      {/* 🔹 Cart Panel */}
+      <div className={`fixed top-0 right-0 h-full w-full sm:w-[380px] bg-white z-[70] transition-transform duration-500 border-l border-slate-100 ${cartOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="p-8 flex flex-col h-full">
-          <div className="flex justify-between items-center mb-10">
+          <div className="flex justify-between items-center mb-8">
             <div>
-                <h2 className="text-2xl font-black uppercase tracking-tighter italic leading-none">Your Selection</h2>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Review your session items</p>
+                <h2 className="text-xl font-black uppercase tracking-tighter italic leading-none">Ritual Bag</h2>
+                <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1">Review items</p>
             </div>
-            <button onClick={() => setCartOpen(false)} className="p-3 text-gray-400 hover:text-[#030712] bg-gray-50 rounded-full transition-colors"><X size={20} /></button>
+            <button onClick={() => setCartOpen(false)} className="p-2 text-slate-400 bg-slate-50 rounded-full"><X size={18} /></button>
           </div>
+          
           <div className="flex-1 space-y-4 overflow-y-auto no-scrollbar">
             {cart.map((item, i) => (
-              <div key={i} className="flex justify-between items-center p-6 bg-white border border-gray-100 rounded-[2rem] shadow-sm">
-                <div>
-                  <p className="text-sm font-black uppercase tracking-tight text-[#030712]">{item.title}</p>
-                  <p className="text-blue-600 font-black text-[12px]">₹{item.price}</p>
+              <div key={i} className="flex justify-between items-center p-4 bg-white border border-slate-100 rounded-3xl shadow-sm">
+                <div className="flex items-center gap-3">
+                    <div className="relative w-12 h-12 rounded-xl overflow-hidden"><Image src={item.image} fill className="object-cover" alt="img"/></div>
+                    <div>
+                        <p className="text-[10px] font-black uppercase leading-tight text-[#030712]">{item.title}</p>
+                        <p className="text-blue-600 font-black text-[10px] mt-0.5">₹{item.price}</p>
+                    </div>
                 </div>
-                <button onClick={() => removeFromCart(item._id)} className="p-2.5 text-red-500 bg-red-50 rounded-xl active:scale-90 transition-transform"><Trash2 size={18}/></button>
+                <button onClick={() => removeFromCart(item._id)} className="p-2 text-red-300"><Trash2 size={16}/></button>
               </div>
             ))}
           </div>
-          <div className="mt-10 space-y-6 pt-10 border-t border-gray-50">
-            <div className="flex justify-between items-end px-2">
-              <span className="text-gray-400 font-black uppercase text-[10px] tracking-widest mb-1">Total Payable</span>
-              <span className="text-4xl font-black tracking-tighter italic text-[#030712]">₹{cart.reduce((s, i) => s + i.price, 0)}</span>
+
+          <div className="mt-6 space-y-6 pt-6 border-t border-slate-100">
+            <div className="flex justify-between items-end px-1">
+              <span className="text-slate-400 font-black uppercase text-[9px] tracking-widest">Total</span>
+              <span className="text-3xl font-black tracking-tighter italic text-[#030712]">₹{cart.reduce((s, i) => s + i.price, 0)}</span>
             </div>
-            <button onClick={() => router.push("/checkout")} className="w-full py-6 bg-[#030712] text-white rounded-[2.5rem] font-black uppercase tracking-widest text-[12px] active:scale-[0.98] transition-all shadow-xl shadow-gray-200">
-              Finalize Booking
+            <button onClick={() => router.push("/checkout")} className="w-full py-4 bg-[#030712] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all">
+              Confirm & Book
             </button>
           </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
     </div>
   );
 }

@@ -10,9 +10,10 @@ import {
   ChevronLeft,
   Mail,
   RefreshCcw,
+  Smartphone,
 } from "lucide-react";
 
-const INITIAL_TIMER = 10; // 2 minutes
+const INITIAL_TIMER = 10; // 2 minutes logic
 
 export default function Login() {
   const [phone, setPhone] = useState("");
@@ -28,11 +29,9 @@ export default function Login() {
   /* ---------------- Timer Logic ---------------- */
   useEffect(() => {
     if (step !== "otp" || timer <= 0) return;
-
     const interval = setInterval(() => {
       setTimer((t) => t - 1);
     }, 1000);
-
     return () => clearInterval(interval);
   }, [step, timer]);
 
@@ -53,7 +52,6 @@ export default function Login() {
       setMessage("Enter a valid 10-digit phone number");
       return;
     }
-
     if (method === "email" && !email.includes("@")) {
       setMessage("Enter a valid email address");
       return;
@@ -62,14 +60,8 @@ export default function Login() {
     try {
       setLoading(true);
       setMessage("");
-
-      const endpoint =
-        method === "whatsapp" ? "/api/send-otp" : "/api/send-email-otp";
-
-      const body =
-        method === "whatsapp"
-          ? { phone: formatPhoneNumber(phone) }
-          : { email };
+      const endpoint = method === "whatsapp" ? "/api/send-otp" : "/api/send-email-otp";
+      const body = method === "whatsapp" ? { phone: formatPhoneNumber(phone) } : { email };
 
       const res = await fetch(endpoint, {
         method: "POST",
@@ -91,87 +83,85 @@ export default function Login() {
   };
 
   /* ---------------- Verify OTP ---------------- */
-const verifyOtp = async () => {
-  if (!otp) {
-    setMessage("Please enter OTP");
-    return;
-  }
+  const verifyOtp = async () => {
+    if (!otp) {
+      setMessage("Please enter OTP");
+      return;
+    }
+    try {
+      setLoading(true);
+      setMessage("");
+      let endpoint = "";
+      let payload = { otp };
 
-  try {
-    setLoading(true);
-    setMessage("");
-
-    let endpoint = "";
-    let payload = { otp };
-
-    // 📧 Email OTP flow (SEND PHONE ALSO)
-    if (email) {
-      endpoint = "/api/verify-email-otp";
-      payload.email = email.trim().toLowerCase();
-
-      if (phone) {
+      if (email) {
+        endpoint = "/api/verify-email-otp";
+        payload.email = email.trim().toLowerCase();
+        if (phone) payload.phone = formatPhoneNumber(phone);
+      } else if (phone) {
+        endpoint = "/api/verify-otp";
         payload.phone = formatPhoneNumber(phone);
+      } else {
+        throw new Error("No email or phone provided");
       }
+
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Invalid OTP");
+      router.push("/");
+    } catch (err) {
+      setMessage(err.message);
+    } finally {
+      setLoading(false);
     }
-
-    // 📱 Phone / WhatsApp OTP flow
-    else if (phone) {
-      endpoint = "/api/verify-otp";
-      payload.phone = formatPhoneNumber(phone);
-    } else {
-      throw new Error("No email or phone provided");
-    }
-
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.error || "Invalid OTP");
-    }
-
-    // ✅ Login success
-    router.push("/");
-  } catch (err) {
-    setMessage(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
-
+  };
 
   return (
-    <div className="min-h-screen bg-[#030712] flex justify-center px-4">
-      <div className="w-full max-w-md mt-6">
-        <div className="flex justify-end mb-4">
+    <div className="min-h-screen bg-[#F8FAFC] flex justify-center px-4 font-sans selection:bg-blue-100">
+      <div className="w-full max-w-md mt-10">
+        
+        {/* Top Action */}
+        {/* <div className="flex justify-end mb-6">
           <button
             onClick={() => router.push("/")}
-            className="text-gray-500 hover:text-white text-xs font-black uppercase flex items-center gap-2"
+            className="text-slate-400 hover:text-blue-600 text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2 transition-all"
           >
-            Skip <ArrowRight size={14} />
+            Explore App <ArrowRight size={14} />
           </button>
-        </div>
+        </div> */}
 
+        {/* Main Auth Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10"
+          className="bg-white rounded-[40px] p-8 md:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 relative overflow-hidden"
         >
-          <div className="text-center mb-8">
-            <div className="w-14 h-14 mx-auto bg-blue-600/20 rounded-xl flex items-center justify-center mb-4">
+          {/* Brand Accent */}
+          <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-600 to-indigo-500" />
+
+          <div className="text-center mb-10">
+            <motion.div 
+              key={step}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="w-16 h-16 mx-auto bg-blue-50 rounded-2xl flex items-center justify-center mb-5 border border-blue-100/50"
+            >
               {step === "email" ? (
-                <Mail className="text-blue-500" />
+                <Mail className="text-blue-600" size={28} />
+              ) : step === "otp" ? (
+                <ShieldCheck className="text-blue-600" size={28} />
               ) : (
-                <MessageSquare className="text-blue-500" />
+                <MessageSquare className="text-blue-600" size={28} />
               )}
-            </div>
-            <h1 className="text-white text-2xl font-bold">Secure Login</h1>
-            <p className="text-gray-400 text-sm">
-              Verify your account to continue
+            </motion.div>
+            <h1 className="text-[#030712] text-2xl font-black tracking-tight mb-2 uppercase italic">Secure Access</h1>
+            <p className="text-slate-400 text-sm font-medium">
+              Verify your identity to continue
             </p>
           </div>
 
@@ -184,24 +174,39 @@ const verifyOtp = async () => {
                 exit={{ opacity: 0, x: -10 }}
                 className="space-y-6"
               >
-                <input
-                  type="tel"
-                  maxLength={10}
-                  value={phone}
-                  onChange={(e) =>
-                    setPhone(e.target.value.replace(/\D/g, ""))
-                  }
-                  className="w-full px-4 py-4 rounded-xl bg-[#111827] text-white border border-white/10"
-                  placeholder="10-digit phone number"
-                />
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Phone Number</label>
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2 border-r border-slate-200 pr-3">
+                        <span className="text-slate-400 font-bold text-sm">+91</span>
+                    </div>
+                    <input
+                      type="tel"
+                      maxLength={10}
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+                      className="w-full pl-16 pr-5 py-4.5 rounded-2xl bg-slate-50 text-[#030712] border border-slate-200 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/5 outline-none font-bold transition-all text-base shadow-inner"
+                      placeholder="00000 00000"
+                    />
+                  </div>
+                </div>
 
                 <button
                   onClick={() => sendOtp("whatsapp")}
                   disabled={loading}
-                  className="w-full py-4 bg-white text-black rounded-xl font-bold"
+                  className="w-full py-5 bg-[#030712] text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl shadow-slate-200 active:scale-[0.98] transition-all flex items-center justify-center gap-3"
                 >
-                  {loading ? "Sending..." : "Get OTP on WhatsApp"}
+                  {loading ? "Initializing..." : <>Get OTP on WhatsApp <ArrowRight size={16}/></>}
                 </button>
+                
+                {/* <div className="pt-2">
+                    <button 
+                      onClick={() => setStep("email")}
+                      className="w-full text-center text-[10px] font-black uppercase tracking-widest text-blue-600 hover:text-blue-700 transition-colors"
+                    >
+                      Use email address instead
+                    </button>
+                </div> */}
               </motion.div>
             )}
 
@@ -215,25 +220,28 @@ const verifyOtp = async () => {
               >
                 <button
                   onClick={() => setStep("phone")}
-                  className="text-xs text-blue-400 flex items-center gap-1"
+                  className="text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-1.5 hover:text-blue-600 transition-all"
                 >
-                  <ChevronLeft size={14} /> Back
+                  <ChevronLeft size={14} /> Back to Phone
                 </button>
 
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-4 rounded-xl bg-[#111827] text-white border border-white/10"
-                  placeholder="name@example.com"
-                />
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">Email ID</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-5 py-4.5 rounded-2xl bg-slate-50 text-[#030712] border border-slate-200 focus:border-blue-500 focus:bg-white outline-none font-bold transition-all text-base shadow-inner"
+                    placeholder="name@example.com"
+                  />
+                </div>
 
                 <button
                   onClick={() => sendOtp("email")}
                   disabled={loading}
-                  className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold"
+                  className="w-full py-5 bg-[#030712] text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl shadow-slate-200 active:scale-[0.98] transition-all"
                 >
-                  {loading ? "Sending..." : "Send Email OTP"}
+                  {loading ? "Sending..." : "Request Email Link"}
                 </button>
               </motion.div>
             )}
@@ -244,35 +252,39 @@ const verifyOtp = async () => {
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
-                className="space-y-6 text-center"
+                className="space-y-8 text-center"
               >
-                <div className="text-2xl font-mono font-bold text-blue-500">
-                  {formatTime(timer)}
+                <div className="inline-flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full border border-blue-100">
+                  <div className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+                  <span className="text-blue-600 font-black text-xs tracking-widest">{formatTime(timer)}</span>
                 </div>
 
-                <input
-                  type="number"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  className="w-full px-4 py-4 text-center tracking-widest rounded-xl bg-[#111827] text-white border border-white/10"
-                  placeholder="Enter OTP"
-                />
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">Verification Code</label>
+                  <input
+                    type="number"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    className="w-full px-5 py-5 text-center tracking-[0.8em] rounded-3xl bg-slate-50 text-[#030712] border border-slate-200 focus:border-blue-500 focus:bg-white outline-none font-black text-2xl transition-all shadow-inner"
+                    placeholder="••••"
+                  />
+                </div>
 
                 <button
                   onClick={verifyOtp}
                   disabled={loading}
-                  className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold"
+                  className="w-full py-5 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[11px] shadow-xl shadow-blue-100 active:scale-[0.98] transition-all"
                 >
                   {loading ? "Verifying..." : "Confirm & Login"}
                 </button>
 
                 {timer === 0 && (
-                  <div className="pt-4 space-y-3">
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="pt-4 grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setStep("email")}
-                      className="w-full py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center gap-2"
+                      className="py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-600 flex justify-center items-center gap-2 hover:bg-slate-100 transition-all"
                     >
-                      <Mail size={14} /> Login via Email
+                      <Mail size={14} /> Try Email
                     </button>
 
                     <button
@@ -281,26 +293,38 @@ const verifyOtp = async () => {
                         setOtp("");
                         setMessage("");
                       }}
-                      className="w-full py-3 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-white flex justify-center gap-2"
+                      className="py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-600 flex justify-center items-center gap-2 hover:bg-slate-100 transition-all"
                     >
-                      <RefreshCcw size={14} /> Change Number
+                      <RefreshCcw size={14} /> Change No.
                     </button>
-                  </div>
+                  </motion.div>
                 )}
               </motion.div>
             )}
           </AnimatePresence>
 
           {message && (
-            <p className="mt-4 text-center text-xs font-bold text-red-400">
+            <motion.div 
+              initial={{ opacity: 0, y: 5 }} 
+              animate={{ opacity: 1, y: 0 }}
+              className={`mt-6 p-4 rounded-2xl text-center text-[10px] font-black uppercase tracking-widest border shadow-sm ${
+                message.toLowerCase().includes('failed') || message.toLowerCase().includes('valid') || message.toLowerCase().includes('invalid')
+                ? 'bg-red-50 border-red-100 text-red-500' 
+                : 'bg-emerald-50 border-emerald-100 text-emerald-600'
+              }`}
+            >
               {message}
-            </p>
+            </motion.div>
           )}
         </motion.div>
 
-        <div className="mt-6 flex justify-center items-center gap-2 text-gray-500 text-xs">
-          <ShieldCheck size={14} className="text-blue-500" />
-          Multi-Channel Secure Verification
+        {/* Trust Footer */}
+        <div className="mt-12 flex justify-center items-center gap-3 text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">
+          <div className="h-px w-12 bg-slate-200" />
+          <div className="flex items-center gap-1.5 text-blue-600">
+             <ShieldCheck size={16} /> Secure
+          </div>
+          <div className="h-px w-12 bg-slate-200" />
         </div>
       </div>
     </div>
