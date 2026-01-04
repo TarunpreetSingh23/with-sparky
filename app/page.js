@@ -18,7 +18,6 @@ import {
   ArrowRight,
   LayoutGrid
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 /* ================= DATA ================= */
@@ -32,7 +31,7 @@ const CATEGORIES = [
 const CRAZY_DEAL = {
   name: "Gold Facial",
   originalPrice: "₹1,875",
-  price: 999, // Changed to number for logic
+  price: 999,
   image: "/images/goldfacial.jpg",
   discount: "45% OFF",
   link: "/services/facial"
@@ -46,16 +45,16 @@ const QUICK_SERVICES = [
 ];
 
 const BESTSELLERS = [
-  { id: 1, name: "Manicure", image: "/images/mpm.jpg", count: "+120 more", price: 499, link: "/services/manicure",category:"Woman Services" },
+  { id: 1, name: "Manicure", image: "/images/mpm.jpg", count: "+120 more", price: 499, link: "/services/manicure", category: "Woman Services" },
   { id: 2, name: "Plumbing", image: "/images/plumbing.jpg", count: "+80 more", price: 299, link: "/services/plumbing" },
-  { id: 3, name: "Makeup", image: "/images/makeup.jpg", count: "+150 more", price: 1499, link: "/services/makeup" ,category:"Woman Services" },
+  { id: 3, name: "Makeup", image: "/images/makeup.jpg", count: "+150 more", price: 1499, link: "/services/makeup", category: "Woman Services" },
 ];
 
 const STATIC_SERVICES = [
-  { title: "Manicure", price: 499, image: "/images/mpm.jpg", link: "/services/manicure",category:"Woman Services" },
-  { title: "Pedicure", price: 599, image: "/images/vee.jpg", link: "/services/pedicure",category:"Woman Services" },
-  { title: "Facial", price: 999, image: "/images/vee2.jpg", link: "/services/facial",category:"Woman Services" },
-  { title: "Waxing", price: 699, image: "/images/wm.jpg", link: "/services/waxing",category:"Woman Services" },
+  { title: "Manicure", price: 499, image: "/images/mpm.jpg", link: "/services/manicure", category: "Woman Services" },
+  { title: "Pedicure", price: 599, image: "/images/vee.jpg", link: "/services/pedicure", category: "Woman Services" },
+  { title: "Facial", price: 999, image: "/images/vee2.jpg", link: "/services/facial", category: "Woman Services" },
+  { title: "Waxing", price: 699, image: "/images/wm.jpg", link: "/services/waxing", category: "Woman Services" },
   { title: "Cleaning", price: 799, image: "/images/cleanup.jpg", link: "/services/cleaning" },
   { title: "AC Repair", price: 499, image: "/images/ac.jpg", link: "/services/ac-repair" },
 ];
@@ -68,8 +67,8 @@ export default function SparkyServiceApp() {
   const techRef = useRef(null);
   const searchRef = useRef(null);
   const router = useRouter();
+  
   const [services, setServices] = useState([]);
-const [cart, setCart] = useState([]);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
@@ -77,6 +76,7 @@ const [cart, setCart] = useState([]);
   const [selectedService, setSelectedService] = useState(null);
 
   const refs = { beautyRef, beatiqueRef, techRef };
+
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -90,33 +90,22 @@ const [cart, setCart] = useState([]);
       }
     };
     fetchServices();
-    const saved = localStorage.getItem("cart");
-    if (saved) setCart(JSON.parse(saved));
   }, []);
-  // Helper function to add to cart and redirect
+
   const handleBooking = (service) => {
-    // 1. Prepare the item object
     const itemToAdd = {
       title: service.name || service.title,
       price: typeof service.price === 'string' ? parseInt(service.price.replace('₹', '')) : service.price,
       image: service.image,
       quantity: 1,
-      category:service.category
-      
+      category: service.category
     };
- console.log(itemToAdd);
-    // 2. Get existing cart or initialize
     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-    
-    // 3. Add to cart
     existingCart.push(itemToAdd);
     localStorage.setItem("cart", JSON.stringify(existingCart));
-
-    // 4. Redirect to checkout
     router.push("/checkout");
   };
 
-  // Search Logic
   useEffect(() => {
     if (query.length < 2) {
       setResults([]);
@@ -130,7 +119,6 @@ const [cart, setCart] = useState([]);
     setOpen(true);
   }, [query]);
 
-  // Handle Search Outside Click
   useEffect(() => {
     const handler = (e) => {
       if (searchRef.current && !searchRef.current.contains(e.target)) {
@@ -139,12 +127,6 @@ const [cart, setCart] = useState([]);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  // Page Loader
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(timer);
   }, []);
 
   const scrollTo = (refKey) => {
@@ -164,18 +146,8 @@ const [cart, setCart] = useState([]);
       
       {/* ================= HEADER ================= */}
       <header className="sticky top-0 z-40 bg-gradient-to-b from-[#030712] via-[#a3b7d6] to-[#edf4ff] backdrop-blur-md border-b border-blue-50 px-4 pt-4 pb-3 space-y-3">
-        {/* <div className="flex justify-between items-center">
-          <Link href="/" className="active:scale-95 transition-transform">
-            <Image src="/images/wLogo.png" alt="Logo" width={110} height={28} />
-          </Link>
-          <div className="w-9 h-9 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-sm">
-            <User size={18} className="text-gray-600" />
-          </div>
-        </div> */}
-
-        {/* Search Bar */}
         <div ref={searchRef} className="relative">
-          <div className="flex items-center bg-gray-50  rounded-2xl px-4 py-3 ">
+          <div className="flex items-center bg-gray-50 rounded-2xl px-4 py-3">
             <Search size={18} className="text-gray-400 mr-3" />
             <input
               value={query}
@@ -189,24 +161,22 @@ const [cart, setCart] = useState([]);
             )}
           </div>
 
-          {open && results.length > 0 && (
-            <div className="absolute z-50 w-full mt-2 bg-white rounded-2xl border border-gray-100 shadow-xl overflow-hidden">
-              {results.map((s) => (
-                <div key={s.title} onClick={() => { setSelectedService(s); setOpen(false); }} className="flex items-center gap-3 p-3 hover:bg-blue-50 cursor-pointer">
-                  <div className="relative w-10 h-10 rounded-xl overflow-hidden border">
-                    <Image src={s.image} alt={s.title} fill className="object-cover" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-bold text-gray-800">{s.title}</p>
-                    <p className="text-xs text-blue-500 font-semibold text-">Starts ₹{s.price}</p>
-                  </div>
+          {/* Search Dropdown with CSS Transition */}
+          <div className={`absolute z-50 w-full mt-2 bg-white rounded-2xl border border-gray-100 shadow-xl overflow-hidden transition-all duration-200 ${open && results.length > 0 ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-2 invisible"}`}>
+            {results.map((s) => (
+              <div key={s.title} onClick={() => { setSelectedService(s); setOpen(false); }} className="flex items-center gap-3 p-3 hover:bg-blue-50 cursor-pointer">
+                <div className="relative w-10 h-10 rounded-xl overflow-hidden border">
+                  <Image src={s.image} alt={s.title} fill className="object-cover" />
                 </div>
-              ))}
-            </div>
-          )}
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-gray-800">{s.title}</p>
+                  <p className="text-xs text-blue-500 font-semibold">Starts ₹{s.price}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Category Icons */}
         <div className="flex gap-6 justify-center overflow-x-auto no-scrollbar pt-2">
           {CATEGORIES.map((c, i) => (
             <button
@@ -227,16 +197,8 @@ const [cart, setCart] = useState([]);
 
       {/* ================= MAIN CONTENT ================= */}
       <main className="px-4 space-y-8 pt-6">
-        
-        {/* Crazy Deals Section */}
         <div className="grid grid-cols-12 gap-3 h-72">
-          <div onClick={() => setSelectedService(CRAZY_DEAL)} className="col-span-5 bg-blue-100 p-5 relative overflow-hidden shadow-sm border border-blue-200 cursor-pointer rounded-3xl">
-            {/* <span className="bg-white/80 backdrop-blur-sm text-blue-700 text-[10px] font-black px-3  rounded-full">CRAZY DEAL</span>
-            <div className=" ml-7.5  relative z-10">
-              <p className="text-2xl font-black tracking-tighter text-blue-900">₹{CRAZY_DEAL.price}</p>
-              <p className="text-xs line-through text-blue-900/50 font-bold">{CRAZY_DEAL.originalPrice}</p>
-              <p className="text-sm font-black mt-1 leading-tight">{CRAZY_DEAL.name}</p>
-            </div> */}
+          <div onClick={() => setSelectedService(CRAZY_DEAL)} className="col-span-5 bg-blue-100 relative overflow-hidden shadow-sm border border-blue-200 cursor-pointer rounded-3xl">
             <div className="absolute bottom-0 right-0 w-full h-full">
               <Image src={CRAZY_DEAL.image} fill className="object-cover object-top" alt="" />
             </div>
@@ -244,10 +206,8 @@ const [cart, setCart] = useState([]);
 
           <div className="col-span-7 grid grid-cols-2 gap-3">
             {QUICK_SERVICES.map((d, i) => (
-              <div key={i} onClick={() => setSelectedService(d)} className="bg-gray-50 border border-gray-100 rounded-3xl  relative flex flex-col justify-between overflow-hidden cursor-pointer active:scale-95 transition-all">
-                {/* <span className="absolute top-2 right-2 bg-white/90 text-[8px] font-black px-2 py-1 rounded-lg border border-gray-100">{d.discount}</span>
-                <p className="text-[11px] font-black leading-tight pr-4">{d.title}</p> */}
-                <div className=" w-full h-full relative">
+              <div key={i} onClick={() => setSelectedService(d)} className="bg-gray-50 border border-gray-100 rounded-3xl relative flex flex-col justify-between overflow-hidden cursor-pointer active:scale-95 transition-all">
+                <div className="w-full h-full relative">
                   <Image src={d.image} fill className="object-cover rounded-xl shadow-sm" alt="" />
                 </div>
               </div>
@@ -255,21 +215,16 @@ const [cart, setCart] = useState([]);
           </div>
         </div>
 
-        {/* Dynamic Sections */}
-<section ref={beautyRef} className="pt-2">
-  <SectionTitle title="Beauty Services" />
-
-  <div className="grid grid-cols-3 gap-3">
-    {services
-      .filter(item => item.category === "Woman Services")
-      .map(item => (
-        <div key={item.id} onClick={() => setSelectedService(item)}>
-          <ServiceAppCard item={item} />
-        </div>
-      ))}
-  </div>
-</section>
-
+        <section ref={beautyRef} className="pt-2">
+          <SectionTitle title="Beauty Services" />
+          <div className="grid grid-cols-3 gap-3">
+            {services.filter(item => item.category === "Woman Services").map(item => (
+              <div key={item.id} onClick={() => setSelectedService(item)}>
+                <ServiceAppCard item={item} />
+              </div>
+            ))}
+          </div>
+        </section>
 
         <section ref={beatiqueRef} className="pt-4">
           <SectionTitle title="The Beatique" />
@@ -294,86 +249,77 @@ const [cart, setCart] = useState([]);
         </section>
       </main>
 
-      {/* ================= BOTTOM SLIDE DRAWER ================= */}
-      <AnimatePresence>
+      {/* ================= BOTTOM SLIDE DRAWER (CSS TRANSITION) ================= */}
+      {/* Backdrop */}
+      <div 
+        onClick={() => setSelectedService(null)}
+        className={`fixed inset-0 bg-black/40 z-[60] backdrop-blur-[2px] transition-opacity duration-300 ${selectedService ? "opacity-100 visible" : "opacity-0 invisible"}`}
+      />
+      
+      {/* Drawer */}
+      <div className={`fixed bottom-0 left-0 right-0 bg-white rounded-t-[2.5rem] z-[70] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] overflow-hidden transition-transform duration-300 ease-out transform ${selectedService ? "translate-y-0" : "translate-y-full"}`}>
+        <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mt-4 mb-2" />
+        
         {selectedService && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedService(null)}
-              className="fixed inset-0 bg-black/40 z-[60] backdrop-blur-[2px]"
-            />
-            <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed bottom-0 left-0 right-0 bg-white rounded-t-[2.5rem] z-[70] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] overflow-hidden"
-            >
-              <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mt-4 mb-2" />
-              <div className="px-6 pb-8 pt-2">
-                <div className="relative w-full h-64 rounded-3xl overflow-hidden mb-6 shadow-md border border-gray-100">
-                  <Image src={selectedService.image} fill className="object-cover" alt="Detail" />
-                  <button onClick={() => setSelectedService(null)} className="absolute top-4 right-4 bg-white/90 p-2 rounded-full shadow-lg">
-                    <X size={20} className="text-gray-800" />
-                  </button>
-                </div>
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h2 className="text-2xl font-black text-gray-900 tracking-tight">{selectedService.name || selectedService.title}</h2>
-                    <div className="flex items-center gap-2 mt-1">
-                      <div className="flex items-center text-yellow-500">
-                        <Star size={14} fill="currentColor" />
-                        <span className="ml-1 text-sm font-bold text-gray-600">4.9</span>
-                      </div>
-                      <span className="text-gray-300">•</span>
-                      <span className="text-sm font-bold text-blue-600 tracking-wide uppercase text-[10px]">Verified Expert</span>
-                    </div>
+          <div className="px-6 pb-8 pt-2">
+            <div className="relative w-full h-64 rounded-3xl overflow-hidden mb-6 shadow-md border border-gray-100">
+              <Image src={selectedService.image} fill className="object-cover" alt="Detail" />
+              <button onClick={() => setSelectedService(null)} className="absolute top-4 right-4 bg-white/90 p-2 rounded-full shadow-lg">
+                <X size={20} className="text-gray-800" />
+              </button>
+            </div>
+            
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h2 className="text-2xl font-black text-gray-900 tracking-tight">{selectedService.name || selectedService.title}</h2>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center text-yellow-500">
+                    <Star size={14} fill="currentColor" />
+                    <span className="ml-1 text-sm font-bold text-gray-600">4.9</span>
                   </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-black text-blue-600 tracking-tighter">₹{selectedService.price || "799"}</p>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest text-[9px]">Base Price</p>
-                  </div>
-                </div>
-                <p className="text-gray-500 leading-relaxed mb-8 font-medium text-sm">
-                  Indulge in a premium service experience. Our certified professionals ensure top-tier hygiene and salon-grade results in the comfort of your home. 
-                </p>
-                <div className="flex gap-4">
-                  <button onClick={() => handleBooking(selectedService)} className="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-                    Book Now <ArrowRight size={16} />
-                  </button>
-                  <button onClick={() => {  router.push(`services/${selectedService.title}`) }} className="flex-1 bg-gray-50 text-gray-800 border border-gray-100 py-4 rounded-2xl font-black text-xs uppercase tracking-widest active:scale-[0.98] transition-all">
-                    View Info
-                  </button>
+                  <span className="text-gray-300">•</span>
+                  <span className="text-sm font-bold text-blue-600 tracking-wide uppercase text-[10px]">Verified Expert</span>
                 </div>
               </div>
-            </motion.div>
-          </>
+              <div className="text-right">
+                <p className="text-2xl font-black text-blue-600 tracking-tighter">₹{selectedService.price || "799"}</p>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest text-[9px]">Base Price</p>
+              </div>
+            </div>
+            
+            <p className="text-gray-500 leading-relaxed mb-8 font-medium text-sm">
+              Indulge in a premium service experience. Our certified professionals ensure top-tier hygiene and salon-grade results.
+            </p>
+            
+            <div className="flex gap-4">
+              <button onClick={() => handleBooking(selectedService)} className="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-blue-200 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                Book Now <ArrowRight size={16} />
+              </button>
+              <button onClick={() => { router.push(`services/${selectedService.title}`) }} className="flex-1 bg-gray-50 text-gray-800 border border-gray-100 py-4 rounded-2xl font-black text-xs uppercase tracking-widest active:scale-[0.98] transition-all">
+                View Info
+              </button>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
-
+      </div>
     </div>
   );
 }
 
 /* ================= HELPER COMPONENTS ================= */
-
 function PageLoader() {
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white">
-      <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.4 }} className="flex flex-col items-center gap-4">
-        <Image src="/images/wLogo.png" alt="Logo" width={160} height={48} />
-        <div className="w-54 h-1 bg-blue-100 rounded-full overflow-hidden">
-          <motion.div initial={{ x: "-100%" }} animate={{ x: "100%" }} transition={{ repeat: Infinity, duration: 1.1, ease: "easeInOut" }} className="h-full w-full bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-[100]">
+      <div className="flex flex-col items-center">
+        <Image src="/images/wLogo.png" alt="Logo" width={120} height={40} className="mb-8 object-contain" />
+        <div className="relative w-48 h-[2px] bg-slate-100 rounded-full overflow-hidden">
+          <div className="absolute h-full w-1/2 bg-gradient-to-r from-transparent via-blue-600 to-transparent animate-loading-slide" />
         </div>
-        <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Syncing Data...</span>
-      </motion.div>
+        <span className="mt-4 text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">Refining Experience</span>
+      </div>
     </div>
   );
 }
-
 function ServiceAppCard({ item }) {
   return (
     <div className="bg-white rounded-[2rem] p-2 border border-gray-100 shadow-[0_4px_15px_rgba(0,0,0,0.02)] flex flex-col items-center active:scale-95 transition-all cursor-pointer">
@@ -391,15 +337,6 @@ function SectionTitle({ title }) {
     <div className="flex justify-between items-end mb-4 px-1">
       <h2 className="text-lg font-black tracking-tighter text-gray-900">{title}</h2>
       <span className="text-blue-600 text-[10px] font-black uppercase tracking-widest mb-1 border-b-2 border-blue-600/10">See All</span>
-    </div>
-  );
-}
-
-function NavIcon({ icon, label, active }) {
-  return (
-    <div className={`flex flex-col items-center gap-1 transition-colors ${active ? "text-blue-600" : "text-gray-400"}`}>
-      {icon}
-      <span className="text-[9px] font-black uppercase tracking-tight">{label}</span>
     </div>
   );
 }

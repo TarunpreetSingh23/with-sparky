@@ -172,42 +172,47 @@ export default function Navbar() {
       </div>
 
       {/* ================= MOBILE BOTTOM NAV ================= */}
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#030712] border-t border-gray-100 px-2 py-3 flex justify-around items-center z-50 shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
-    {mobileMenuItems.map((item) => (
+  <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-100 px-4 py-2 flex justify-around items-center z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
+  {mobileMenuItems.map((item) => {
+    const isActive = active === item.name;
+    return (
       <Link
         key={item.name}
         href={item.href}
         onClick={() => setActive(item.name)}
-        className="flex flex-col items-center justify-center min-w-[70px] transition-all active:scale-95"
+        className="relative flex flex-col items-center justify-center min-w-[65px] py-1 transition-all active:scale-90"
       >
+        {/* Active Indicator Bar - Glides if you use a single div, 
+            but for a simpler 'fade-and-slide' feel per item: */}
+        <div 
+          className={`absolute top-[-8px] w-6 h-[3px] bg-black rounded-b-full transition-all duration-300 ease-out ${
+            isActive ? "opacity-100 transform translate-y-0" : "opacity-0 transform -translate-y-2"
+          }`} 
+        />
+
         {/* Icon Container */}
         <div
-          className={`mb-1 transition-colors duration-200 ${
-            active === item.name ? "text-white" : "text-white"
+          className={`mb-1 transition-all duration-300 ease-in-out ${
+            isActive ? "text-black scale-110" : "text-slate-400"
           }`}
         >
-          {/* Ensure your icons are passed with a strokeWidth of 1.5 to 2 to match the "Outlined" look */}
-          <span className="text-2xl">
+          <span className="text-xl">
             {item.icon}
           </span>
         </div>
 
         {/* Label Styling */}
         <span
-          className={`text-[12px] font-bold tracking-tight transition-colors duration-200 ${
-            active === item.name ? "text-white" : "text-[#64748b]"
+          className={`text-[10px] font-black uppercase tracking-widest transition-all duration-300 ease-in-out ${
+            isActive ? "text-black opacity-100" : "text-slate-400 opacity-60"
           }`}
         >
           {item.name}
         </span>
-
-        {/* Optional Active Indicator (the black bar seen at the top of 'Home' in screenshots) */}
-        {active === item.name && (
-          <div className="absolute top-0 w-8 h-[3px] bg-white rounded-b-full" />
-        )}
       </Link>
-    ))}
-  </nav>
+    );
+  })}
+</nav>
 
       {/* ================= MOBILE SIDEBAR ================= */}
       <AnimatePresence>

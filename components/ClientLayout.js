@@ -15,7 +15,9 @@ export default function ClientLayout({ children }) {
 
       <main
         className={
-          !hideLayout ? "pt-[66px] md:pt-[70px] pb-[72px] md:pb-0" : ""
+          !hideLayout
+            ? "pt-[66px] md:pt-[70px] "
+            : ""
         }
       >
         {children}
