@@ -171,8 +171,8 @@ export default function Navbar() {
         </Link>
       </div>
 
-      {/* ================= MOBILE BOTTOM NAV ================= */}
-  <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-gray-100 px-4 py-2 flex justify-around items-center z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
+    {/* ================= MOBILE BOTTOM NAV ================= */}
+  <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#030712] backdrop-blur-lg border-t border-gray-100 px-4 py-2 flex justify-around items-center z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
   {mobileMenuItems.map((item) => {
     const isActive = active === item.name;
     return (
@@ -185,7 +185,7 @@ export default function Navbar() {
         {/* Active Indicator Bar - Glides if you use a single div, 
             but for a simpler 'fade-and-slide' feel per item: */}
         <div 
-          className={`absolute top-[-8px] w-6 h-[3px] bg-black rounded-b-full transition-all duration-300 ease-out ${
+          className={`absolute top-[-8px] w-6 h-[3px] bg-white rounded-b-full transition-all duration-300 ease-out ${
             isActive ? "opacity-100 transform translate-y-0" : "opacity-0 transform -translate-y-2"
           }`} 
         />
@@ -193,7 +193,7 @@ export default function Navbar() {
         {/* Icon Container */}
         <div
           className={`mb-1 transition-all duration-300 ease-in-out ${
-            isActive ? "text-black scale-110" : "text-slate-400"
+            isActive ? "text-white scale-110" : "text-slate-400"
           }`}
         >
           <span className="text-xl">
@@ -204,7 +204,7 @@ export default function Navbar() {
         {/* Label Styling */}
         <span
           className={`text-[10px] font-black uppercase tracking-widest transition-all duration-300 ease-in-out ${
-            isActive ? "text-black opacity-100" : "text-slate-400 opacity-60"
+            isActive ? "text-white opacity-100" : "text-slate-400 opacity-60"
           }`}
         >
           {item.name}

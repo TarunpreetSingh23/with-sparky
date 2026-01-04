@@ -24,18 +24,47 @@ import {
 /* ================= LOADER ================= */
 function PageLoader() {
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white">
-      <div className="flex flex-col items-center gap-4">
-        <Image src="/images/wLogo.png" alt="Logo" width={140} height={40} className="opacity-80" />
-        <div className="w-48 h-1 bg-gray-100 rounded-full overflow-hidden">
-          <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: "100%" }}
-            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-            className="h-full w-full bg-green-600"
-          />
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-[100]">
+      <div className="flex flex-col items-center">
+        {/* Logo */}
+        <Image 
+          src="/images/wLogo.png" 
+          alt="Logo" 
+          width={120} 
+          height={40} 
+          className="mb-8 object-contain" 
+        />
+        
+        {/* Progress Bar Container */}
+        <div className="relative w-48 h-[2px] bg-slate-100 rounded-full overflow-hidden">
+          {/* Moving Indicator */}
+          <div className="loading-bar-element absolute h-full w-1/2 bg-gradient-to-r from-transparent via-blue-600 to-transparent" />
         </div>
+        
+        {/* Text */}
+        <span className="mt-4 text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">
+          Refining Experience
+        </span>
       </div>
+
+      {/* Scoped CSS for the animation */}
+      <style jsx>{`
+        .loading-bar-element {
+          animation: loading-slide 1.5s infinite ease-in-out;
+        }
+
+        @keyframes loading-slide {
+          0% {
+            left: -100%;
+          }
+          50% {
+            left: 25%;
+          }
+          100% {
+            left: 100%;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -10,12 +10,45 @@ function PageLoader() {
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-[100]">
       <div className="flex flex-col items-center">
-        <Image src="/images/wLogo.png" alt="Logo" width={120} height={40} className="mb-8 object-contain" />
+        {/* Logo */}
+        <Image 
+          src="/images/wLogo.png" 
+          alt="Logo" 
+          width={120} 
+          height={40} 
+          className="mb-8 object-contain" 
+        />
+        
+        {/* Progress Bar Container */}
         <div className="relative w-48 h-[2px] bg-slate-100 rounded-full overflow-hidden">
-          <div className="absolute h-full w-1/2 bg-gradient-to-r from-transparent via-blue-600 to-transparent animate-loading-slide" />
+          {/* Moving Indicator */}
+          <div className="loading-bar-element absolute h-full w-1/2 bg-gradient-to-r from-transparent via-blue-600 to-transparent" />
         </div>
-        <span className="mt-4 text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">Refining Experience</span>
+        
+        {/* Text */}
+        <span className="mt-4 text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">
+          Refining Experience
+        </span>
       </div>
+
+      {/* Scoped CSS for the animation */}
+      <style jsx>{`
+        .loading-bar-element {
+          animation: loading-slide 1.5s infinite ease-in-out;
+        }
+
+        @keyframes loading-slide {
+          0% {
+            left: -100%;
+          }
+          50% {
+            left: 25%;
+          }
+          100% {
+            left: 100%;
+          }
+        }
+      `}</style>
     </div>
   );
 }
@@ -163,7 +196,7 @@ export default function CleaningPage() {
       </main>
 
       {/* 🚀 Floating Checkout Pill */}
-      <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 w-[85%] max-w-sm z-50 transition-all duration-300 transform ${cart.length > 0 ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
+      <div className={`fixed bottom-17 left-1/2 -translate-x-1/2 w-[85%] max-w-sm z-50 transition-all duration-300 transform ${cart.length > 0 ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
         <div 
           onClick={() => setCartOpen(true)}
           className="bg-[#030712] text-white p-2 pr-4 rounded-[1.8rem] shadow-xl flex items-center justify-between border border-white/10 cursor-pointer"
