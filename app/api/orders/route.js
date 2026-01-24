@@ -3,20 +3,13 @@ export const runtime = "nodejs";
 import { connects } from "@/dbconfig/dbconfig";
 import Task from "@/models/task";
 import { generateInvoice } from "@/lib/generateInvoice";
-import { v2 as cloudinary } from "cloudinary";
-
-/* ---------------- CLOUDINARY CONFIG ---------------- */
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+import { supabase } from "@/lib/supabase";
+import { sendWhatsAppMessage } from "@/lib/twilio";
 
 /* ---------------- POST: CREATE ORDER ---------------- */
 export async function POST(req) {
   try {
     await connects();
-
     const body = await req.json();
 
     /* ---------- VALIDATION ---------- */
@@ -36,14 +29,13 @@ export async function POST(req) {
       );
     }
 
-    /* ---------- GENERATE 4-DIGIT SERVICE OTP ---------- */
+    /* ---------- GENERATE OTP ---------- */
     const serviceOtp = Math.floor(1000 + Math.random() * 9000).toString();
 
     /* ---------- CREATE TASK ---------- */
     const task = await Task.create({
       ...body,
       paymentMethod: body.paymentMethod || "Pay After Service",
-
       serviceOtp: {
         code: serviceOtp,
         verified: false,
@@ -51,43 +43,57 @@ export async function POST(req) {
       },
     });
 
-    /* ---------- GENERATE INVOICE PDF ---------- */
-    const pdfBuffer = await generateInvoice(task.toObject());
+    /* ---------- PHONE FORMAT ---------- */
+    const normalizePhone = (phone) => {
+      if (phone.startsWith("+")) return phone;
+      return `+91${phone}`;
+    };
 
-    if (!Buffer.isBuffer(pdfBuffer)) {
-      throw new Error("Invoice generation failed (invalid buffer)");
+    const customerPhone = normalizePhone(body.phone);
+    const workerPhone = "+918195060669";
+
+    const cartText = body.cart.map(item => `${item.name} (${item.qty || 1})`).join(", ");
+
+    /* ---------- SEND WHATSAPP ---------- */
+    try {
+      await sendWhatsAppMessage(
+        customerPhone,
+        `ORDER CONFIRMED\nCustomer: ${body.customerName}\nService: ${cartText}`
+      );
+    } catch (err) {
+      console.error("Customer WhatsApp failed:", err.message);
     }
 
-    /* ---------- UPLOAD PDF TO CLOUDINARY ---------- */
-    await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          resource_type: "raw",
-          folder: "invoices",
-          public_id: task.order_id,
-          format: "pdf",
-          use_filename: true,
-          unique_filename: false,
-        },
-        (error) => {
-          if (error) reject(error);
-          else resolve();
-        }
+    try {
+      await sendWhatsAppMessage(
+        workerPhone,
+        `NEW TASK\nCustomer: ${body.customerName}\nService: ${cartText}`
       );
+    } catch (err) {
+      console.error("Worker WhatsApp failed:", err.message);
+    }
 
-      uploadStream.end(pdfBuffer);
-    });
+    /* ---------- GENERATE INVOICE PDF ---------- */
+    const pdfBuffer = await generateInvoice(task.toObject());
+    if (!Buffer.isBuffer(pdfBuffer)) throw new Error("Invoice generation failed");
 
-    /* ---------- GENERATE DOWNLOAD URL ---------- */
-    const invoiceUrl = cloudinary.url(
-      `invoices/${task.order_id}.pdf`,
-      {
-        resource_type: "raw",
-        flags: "attachment",
-      }
-    );
+    /* ---------- UPLOAD PDF TO SUPABASE ---------- */
+    const fileName = `invoice-${task.order_id}.pdf`;
 
-    /* ---------- SAVE INVOICE URL ---------- */
+    const { error } = await supabase.storage
+      .from("invoices")
+      .upload(fileName, pdfBuffer, {
+        contentType: "application/pdf",
+        upsert: true,
+      });
+
+    if (error) throw error;
+
+    /* ---------- GET PUBLIC URL ---------- */
+    const { data } = supabase.storage.from("invoices").getPublicUrl(fileName);
+    const invoiceUrl = data.publicUrl;
+
+    /* ---------- SAVE URL IN DB ---------- */
     await Task.findByIdAndUpdate(task._id, {
       invoiceUrl,
       invoiceGeneratedAt: new Date(),
@@ -95,23 +101,14 @@ export async function POST(req) {
 
     /* ---------- RESPONSE ---------- */
     return Response.json(
-      {
-        success: true,
-        orderId: task.order_id,
-        invoiceUrl,
-        // ⚠️ DO NOT SEND OTP TO FRONTEND IN PRODUCTION
-        // serviceOtp,  // keep only for testing
-      },
+      { success: true, orderId: task.order_id, invoiceUrl },
       { status: 201 }
     );
-  } catch (err) {
-    console.error("❌ ORDER CREATION ERROR:", err);
 
+  } catch (err) {
+    console.error("❌ ORDER ERROR:", err);
     return Response.json(
-      {
-        success: false,
-        message: err.message || "Server error",
-      },
+      { success: false, message: err.message },
       { status: 500 }
     );
   }

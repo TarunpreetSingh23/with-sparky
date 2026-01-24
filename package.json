@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-google-maps/api": "^2.20.8",
+    "@supabase/supabase-js": "^2.91.1",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.8.0",
     "cross-env": "^10.1.0",

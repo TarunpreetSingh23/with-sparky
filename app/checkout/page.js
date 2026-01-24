@@ -8,6 +8,7 @@ import {
   User, Phone, MapPin, Calendar, Clock, ShoppingCart, 
   Tag, CheckCircle2, ChevronLeft, ArrowRight, ShieldCheck, Zap 
 } from "lucide-react";
+import Link from "next/link";
 
 const UserMap = dynamic(() => import("@/components/UserMap"), { ssr: false });
 
@@ -153,7 +154,14 @@ export default function Checkout() {
             </div>
             <h2 className="text-2xl font-black mb-2 tracking-tighter">Booking Confirmed!</h2>
             <p className="text-gray-500 text-sm mb-8 px-4 font-medium">Your request for <span className="font-bold text-black">{orderId}</span> is scheduled.</p>
-            <a href={invoiceUrl} target="_blank" className="block w-full py-4 bg-[#030712] text-white rounded-2xl font-black uppercase text-[12px] tracking-widest shadow-xl text-center">Download Receipt</a>
+<Link
+  href={invoiceUrl}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="block w-full py-4 bg-[#030712] text-white rounded-2xl font-black uppercase text-[12px] tracking-widest shadow-xl text-center"
+>
+  Download Invoice
+</Link>
             <button onClick={() => router.push("/")} className="w-full mt-4 py-4 text-gray-400 font-bold uppercase text-[10px] tracking-widest text-center">Go to Home</button>
           </div>
         </div>
@@ -216,6 +224,11 @@ export default function Checkout() {
               </button>
               <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 space-y-8">
                 <h2 className="text-xl font-black tracking-tight">Service Address</h2>
+                 {/* <button onClick={() => setShowMap(!showMap)} className="w-full py-3 bg-gray-50 text-[#030712] border border-gray-200 rounded-xl font-black text-[11px] uppercase tracking-widest hover:bg-gray-100 text-center">
+                  {showMap ? "Hide Map" : "Search on Map"}
+                </button> */}
+                                { <div className=" overflow-hidden border border-gray-100 h-64"><UserMap setAddress={setAddress}/></div>}
+
                 <div className="space-y-4">
                   <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Complete Address</label>
                   <textarea rows={3} value={address} onChange={(e) => setAddress(e.target.value)} placeholder="House No, Landmark, Area..." 
@@ -223,10 +236,10 @@ export default function Checkout() {
                   {errors.address && <span className="text-red-500 text-[9px] font-black uppercase">{errors.address}</span>}
                 </div>
                 <InputField label="Pincode" value={pincode} onChange={(e) => setPincode(e.target.value)} error={errors.pincode} placeholder="6-digit PIN" icon={MapPin} />
-                <button onClick={() => setShowMap(!showMap)} className="w-full py-3 bg-gray-50 text-[#030712] border border-gray-200 rounded-xl font-black text-[11px] uppercase tracking-widest hover:bg-gray-100 text-center">
+                {/* <button onClick={() => setShowMap(!showMap)} className="w-full py-3 bg-gray-50 text-[#030712] border border-gray-200 rounded-xl font-black text-[11px] uppercase tracking-widest hover:bg-gray-100 text-center">
                   {showMap ? "Hide Map" : "Open Map Selection"}
-                </button>
-                {showMap && <div className="rounded-2xl overflow-hidden border border-gray-100 h-64"><UserMap setAddress={setAddress}/></div>}
+                </button> */}
+                {/* {showMap && <div className="rounded-2xl overflow-hidden border border-gray-100 h-64"><UserMap setAddress={setAddress}/></div>} */}
                 <button onClick={nextStep} className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black uppercase tracking-widest text-[13px] shadow-lg flex items-center justify-center gap-3 text-center">
                   Continue to Schedule <ArrowRight size={18}/>
                 </button>

@@ -7,7 +7,7 @@ const TaskSchema = new mongoose.Schema({
     unique: true,
   },
   customerName: { type: String, required: true },
-  email: { type: String }, // optional
+  email: { type: String },
   phone: { type: String, required: true },
   loginPhone: { type: String},
   address: { type: String, required: true },

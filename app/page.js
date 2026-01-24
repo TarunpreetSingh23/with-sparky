@@ -23,7 +23,7 @@ import { useRouter } from "next/navigation";
 /* ================= DATA ================= */
 
 const CATEGORIES = [
-  { name: "Beauty", icon: <Sparkles size={20} />, ref: "beautyRef" },
+  { name: "BEAUTY", icon: <Sparkles size={20} />, ref: "beautyRef" },
   { name: "Beatique", icon: <Scissors size={20} />, ref: "beatiqueRef" },
   { name: "Technical", icon: <Wrench size={20} />, ref: "techRef" },
 ];
@@ -34,14 +34,15 @@ const CRAZY_DEAL = {
   price: 999,
   image: "/images/goldfacial.jpg",
   discount: "45% OFF",
-  link: "/services/facial"
+  link: "/services/facial",
+  category: "Woman Services"
 };
 
 const QUICK_SERVICES = [
   { title: "Suit Stitching", discount: "30% OFF", image: "/images/stitching.jpg", price: 1299, link: "/services/stitching" },
   { title: "AC Repair", discount: "₹200 OFF", image: "/images/crazyAc.avif", price: 499, link: "/services/ac-repair" },
   { title: "Deep Cleanup", discount: "50% OFF", image: "/images/deepc.webp", price: 799, link: "/services/cleaning" },
-  { title: "Manicure", discount: "Starts ₹199", image: "/images/mpm.jpg", price: 199, link: "/services/manicure" },
+  { title: "Manicure", discount: "Starts ₹199", image: "/images/mpm.jpg", price: 199, link: "/services/manicure",category: "Woman Services" },
 ];
 
 const BESTSELLERS = [
@@ -216,7 +217,7 @@ export default function SparkyServiceApp() {
         </div>
 
         <section ref={beautyRef} className="pt-2">
-          <SectionTitle title="Beauty Services" />
+          <SectionTitle title="BEAUTY SERVICES" />
           <div className="grid grid-cols-3 gap-3">
             {services.filter(item => item.category === "Woman Services").map(item => (
               <div key={item.id} onClick={() => setSelectedService(item)}>
@@ -353,23 +354,63 @@ function PageLoader() {
     </div>
   );
 }
+// import Image from 'next/image';
+// import { Plus } from 'lucide-react'; // Optional: Use an icon library like lucide-react
+
 function ServiceAppCard({ item }) {
   return (
-    <div className="bg-white rounded-[2rem] p-2 border border-gray-100 shadow-[0_4px_15px_rgba(0,0,0,0.02)] flex flex-col items-center active:scale-95 transition-all cursor-pointer">
-      <div className="w-full aspect-square relative mb-3 overflow-hidden rounded-[1.5rem] border border-gray-50">
-        <Image src={item.image} fill className="object-cover" alt={item.name} />
+    <div className="group relative flex w-full flex-col gap-3 bg-white p-3 rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 cursor-pointer">
+      
+      {/* Image Container with Zoom Effect */}
+      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gray-50">
+        <Image 
+          src={item.image} 
+          fill 
+          className="object-cover transition-transform duration-500 group-hover:scale-105" 
+          alt={item.name || item.title} 
+        />
+        
+        {/* Optional: Floating Badge for Rating or Tag */}
+        {item.rating && (
+           <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-1.5 py-0.5 rounded-md text-[10px] font-bold shadow-sm">
+             ★ {item.rating}
+           </div>
+        )}
       </div>
-      <span className="text-[11px] font-black text-gray-800 text-center truncate w-full mb-1 px-1 leading-tight">{item.title}</span>
-      <div className="bg-blue-50 text-blue-600 rounded-full py-0.5 px-2 text-[8px] font-black uppercase tracking-tighter">{item.price}</div>
+
+      {/* Content Section */}
+      <div className="flex flex-col gap-1">
+        {/* Title */}
+        <h3 className="text-sm font-semibold text-blue-900 line-clamp-2 leading-tight">
+          {item.title}
+        </h3>
+
+        {/* Price & Action Row */}
+        <div className="flex items-center justify-between mt-1">
+          <div className="flex flex-col">
+            <span className="text-xs text-red-400 font-medium">at Just</span>
+            <span className="text-sm font-bold text-blue-900">₹{item.price}</span>
+          </div>
+          
+          {/* subtle 'Add' button visual */}
+          {/* <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-600 transition-colors group-hover:bg-black group-hover:text-white">
+          
+            <span className="text-lg leading-none mb-0.5">+</span> 
+          </div> */}
+        </div>
+      </div>
     </div>
   );
 }
 
+
+
 function SectionTitle({ title }) {
   return (
     <div className="flex justify-between items-end mb-4 px-1">
-      <h2 className="text-lg font-black tracking-tighter text-gray-900">{title}</h2>
-      <span className="text-blue-600 text-[10px] font-black uppercase tracking-widest mb-1 border-b-2 border-blue-600/10">See All</span>
+      <h2 className="text-lg font-semibold line-clamp-2 leading-tight
+       text-blue-900">{title}</h2>
+      {/* <span className="text-blue-600 text-[10px] font-black uppercase tracking-widest mb-1 border-b-2 border-blue-600/10">See All</span> */}
     </div>
   );
 }
