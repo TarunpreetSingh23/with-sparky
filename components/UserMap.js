@@ -6,7 +6,7 @@ import {
   useJsApiLoader,
 } from "@react-google-maps/api";
 import { useEffect, useRef, useState, useCallback } from "react";
-import { MapPin, LocateFixed, Search, Loader2 } from "lucide-react";
+import { LocateFixed, Search, Loader2 } from "lucide-react";
 
 const mapContainerStyle = {
   width: "100%",
@@ -14,19 +14,17 @@ const mapContainerStyle = {
   borderRadius: "1.5rem", // matches rounded-3xl
 };
 
-// Clean map styles (removes default Google buttons/clutter)
 const mapOptions = {
   disableDefaultUI: true,
   zoomControl: false,
   streetViewControl: false,
   mapTypeControl: false,
   fullscreenControl: false,
-  clickableIcons: false, // Prevents clicking on restaurants/landmarks
-  gestureHandling: "greedy", // Improves touch handling on mobile
+  clickableIcons: false,
+  gestureHandling: "greedy", 
 };
 
 export default function UserMap({ setAddress, setPincode }) {
-  // Default: New Delhi (or your preferred default)
   const [center, setCenter] = useState({ lat: 28.6139, lng: 77.2090 }); 
   const [isDragging, setIsDragging] = useState(false);
   const [loadingAddress, setLoadingAddress] = useState(false);
@@ -39,7 +37,6 @@ export default function UserMap({ setAddress, setPincode }) {
     libraries: ["places"],
   });
 
-  // 1. Get Current Location on Mount
   useEffect(() => {
     getCurrentLocation();
   }, []);
@@ -54,23 +51,18 @@ export default function UserMap({ setAddress, setPincode }) {
             lng: position.coords.longitude,
           };
           setCenter(pos);
-          // If map is already loaded, pan to it
           if(mapRef.current) {
             mapRef.current.panTo(pos);
-            // We don't need to call reverseGeocode here immediately, 
-            // the onIdle event will trigger it.
           }
           setLoadingAddress(false);
         },
         () => {
           setLoadingAddress(false);
-          // Handle error if needed
         }
       );
     }
   };
 
-  // 2. Reverse Geocode (Get Address from Lat/Lng)
   const reverseGeocode = async (lat, lng) => {
     try {
       setLoadingAddress(true);
@@ -82,7 +74,6 @@ export default function UserMap({ setAddress, setPincode }) {
       if (data.results?.[0]) {
         const result = data.results[0];
         setAddress(result.formatted_address);
-
         const pin = result.address_components.find((c) =>
           c.types.includes("postal_code")
         );
@@ -95,12 +86,10 @@ export default function UserMap({ setAddress, setPincode }) {
     }
   };
 
-  // 3. Handle Map Load
   const onLoad = useCallback((map) => {
     mapRef.current = map;
   }, []);
 
-  // 4. Handle "Idle" (When map stops moving) - This is the Pro way
   const onIdle = () => {
     if (!mapRef.current) return;
     setIsDragging(false);
@@ -109,22 +98,17 @@ export default function UserMap({ setAddress, setPincode }) {
     const lat = newCenter.lat();
     const lng = newCenter.lng();
     
-    // Only fetch address if we stopped dragging
     reverseGeocode(lat, lng);
   };
 
-  // 5. Detect Dragging to animate pin
   const onDragStart = () => {
     setIsDragging(true);
   };
 
-  // 6. Handle Search Selection
   const onPlaceChanged = () => {
     const place = autocompleteRef.current.getPlace();
     if (!place.geometry) return;
-
     const location = place.geometry.location;
-    // Pan map to new location (this triggers onIdle, which fetches address)
     if (mapRef.current) {
       mapRef.current.panTo(location);
       mapRef.current.setZoom(17);
@@ -142,8 +126,8 @@ export default function UserMap({ setAddress, setPincode }) {
   return (
     <div className="relative w-full h-full rounded-[2rem] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 bg-gray-50 group">
       
-      {/* --- Top Search Bar (Floating) --- */}
-      <div className="absolute top-4 left-4 right-4 z-10">
+      {/* --- Top Search Bar --- */}
+      <div className="absolute top-4 left-4 right-4 z-50">
         <div className="relative bg-white shadow-xl shadow-black/5 rounded-2xl flex items-center p-1 transition-all focus-within:ring-2 focus-within:ring-blue-500/20">
           <div className="pl-3 text-gray-400">
             <Search size={20} />
@@ -155,42 +139,44 @@ export default function UserMap({ setAddress, setPincode }) {
           >
             <input
               type="text"
-              placeholder="Search for your location..."
+              placeholder="Search location..."
               className="w-full py-3.5 px-3 outline-none text-sm font-bold text-gray-700 placeholder:text-gray-400 bg-transparent"
             />
           </Autocomplete>
         </div>
       </div>
 
-      {/* --- Center Fixed Pin (The "Uber/Blinkit" Style) --- */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none flex flex-col items-center pb-[38px]">
-        {/* The Location Tooltip */}
+      {/* --- CUSTOM CENTER MARKER --- */}
+      {/* FIX: z-index set to 50 to appear above map tiles */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none flex flex-col items-center pb-[50px]">
+        
+        {/* Tooltip */}
         <div 
-          className={`mb-2 px-4 py-2 bg-gray-900 text-white text-[10px] font-bold uppercase tracking-widest rounded-full shadow-xl transition-all duration-200 transform
-            ${isDragging ? "opacity-0 translate-y-2" : "opacity-100 translate-y-0"}
+          className={`mb-3 px-4 py-2 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded-full shadow-2xl transition-all duration-200 transform
+            ${isDragging ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"}
           `}
         >
-          {loadingAddress ? "Locating..." : "Order Here"}
+          {loadingAddress ? "Locating..." : "Deliver Here"}
         </div>
 
-        {/* The Pin Icon */}
-        <div className={`relative transition-transform duration-200 ${isDragging ? "-translate-y-3 scale-110" : "translate-y-0 scale-100"}`}>
-           <MapPin 
-             size={42} 
-             className="text-red-500 drop-shadow-2xl fill-current" 
-             fill="currentColor"
-             stroke="white"
-             strokeWidth={1.5}
-           />
-           {/* Pin Shadow on the ground */}
-           <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-3 h-1.5 bg-black/20 rounded-full blur-[2px]" />
+        {/* CUSTOM IMAGE PIN */}
+        {/* Replace '/pin.png' with your actual image path */}
+        <div className={`relative transition-transform duration-200 ${isDragging ? "-translate-y-4 scale-110" : "translate-y-0 scale-100"}`}>
+            {/* If you don't have an image yet, this SVG acts as a nice placeholder */}
+             <img 
+               src="https://cdn-icons-png.flaticon.com/512/927/927667.png" 
+               alt="Location Marker" 
+               className="w-12 h-12 drop-shadow-2xl"
+             />
+             {/* Pin Shadow */}
+             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-2 bg-black/20 rounded-full blur-[2px]" />
         </div>
       </div>
 
       {/* --- Locate Me Button --- */}
       <button
         onClick={getCurrentLocation}
-        className="absolute bottom-6 right-6 z-10 bg-white text-blue-600 p-4 rounded-2xl shadow-xl shadow-blue-900/10 border border-gray-50 active:scale-95 transition-all hover:bg-blue-50"
+        className="absolute bottom-6 right-6 z-50 bg-white text-blue-600 p-4 rounded-2xl shadow-xl shadow-blue-900/10 border border-gray-50 active:scale-95 transition-all hover:bg-blue-50"
       >
         {loadingAddress && isDragging ? (
           <Loader2 size={22} className="animate-spin" />
@@ -199,7 +185,6 @@ export default function UserMap({ setAddress, setPincode }) {
         )}
       </button>
 
-      {/* --- Google Map Component --- */}
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={center}
@@ -207,10 +192,8 @@ export default function UserMap({ setAddress, setPincode }) {
         options={mapOptions}
         onLoad={onLoad}
         onDragStart={onDragStart}
-        onIdle={onIdle} // This replaces onClick
-      >
-        {/* We removed the <Marker> because we are using the Fixed Center Pin method */}
-      </GoogleMap>
+        onIdle={onIdle}
+      />
     </div>
   );
 }
