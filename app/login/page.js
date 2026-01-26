@@ -97,7 +97,15 @@ export default function Login() {
       if (email) {
         endpoint = "/api/verify-email-otp";
         payload.email = email.trim().toLowerCase();
+<<<<<<< HEAD
         if (phone) payload.phone = phone;
+=======
+<<<<<<< HEAD
+        if (phone) payload.phone =phone;
+=======
+        if (phone) payload.phone = phone;
+>>>>>>> fd10377 (f)
+>>>>>>> b81990a361e5cdb8c5f1e5e3a5b191794686b546
       } else if (phone) {
         endpoint = "/api/verify-otp";
         payload.phone = formatPhoneNumber(phone);
