@@ -13,12 +13,14 @@ const TaskSchema = new mongoose.Schema({
   address: { type: String, required: true },
   pincode: { type: String, required: true },
 
-  cart: [
+  cart:[
     {
       name: { type: String, required: true },
       price: { type: Number, required: true },
       quantity: { type: Number, default: 1 },
       category: { type: String, required: true },
+      earning:{type:Number,required: true},
+      profit:{type:Number,required: true},
     },
   ],
 
@@ -28,7 +30,7 @@ const TaskSchema = new mongoose.Schema({
   paymentMethod: { type: String, default: "Pay After Service" },
   date: { type: String, required: true },
   timeSlot: { type: String, required: true },
-
+  
   assignedWorkers: [
     {
       workerId: { type: String, required: true },

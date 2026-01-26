@@ -11,7 +11,7 @@ export async function POST(req) {
   try {
     await connects();
     const body = await req.json();
-
+  console.log(body);
     /* ---------- VALIDATION ---------- */
     if (
       !body.customerName ||

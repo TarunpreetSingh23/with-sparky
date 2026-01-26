@@ -122,8 +122,12 @@ export default function Checkout() {
       name: item.title || item.name,
       price: item.price,
       quantity: item.quantity || 1,
-      category: item.category
+      category: item.category,
+      earning:item.earning,
+      profit:item.profit
+
     }));
+    console.log(formattedCart);
 
     try {
       const res = await fetch("/api/orders", {

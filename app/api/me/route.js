@@ -7,6 +7,7 @@ import User from "@/models/usermodel";
 
 const SECRET = new TextEncoder().encode(process.env.JWT_SECRET);
 
+
 export async function GET() {
   try {
     const token = cookies().get("session")?.value;
@@ -23,7 +24,6 @@ export async function GET() {
 
     await connects();
 
-    // 🔍 Find user by ID (BEST & SAFEST)
     const user = await User.findById(payload.userId).select("phone email");
 
     if (!user) {

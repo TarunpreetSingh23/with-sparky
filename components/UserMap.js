@@ -11,7 +11,11 @@ import { LocateFixed, Search, Loader2 } from "lucide-react";
 const mapContainerStyle = {
   width: "100%",
   height: "100%",
+<<<<<<< HEAD
   borderRadius: "1.5rem", // matches rounded-3xl
+=======
+  borderRadius: "1.5rem",
+>>>>>>> fd10377 (f)
 };
 
 const mapOptions = {

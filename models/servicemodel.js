@@ -29,6 +29,14 @@ const serviceSchema = new mongoose.Schema(
       min: 0,
       max: 5,
     },
+    earning:{
+      type:Number,
+      required:true,
+    },
+    profit:{
+      type:Number,
+      required:true,
+    },
   },
   { timestamps: true }
 );
