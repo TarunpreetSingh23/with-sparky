@@ -99,7 +99,9 @@ export default function SparkyServiceApp() {
       price: typeof service.price === 'string' ? parseInt(service.price.replace('₹', '')) : service.price,
       image: service.image,
       quantity: 1,
-      category: service.category
+      category: service.category,
+      earning:service.earning,
+      profit:service.profit,
     };
     const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
     existingCart.push(itemToAdd);
