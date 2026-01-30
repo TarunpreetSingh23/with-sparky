@@ -42,9 +42,9 @@ function PageLoader() {
         </div>
         
         {/* Text */}
-        <span className="mt-4 text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">
+        {/* <span className="mt-4 text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">
           Refining Experience
-        </span>
+        </span> */}
       </div>
 
       {/* Scoped CSS for the animation */}
@@ -136,15 +136,15 @@ export default function ServiceDetailPage() {
     <div className="min-h-screen bg-[#F3F4F6] text-[#1f1f1f] pb-32 font-sans selection:bg-green-100">
       
       {/* 📍 Header Overlay */}
-      <header className="fixed top-0 inset-x-0 z-[50] flex justify-between items-center px-4 py-4 pointer-events-none">
+      {/* <header className="fixed top-0 inset-x-0 z-[50] flex justify-between items-center px-4 py-4 pointer-events-none">
         <button onClick={() => router.back()} className="pointer-events-auto w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center border border-gray-100 active:scale-90 transition-all">
           <ChevronLeft size={22} className="text-gray-800" />
         </button>
         <div className="flex gap-2 pointer-events-auto">
-          {/* <button className="w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center border border-gray-100"><Share2 size={18} className="text-gray-800" /></button>
-          <button className="w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center border border-gray-100"><Search size={18} className="text-gray-800" /></button> */}
+          <button className="w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center border border-gray-100"><Share2 size={18} className="text-gray-800" /></button>
+          <button className="w-10 h-10 bg-white shadow-md rounded-full flex items-center justify-center border border-gray-100"><Search size={18} className="text-gray-800" /></button>
         </div>
-      </header>
+      </header> */}
 
       {/* 🖼️ Hero Visual */}
       <div className="relative w-full h-[400px] bg-white overflow-hidden flex items-center justify-center">
@@ -279,7 +279,7 @@ export default function ServiceDetailPage() {
         </div>
         
         <button
-          onClick={() => setShowDrawer(true)}
+          onClick={() => addToCart(selected)}
           className="bg-[#030712] hover:bg-gray-900 text-white px-12 h-14 rounded-xl font-black text-sm uppercase tracking-widest shadow-xl shadow-green-100 flex items-center justify-center gap-2 active:scale-95 transition-all"
         >
           Add to cart

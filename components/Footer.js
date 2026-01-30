@@ -17,7 +17,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative bg-white border-t border-slate-100 overflow-hidden font-sans">
+    <footer className="relative bg-white border-t mb-5 border-slate-100 overflow-hidden font-sans">
       {/* Decorative Background Elements */}
       <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-50/40 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-50/30 blur-[80px] rounded-full pointer-events-none" />
@@ -57,7 +57,7 @@ export default function Footer() {
             </div>
 
             {/* Social Icons Integrated Here for better visual flow */}
-            <div className="flex gap-3 pt-2">
+            {/* <div className="flex gap-3 pt-2">
               {[Facebook, Twitter, Instagram].map((Icon, idx) => (
                 <Link 
                   key={idx} 
@@ -67,11 +67,11 @@ export default function Footer() {
                   <Icon size={18} />
                 </Link>
               ))}
-            </div>
+            </div> */}
           </motion.div>
 
           {/* Quick Contact Card Section */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -99,18 +99,18 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-          </motion.div>
+          </motion.div> */}
         </div>
 
         {/* Refined Bottom Copyright Section */}
-        <div className="mt-16 pt-8 mb-6 border-t border-slate-50 flex justify-center items-center">
+        {/* <div className="mt-16 pt-8 mb-6 border-t border-slate-50 flex justify-center items-center">
           <div className="flex items-center gap-2.5">
              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em]">
                © {currentYear} Sparky Services • All Rights Reserved
              </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </footer>
   );

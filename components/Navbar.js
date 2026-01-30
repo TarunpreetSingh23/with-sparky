@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { IoMdArrowDropdown } from "react-icons/io";
+import { FaUserCircle } from "react-icons/fa";
 // Icons
 import { GiHamburgerMenu } from "react-icons/gi";
 import {
@@ -23,7 +24,14 @@ export default function Navbar() {
   const [active, setActive] = useState("Home");
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState(null);
+// const [active, setActive] = useState(mo);
+  const [activeIndex, setActiveIndex] = useState(0);
 
+  // Update index when active state changes to move the slider
+  const handleItemClick = (name, index) => {
+    setActive(name);
+    setActiveIndex(index);
+  };
   /* ================= AUTH ================= */
   useEffect(() => {
     fetch("/api/me")
@@ -54,14 +62,10 @@ export default function Navbar() {
 
   const mobileMenuItems = [
     { name: "Home", href: "/", icon: <IoHomeSharp /> },
-    { name: "Explore", href: "/beauty", icon: <GiHamburgerMenu /> },
-    // { name: "Support", href: "/about", icon: <IoMdInformationCircleOutline /> },
+    { name: "Beauty", href: "/beauty", icon: <GiHamburgerMenu /> },
+    { name: "buetique", href: "/botique", icon: <IoMdInformationCircleOutline /> },
     { name: "Support", href: "/contact", icon: <FaPhoneAlt /> },
-    {
-      name: "Profile",
-      href: user ? "/user" : "/login",
-      icon: <CgProfile />,
-    },
+    
   ];
   const sliderItems = [
     { name: "About Sparky", href: "/about", icon: <IoHomeSharp /> },
@@ -152,67 +156,107 @@ export default function Navbar() {
       </motion.nav>
 
       {/* ================= MOBILE TOP NAV ================= */}
-      <div className="md:hidden fixed top-0 left-0 w-full h-[72px] bg-[#030712] backdrop-blur border-b-4 border-grey-200 shadow-xl flex items-center justify-between px-5 z-50">
-        <button onClick={() => setMenuOpen(true)}>
-          <GiHamburgerMenu className="text-2xl text-white" />
+    <nav className="md:hidden fixed top-0 left-0 w-full bg-[#030712] backdrop-blur-xl px-4 py-1 pt-2 z-50 flex items-center justify-between border-b border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
+      
+      {/* Glow Effect Element - Placed behind the time for focus */}
+      <div className="absolute top-0 left-4 w-24 h-12 bg-blue-500/10 blur-[40px] -z-10" />
+
+      {/* Left Section: Delivery Time & Address */}
+      <div className="flex flex-col tracking-tight">
+        <span className="text-[10px] font-black uppercase tracking-[0.1em] text-blue-400 leading-tight">
+          SPARKY in
+        </span>
+        
+        <div className="flex items-center mt-0.5 gap-1">
+          <h1 className="text-[21px] font-black text-white leading-none tracking-tighter drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">
+            16 minutes
+          </h1>
+        </div>
+
+        <button className="flex items-center gap-0.5 mt-1 group">
+          <span className="text-[13px] font-bold text-slate-100">HOME - </span>
+          <span className="text-[13px] font-medium text-slate-400 truncate max-w-[160px]">
+            Tarun, Gs colony gali no
+          </span>
+          <IoMdArrowDropdown className="text-base text-blue-400 group-hover:translate-y-0.5 transition-transform" />
         </button>
+      </div>
 
-        <Link href="/">
-          <Image src="/LOGO.jpg" alt="Logo" width={120} height={30} />
-        </Link>
-
-        <Link href="/cart" className="relative">
-          <IoBagHandleOutline className="text-2xl text-white" />
+      {/* Right Section: Profile Icon with Glow Wrapper */}
+      <div className="flex items-center gap-4">
+               <Link href="/cart" className="relative">
+          <IoBagHandleOutline className="text-3xl text-white" />
           {cartCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
               {cartCount}
             </span>
           )}
         </Link>
+        <Link href="/user">
+          <div className="relative group">
+            {/* Glow behind profile */}
+            <div className="absolute inset-0 bg-blue-500/20 blur-lg rounded-full opacity-0 group-active:opacity-100 transition-opacity" />
+            
+            <div className="relative bg-slate-800/40 p-2 rounded-full border border-white/10 shadow-lg active:scale-90 transition-all backdrop-blur-md">
+              <FaUserCircle className="text-[26px] text-slate-200" />
+            </div>
+          </div>
+        </Link>
       </div>
+    </nav>
 
     {/* ================= MOBILE BOTTOM NAV ================= */}
-  <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#030712] backdrop-blur-lg border-t border-gray-100 px-4 py-2 flex justify-around items-center z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.03)]">
-  {mobileMenuItems.map((item) => {
-    const isActive = active === item.name;
-    return (
-      <Link
-        key={item.name}
-        href={item.href}
-        onClick={() => setActive(item.name)}
-        className="relative flex flex-col items-center justify-center min-w-[65px] py-1 transition-all active:scale-90"
-      >
-        {/* Active Indicator Bar - Glides if you use a single div, 
-            but for a simpler 'fade-and-slide' feel per item: */}
-        <div 
-          className={`absolute top-[-8px] w-6 h-[3px] bg-white rounded-b-full transition-all duration-300 ease-out ${
-            isActive ? "opacity-100 transform translate-y-0" : "opacity-0 transform -translate-y-2"
-          }`} 
-        />
+ <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+      
+      {/* Navigation Container */}
+      <nav className="relative pointer-events-auto bg-[#030712] border-t border-white/10 px-2 pt-3 pb-2 flex justify-around items-center shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
+        
+        {/* The Sliding Indicator */}
+        {/* <div 
+          className="absolute top-2 h-10 bg-white/10 rounded-xl transition-all duration-300 ease-out pointer-events-none"
+          style={{
+            width: `${100 / mobileMenuItems.length}%`,
+            transform: `translateX(${activeIndex * 100}%) scale(0.85)`,
+          }}
+        /> */}
 
-        {/* Icon Container */}
-        <div
-          className={`mb-1 transition-all duration-300 ease-in-out ${
-            isActive ? "text-white scale-110" : "text-slate-400"
-          }`}
-        >
-          <span className="text-xl">
-            {item.icon}
-          </span>
-        </div>
+        {mobileMenuItems.map((item, index) => {
+          const isActive = active === item.name;
+          
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              onClick={() => handleItemClick(item.name, index)}
+              className="relative flex flex-col items-center justify-center flex-1 transition-all z-10"
+            >
+              {/* Icon - Glow effect on active */}
+              <div
+                className={`text-2xl mb-1 transition-all duration-300 ${
+                  isActive ? "text-white scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "text-slate-200"
+                }`}
+              >
+                {isActive ? item.icon : item.icon}
+              </div>
 
-        {/* Label Styling */}
-        <span
-          className={`text-[10px] font-black uppercase tracking-widest transition-all duration-300 ease-in-out ${
-            isActive ? "text-white opacity-100" : "text-slate-400 opacity-60"
-          }`}
-        >
-          {item.name}
-        </span>
-      </Link>
-    );
-  })}
-</nav>
+              {/* Label */}
+              <span
+                className={`text-[10px] uppercase tracking-widest font-bold transition-colors duration-300 ${
+                  isActive ? "text-white" : "text-slate-200"
+                }`}
+              >
+                {item.name}
+              </span>
+
+              {/* Unique Bottom Line Slit */}
+              <div className={`mt-1.5 h-[2px] rounded-full transition-all duration-500 ${
+                isActive ? "w-4 bg-blue-400" : "w-0 bg-transparent"
+              }`} />
+            </Link>
+          );
+        })}
+      </nav>
+    </div>
 
       {/* ================= MOBILE SIDEBAR ================= */}
       <AnimatePresence>

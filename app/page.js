@@ -11,14 +11,28 @@ import {
   ChevronDown,
   Clock,
   Sparkles,
-  Scissors,
+  
   Wrench,
   X,
   Star,
   ArrowRight,
-  LayoutGrid
+  LayoutGrid,
+  Scissors, 
+  
+  Palette, 
+  Wind, 
+  Waves, 
+  Zap, 
+  Smile, 
+  MessageCircle
 } from "lucide-react";
+
 import { useRouter } from "next/navigation";
+import { IoMdArrowDropdown } from "react-icons/io";
+import { FaUserCircle } from "react-icons/fa";
+
+
+
 
 /* ================= DATA ================= */
 
@@ -59,6 +73,16 @@ const STATIC_SERVICES = [
   { title: "Cleaning", price: 799, image: "/images/cleanup.jpg", link: "/services/cleaning" },
   { title: "AC Repair", price: 499, image: "/images/ac.jpg", link: "/services/ac-repair" },
 ];
+const want = [
+  { id: 1, name: 'Haircut', icon: Scissors },
+  { id: 2, name: 'Nails', icon: Zap },
+  { id: 3, name: 'Facial', icon: Sparkles },
+  { id: 4, name: 'Coloring', icon: Palette },
+  { id: 5, name: 'Spa', icon: Waves },
+  { id: 6, name: 'Waxing', icon: Wind },
+  { id: 7, name: 'Makeup', icon: Smile },
+  { id: 8, name: 'Message', icon: MessageCircle },
+];
 
 /* ================= PAGE ================= */
 
@@ -75,6 +99,7 @@ export default function SparkyServiceApp() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedService, setSelectedService] = useState(null);
+  const [selected, setSelected] = useState(null);
 
   const refs = { beautyRef, beatiqueRef, techRef };
 
@@ -143,12 +168,49 @@ export default function SparkyServiceApp() {
   };
 
   if (loading) return <PageLoader />;
+  const handleWantClick = (wantName) => {
+  setSelected(wantName); // Optional: if you want to highlight the clicked item
+
+  // 1. Find all service titles on the page
+  // We look for h3 tags (used in ServiceAppCard) or h2 tags (Drawer)
+  const serviceElements = document.querySelectorAll("h3, h2");
+  
+  let targetElement = null;
+
+  // 2. Loop through to find a match
+  for (const el of serviceElements) {
+    if (el.textContent.toLowerCase().includes(wantName.toLowerCase())) {
+      targetElement = el;
+      break;
+    }
+  }
+
+  // 3. Scroll to the element if found
+  if (targetElement) {
+    const offset = 120; // Adjust based on your sticky header height
+    const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+    
+    window.scrollTo({
+      top: elementPosition - offset,
+      behavior: "smooth",
+    });
+
+    // Optional: Add a brief "highlight" effect to the found service
+    const card = targetElement.closest('.group');
+    if (card) {
+      card.classList.add('ring-2', 'ring-blue-500', 'ring-offset-2');
+      setTimeout(() => {
+        card.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-2');
+      }, 2000);
+    }
+  }
+};
 
   return (
     <div className="min-h-screen bg-[#edf4ff] text-[#111827] pb-32 font-sans overflow-x-hidden">
-      
+       
       {/* ================= HEADER ================= */}
-      <header className="sticky top-0 z-40 bg-gradient-to-b from-[#030712] via-[#a3b7d6] to-[#edf4ff] backdrop-blur-md border-b border-blue-50 px-4 pt-4 pb-3 space-y-3">
+      <header className="sticky top-0 z-40 bg-gradient-to-b from-[#101a3c] via-[#a3b7d6] to-[#edf4ff] backdrop-blur-md  px-4 pt-4 pb-3 space-y-3">
         <div ref={searchRef} className="relative">
           <div className="flex items-center bg-gray-50 rounded-2xl px-4 py-3">
             <Search size={18} className="text-gray-400 mr-3" />
@@ -180,7 +242,7 @@ export default function SparkyServiceApp() {
           </div>
         </div>
 
-        <div className="flex gap-6 justify-center overflow-x-auto no-scrollbar pt-2">
+        {/* <div className="flex gap-6 justify-center overflow-x-auto no-scrollbar pt-2">
           {CATEGORIES.map((c, i) => (
             <button
               key={i}
@@ -195,39 +257,83 @@ export default function SparkyServiceApp() {
               </span>
             </button>
           ))}
-        </div>
+        </div> */}
       </header>
 
       {/* ================= MAIN CONTENT ================= */}
-      <main className="px-4 space-y-8 pt-6">
-        <div className="grid grid-cols-12 gap-3 h-72">
-          <div onClick={() => setSelectedService(CRAZY_DEAL)} className="col-span-5 bg-blue-100 relative overflow-hidden shadow-sm border border-blue-200 cursor-pointer rounded-3xl">
-            <div className="absolute bottom-0 right-0 w-full h-full">
-              <Image src={CRAZY_DEAL.image} fill className="object-cover object-top" alt="" />
-            </div>
-          </div>
+      <main className="px-4 space-y-8 pt-2 ">
+  
+        <div className="max-w-md mx-auto p-6 bg-white h-[50%] rounded-2xl">
+      <h2 className="text-xl font-bold text-slate-800 mb-8">
+        What do you want to do?
+      </h2>
 
-          <div className="col-span-7 grid grid-cols-2 gap-3">
-            {QUICK_SERVICES.map((d, i) => (
-              <div key={i} onClick={() => setSelectedService(d)} className="bg-gray-50 border border-gray-100 rounded-3xl relative flex flex-col justify-between overflow-hidden cursor-pointer active:scale-95 transition-all">
-                <div className="w-full h-full relative">
-                  <Image src={d.image} fill className="object-cover rounded-xl shadow-sm" alt="" />
-                </div>
+      <div className="grid grid-cols-4 gap-y-8 gap-x-4">
+        {want.map((service) => {
+          const IconComponent = service.icon;
+          const isActive = selected === service.id;
+
+          return (
+           <button
+  key={service.id}
+  onClick={() => handleWantClick(service.name)} // Changed this
+  className="flex flex-col items-center group outline-none"
+>
+              {/* Icon Circle */}
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-200 ${
+                isActive 
+                  ? "bg-[#101a3c] text-white scale-110 shadow-lg" 
+                  : "bg-cyan-50 text-grey-700 group-hover:bg-cyan-100"
+              }`}>
+                <IconComponent size={32} strokeWidth={1.5} />
               </div>
-            ))}
-          </div>
-        </div>
+              
+              {/* Label */}
+              <span className={`mt-2 text-[11px] font-bold tracking-tight transition-colors ${
+                isActive ? "text-[#101a3c]" : "text-grey-800"
+              }`}>
+                {service.name}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+
 
         <section ref={beautyRef} className="pt-2">
-          <SectionTitle title="BEAUTY SERVICES" />
-          <div className="grid grid-cols-3 gap-3">
-            {services.filter(item => item.category === "Woman Services").map(item => (
-              <div key={item.id} onClick={() => setSelectedService(item)}>
-                <ServiceAppCard item={item} />
-              </div>
-            ))}
-          </div>
-        </section>
+  <SectionTitle title="BEAUTY SERVICES" />
+  
+  {/* We define the sub-categories we want to extract */}
+  {["Waxing", "Facial", "Spa", "Haircut", "Nails", "Makeup"].map((subCat) => {
+    // Filter services that belong to "Woman Services" AND match the sub-category name
+    const filteredServices = services.filter(
+      (item) =>
+        item.category === "Woman Services" &&
+        (item.name || item.title || "").toLowerCase().includes(subCat.toLowerCase())
+    );
+
+    // Only render the sub-section if we actually found matching services in the DB
+    if (filteredServices.length === 0) return null;
+
+    return (
+      <div key={subCat} className="mb-8">
+        <h3 className="px-4 mb-3 text-sm font-bold text-[#101a3c] uppercase tracking-wider flex items-center gap-2">
+          <span className="w-1 h-4 bg-blue-400 rounded-full" />
+          {subCat}
+        </h3>
+        
+        <div className="grid grid-cols-3 gap-3 px-1">
+          {filteredServices.map((item) => (
+            <div key={item.id} onClick={() => setSelectedService(item)}>
+              <ServiceAppCard item={item} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  })}
+</section>
 
         <section ref={beatiqueRef} className="pt-4">
           <SectionTitle title="The Beatique" />
@@ -240,7 +346,7 @@ export default function SparkyServiceApp() {
           </div>
         </section>
 
-        <section ref={techRef} className="pt-4">
+        {/* <section ref={techRef} className="pt-4">
           <SectionTitle title="Tech Masters" />
           <div className="grid grid-cols-3 gap-3">
             {BESTSELLERS.map((item) => (
@@ -249,7 +355,7 @@ export default function SparkyServiceApp() {
               </div>
             ))}
           </div>
-        </section>
+        </section> */}
       </main>
 
       {/* ================= BOTTOM SLIDE DRAWER (CSS TRANSITION) ================= */}
@@ -330,9 +436,7 @@ function PageLoader() {
         </div>
         
         {/* Text */}
-        <span className="mt-4 text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">
-          Refining Experience
-        </span>
+       
       </div>
 
       {/* Scoped CSS for the animation */}
@@ -361,7 +465,7 @@ function PageLoader() {
 
 function ServiceAppCard({ item }) {
   return (
-    <div className="group relative flex w-full flex-col gap-3 bg-white p-3 rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 cursor-pointer">
+    <div className="group relative flex w-full h-[200px] flex-col gap-3 bg-white p-3 rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 cursor-pointer">
       
       {/* Image Container with Zoom Effect */}
       <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gray-50">
@@ -409,10 +513,30 @@ function ServiceAppCard({ item }) {
 
 function SectionTitle({ title }) {
   return (
-    <div className="flex justify-between items-end mb-4 px-1">
-      <h2 className="text-lg font-semibold line-clamp-2 leading-tight
-       text-blue-900">{title}</h2>
-      {/* <span className="text-blue-600 text-[10px] font-black uppercase tracking-widest mb-1 border-b-2 border-blue-600/10">See All</span> */}
+    <div className="flex justify-between items-end mb-5 px-4">
+      <div className="flex flex-col">
+        {/* Subtle Accent Line */}
+        <div className="w-8 h-[3px] bg-blue-500 rounded-full mb-1.5 opacity-80" />
+        
+        <h2 className="text-[20px] font-black text-gray-800 leading-none tracking-tight">
+          {title}
+        </h2>
+      </div>
+
+      {/* Re-enabled 'See All' with better styling */}
+      {/* <button className="flex items-center group">
+        <span className="text-[12px] font-extrabold text-blue-400 uppercase tracking-[0.05em] transition-colors group-hover:text-blue-300">
+          See All
+        </span>
+        <svg 
+          className="w-3.5 h-3.5 ml-1 text-blue-400 transition-transform group-hover:translate-x-0.5" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
+        </svg>
+      </button> */}
     </div>
   );
 }

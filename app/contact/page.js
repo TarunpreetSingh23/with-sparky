@@ -79,30 +79,10 @@ export default function SupportPage() {
       <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
 
         {/* ================= FAQ SECTION ================= */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <div className="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
-            <div className="p-8 md:p-12 border-b border-slate-50 text-center">
-              <h2 className="text-3xl md:text-4xl font-black tracking-tighter mb-3">
-                Support Center
-              </h2>
-              <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">
-                Frequently Asked Questions
-              </p>
-            </div>
-
-            <div className="divide-y divide-slate-50 px-2 pb-4">
-              <FAQItem question="Do I need to sign up to view services?" answer="No. You can browse all services without signing up. Login is required only at checkout." />
-              <FAQItem question="How do I book a service?" answer="Select a service, verify your phone number via OTP, choose date, time, and location, and confirm your booking." />
-              <FAQItem question="How is my location captured?" answer="We use Google Maps for precise location selection to ensure smooth service delivery." />
-              <FAQItem question="Will I receive an invoice?" answer="Yes. Once your booking is confirmed, an invoice is automatically sent to your WhatsApp." />
-              <FAQItem question="Can I track my service after booking?" answer="Yes. You can track the professional in real time until they arrive at your location." />
-              <FAQItem question="What payment methods are accepted?" answer="We support UPI, debit/credit cards, net banking, and other digital payment options." />
-            </div>
-          </div>
-        </div>
+       
 
         {/* ================= CONTACT & INFO ================= */}
-        <div className="grid lg:grid-cols-5 gap-8 max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-5 gap-8 mb-3 max-w-6xl mx-auto">
 
           {/* GET IN TOUCH */}
           <div className="lg:col-span-3 bg-white p-8 md:p-12 rounded-[40px] shadow-sm border border-slate-100">
@@ -115,7 +95,7 @@ export default function SupportPage() {
                   Get in Touch
                 </h3>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">
-                  We usually respond within 2 hours
+                  We usually respond within 1 hours
                 </p>
               </div>
             </div>
@@ -136,31 +116,29 @@ export default function SupportPage() {
           </div>
 
           {/* STAY UPDATED */}
-          <div className="lg:col-span-2">
-            <div className="bg-blue-600 p-10 rounded-[40px] shadow-xl shadow-blue-100 h-full flex flex-col justify-center text-white relative overflow-hidden">
-              {/* Decorative Circle */}
-              <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-              
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center">
-                  <Bell size={22} className="text-white" />
-                </div>
-                <h3 className="text-2xl font-black tracking-tight">
-                  Stay Updated
-                </h3>
-              </div>
-              
-              <p className="text-blue-100 font-medium mb-8 leading-relaxed">
-                Join our newsletter to receive exclusive offers, luxury service alerts, and home care tips.
-              </p>
+        
 
-              <input placeholder="Your email address" className="w-full p-4 rounded-2xl bg-white/10 border border-white/20 text-white placeholder:text-blue-200 mb-4 outline-none focus:bg-white/20 transition-all font-bold" />
-              <button className="w-full bg-white text-blue-600 py-4 rounded-2xl font-black text-xs uppercase tracking-widest flex justify-center items-center gap-2 shadow-lg active:scale-95 transition-all">
-                Subscribe Now <ArrowRight size={14} />
-              </button>
+        </div>
+         <div className="max-w-4xl mx-auto mb-16">
+          <div className="bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden">
+            <div className="p-8 md:p-12 border-b border-slate-50 text-center">
+              <h2 className="text-3xl md:text-4xl font-black tracking-tighter mb-3">
+                Support Center
+              </h2>
+              <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">
+                Frequently Asked Questions
+              </p>
+            </div>
+
+            <div className="divide-y divide-slate-50 px-2 pb-4">
+              <FAQItem question="Do I need to sign up to view services?" answer="No. You can browse all services without signing up. Login is required only at checkout." />
+              <FAQItem question="How do I book a service?" answer="Select a service, verify your phone number via OTP, choose date, time, and location, and confirm your booking." />
+              <FAQItem question="How is my location captured?" answer="We use Google Maps for precise location selection to ensure smooth service delivery." />
+              <FAQItem question="Will I receive an invoice?" answer="Yes. Once your booking is confirmed, an invoice is automatically sent to your WhatsApp." />
+              <FAQItem question="Can I track my service after booking?" answer="Yes. You can track the professional in real time until they arrive at your location." />
+              <FAQItem question="What payment methods are accepted?" answer="We support UPI, debit/credit cards, net banking, and other digital payment options." />
             </div>
           </div>
-
         </div>
 
         {/* ================= POLICIES LINKS ================= */}

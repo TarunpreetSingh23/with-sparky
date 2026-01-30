@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { X, ShoppingCart, Trash2, Star, ShieldCheck, Zap, ChevronRight, ChevronLeft, Share2, Search, Clock, Sparkles } from "lucide-react";
+import { X, ShoppingCart, Trash2, Star, ShieldCheck, Zap, Wind,Flame,Smile,LayoutGrid,ChevronRight, ChevronLeft, Share2, Search, Clock, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -26,9 +26,9 @@ function PageLoader() {
         </div>
         
         {/* Text */}
-        <span className="mt-4 text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">
+        {/* <span className="mt-4 text-[8px] font-black uppercase tracking-[0.3em] text-slate-400">
           Refining Experience
-        </span>
+        </span> */}
       </div>
 
       {/* Scoped CSS for the animation */}
@@ -111,92 +111,146 @@ export default function CleaningPage() {
     <div className="bg-[#fcfcfd] min-h-screen text-[#030712] font-sans selection:bg-blue-100 overflow-x-hidden">
       
       {/* 🔮 Mesh Gradients */}
-      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-100/40 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] bg-indigo-50/50 blur-[100px] rounded-full" />
-      </div>
+      {/* 📍 Ultra-Modern Professional Glass Header */}
+{/* <div className="sticky top-0 z-40 items-center justify-center"> */}
+  {/* The Glass Base */}
+  {/* <div className="absolute inset-0 bg-white/60 backdrop-blur-xl border-b border-white/40 shadow-[0_2px_20px_-10px_rgba(0,0,0,0.05)]" /> */}
 
-      {/* 📍 Glass Header */}
-      <div className="sticky top-0 bg-white/70 backdrop-blur-2xl z-40 border-b border-white/20">
-        <div className="flex items-center justify-between px-5 py-3">
-          <div>
-            <button onClick={() => router.back()} className="p-1.5 hover:bg-slate-100 rounded-full transition-colors"><ChevronLeft size={20}/></button>
+  <div className="relative">
+    {/* Upper Row: Navigation & Title */}
+    {/* <div className="flex items-center justify-between px-6 py-4"> */}
+      {/* <button 
+        onClick={() => router.back()} 
+        className="w-10 h-10 flex items-center justify-center bg-white/80 rounded-full border border-slate-100 shadow-sm active:scale-90 transition-transform"
+      >
+        <ChevronLeft size={20} className="text-slate-800" />
+      </button> */}
+
+      {/* <div className="flex flex-col items-center justify-center">
+        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-blue-500 mb-0.5 ml-1">
+          {selectedCategory === "ALL" ? "Premium Selection" : "Category"}
+        </span>
+        <h1 className="text-16px font-black tracking-tight text-[#101a3c] uppercase italic leading-none">
+          {selectedCategory === "ALL" ? "Bestsellers" : selectedCategory}
+        </h1>
+      </div> */}
+
+      {/* <button className="w-10 h-10 flex items-center justify-center bg-white/80 rounded-full border border-slate-100 shadow-sm active:scale-90 transition-transform">
+        <Share2 size={18} className="text-slate-800" />
+      </button> */}
+    {/* </div> */}
+
+    {/* Lower Row: Scrollable Filter Chips */}
+   <div className="max-w-md mx-auto p-6 bg-white rounded-3xl shadow-sm border border-slate-50">
+  <h2 className="text-xl font-black text-[#101a3c] mb-6 uppercase italic tracking-tight px-2">
+    Choose a Service
+  </h2>
+
+  {/* Horizontal Scroll Container */}
+  <div className="flex overflow-x-auto no-scrollbar gap-4 pb-2 px-2 scroll-smooth items-start">
+    {["ALL", "FACIAL", "CLEANSING", "WAXING", "MAKEUP"].map((cat) => {
+      const isActive = selectedCategory === cat;
+      
+      // Mapping text categories to Lucide Icons
+      const IconComponent = {
+        ALL: LayoutGrid,
+        FACIAL: Sparkles,
+        CLEANSING: Wind,
+        WAXING: Flame,
+        MAKEUP: Smile,
+      }[cat] || Sparkles;
+
+      return (
+        <button
+          key={cat}
+          onClick={() => setSelectedCategory(cat)}
+          className="flex flex-col items-center flex-shrink-0 group outline-none transition-transform active:scale-95"
+        >
+          {/* Icon Circle */}
+          <div
+            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 ${
+              isActive
+                ? "bg-[#101a3c] text-white scale-105 shadow-[0_10px_20px_rgba(16,26,60,0.2)]"
+                : "bg-cyan-50 text-cyan-600 group-hover:bg-cyan-100"
+            }`}
+          >
+            <IconComponent size={26} strokeWidth={isActive ? 2 : 1.5} />
           </div>
-          <div className="text-center">
-            <h1 className="text-[14px] font-black tracking-tighter uppercase italic leading-none">{selectedCategory === "ALL" ? "Bestsellers" : selectedCategory}</h1>
-            <p className="text-[7px] font-bold text-blue-600 uppercase tracking-widest mt-0.5">Curated</p>
-          </div>
-          <div />
-        </div>
-        
-        <div className="flex px-5 gap-2 pb-4 overflow-x-auto no-scrollbar">
-          {["ALL", "FACIAL", "CLEANSING", "WAXING", "MAKEUP"].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-1.5 rounded-xl text-[8px] font-black uppercase tracking-[0.1em] whitespace-nowrap transition-all border ${
-                selectedCategory === cat 
-                ? "bg-[#030712] border-[#030712] text-white shadow-sm" 
-                : "bg-white/50 border-slate-200 text-slate-400"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      </div>
+
+          {/* Label */}
+          <span
+            className={`mt-3 text-[10px] font-black uppercase tracking-widest transition-colors ${
+              isActive ? "text-[#101a3c]" : "text-slate-400"
+            }`}
+          >
+            {cat}
+          </span>
+          
+          {/* Active Indicator Dot */}
+          {isActive && (
+            <div className="w-1.5 h-1.5 bg-[#101a3c] rounded-full mt-1" />
+          )}
+        </button>
+      );
+    })}
+  </div>
+</div>
+  </div>
+{/* </div> */}
 
       {/* 🔹 Bento Grid Service List */}
-      <main className="max-w-4xl mx-auto px-5 py-6 grid grid-cols-2 gap-4 pb-44 relative z-10">
-        {filteredServices.map((service, idx) => (
-          <div 
-            key={service._id} 
-            className="bg-white/80 backdrop-blur-md border border-white rounded-[2rem] overflow-hidden shadow-sm flex flex-col group relative active:scale-[0.97] transition-transform"
-            onClick={() => setSelectedService(service)}
+      {/* 🔹 List View Service List (Matches image_e1b5c4.jpg) */}
+<main className="max-w-xl mx-auto px-5 py-6 flex flex-col gap-6 pb-44 relative z-10">
+  {filteredServices.map((service) => (
+    <div 
+      key={service._id} 
+      className="flex gap-4 items-center bg-transparent group cursor-pointer"
+      onClick={() => setSelectedService(service)}
+    >
+      {/* 1. Image Container - Matches rounded corners from screenshot */}
+      <div className="relative w-32 h-32 flex-shrink-0 rounded-[2rem] overflow-hidden shadow-sm">
+        <Image 
+          src={service.image} 
+          alt={service.title} 
+          fill 
+          className="object-cover group-hover:scale-110 transition-transform duration-700" 
+        />
+      </div>
+
+      {/* 2. Content Section */}
+      <div className="flex flex-col flex-1">
+        <h3 className="text-[18px] font-bold text-[#1a1a1b] leading-tight mb-1">
+          {service.title}
+        </h3>
+        
+        {/* Meta Info (Matches the grey text in screenshot) */}
+        <div className="flex flex-wrap gap-x-2 gap-y-1 mb-3">
+          <span className="text-[11px] text-slate-400 font-medium">{service.description}</span>
+          {/* <span className="text-[11px] text-slate-400 font-medium">Package</span>
+          <span className="text-[11px] text-slate-400 font-medium">Offer till Sep 18, 2021</span> */}
+        </div>
+
+        <div className="flex items-center justify-between mt-auto">
+          {/* Price Styling */}
+          <span className="text-[15px] font-bold text-blue-600">
+            ₹{service.price}
+          </span>
+
+          {/* Book Now Button - Indigo color matching image_e1b5c4.jpg */}
+          <button 
+            onClick={() => { router.push(`services/${service.title}`) }} 
+            className="bg-blue-600 text-white px-5 py-2 rounded-xl font-bold text-[12px] shadow-sm hover:bg-[#4f46e5] active:scale-95 transition-all"
           >
-            <div className="relative aspect-[4/5] w-full bg-slate-50">
-              <Image src={service.image} alt={service.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-              
-              <div className="absolute bottom-2 right-2">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); addToCart(service); }}
-                  className="bg-white text-[#030712] border border-slate-100 px-3 py-1.5 rounded-xl font-black text-[8px] shadow-lg hover:bg-black hover:text-white transition-all uppercase tracking-widest"
-                >
-                  Add
-                </button>
-              </div>
-
-              <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-md border border-white px-1.5 py-0.5 rounded-lg flex items-center gap-1 shadow-sm">
-                <Clock size={10} className="text-blue-500" />
-                <span className="text-[7px] font-black text-slate-700 uppercase">8 mins</span>
-              </div>
-            </div>
-
-            <div className="p-3 flex flex-col flex-1">
-              <div className="flex justify-between items-start mb-1">
-                <h3 className="text-[10px] font-black tracking-tight text-[#1a1a1a] line-clamp-1 uppercase italic">
-                  {service.title}
-                </h3>
-                <div className="flex items-center gap-0.5 ml-1">
-                  <Star size={8} className="text-amber-400 fill-amber-400" />
-                  <span className="text-[8px] font-black text-slate-400">{service.rating?.average || "4.8"}</span>
-                </div>
-              </div>
-              
-              <div className="mt-auto pt-2 flex items-end justify-between border-t border-slate-50/50">
-                <div className="flex flex-col">
-                  <p className="text-[9px] text-blue-600 font-black tracking-tighter italic leading-none">₹{service.price}</p>
-                  <p className="text-[7px] text-slate-300 line-through mt-0.5">₹{service.price + 150}</p>
-                </div>
-                <Sparkles size={10} className="text-blue-200" />
-              </div>
-            </div>
-          </div>
-        ))}
-      </main>
+            view more
+          </button>
+        </div>
+      </div>
+    </div>
+  ))}
+</main>
 
       {/* 🚀 Floating Checkout Pill */}
-      <div className={`fixed bottom-17 left-1/2 -translate-x-1/2 w-[85%] max-w-sm z-50 transition-all duration-300 transform ${cart.length > 0 ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
+      <div className={`fixed bottom-19 left-1/2 -translate-x-1/2 w-[85%] max-w-sm z-50 transition-all duration-300 transform ${cart.length > 0 ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}>
         <div 
           onClick={() => setCartOpen(true)}
           className="bg-[#030712] text-white p-2 pr-4 rounded-[1.8rem] shadow-xl flex items-center justify-between border border-white/10 cursor-pointer"
@@ -256,10 +310,10 @@ export default function CleaningPage() {
               <p className="text-2xl font-black text-[#030712] tracking-tighter italic leading-none">₹{selectedService?.price}</p>
             </div>
             <button 
-              onClick={() => { addToCart(selectedService); setSelectedService(null); }}
+             onClick={() => { router.push(`services/${selectedService.title}`) }}
               className="bg-[#030712] text-white px-8 py-3.5 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg active:scale-95 transition-all"
             >
-              Confirm Choice
+              view Info
             </button>
           </div>
         </div>
