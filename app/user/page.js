@@ -166,10 +166,10 @@ export default function ProfilePage() {
                       <IoTimeOutline className="text-blue-500" />
                       {task.timeSlot}
                     </div>
-                    <div className="col-span-2 flex items-center gap-2 text-xs">
+                    {/* <div className="col-span-2 flex items-center gap-2 text-xs">
                       <IoLocationOutline className="text-blue-500" />
                       <span className="line-clamp-1">{task.address}</span>
-                    </div>
+                    </div> */}
                   </div>
 
                   <button

@@ -85,7 +85,7 @@ export default function CartPage() {
             href="/"
             className="text-blue-600 text-xs font-black uppercase tracking-widest"
           >
-            Add More
+            Browse service
           </Link>
         </header>
 
@@ -93,12 +93,12 @@ export default function CartPage() {
           <div className="bg-white border border-blue-100 rounded-3xl p-16 text-center shadow-sm">
             <ShoppingBag size={48} className="mx-auto text-gray-400 mb-4" />
             <h2 className="text-lg font-bold mb-2">Your cart is empty</h2>
-            <Link
+            {/* <Link
               href="/"
               className="text-blue-600 text-sm font-bold"
             >
               Browse Services
-            </Link>
+            </Link> */}
           </div>
         ) : (
           <>
@@ -159,7 +159,10 @@ export default function CartPage() {
             {/* Bill Summary */}
             <div className="bg-white border border-blue-100 rounded-3xl p-6 space-y-4 shadow-sm">
               <Row label="Subtotal" value={`₹${subtotal.toFixed(0)}`} />
-              <Row label="Taxes & Fees" value={`₹${tax.toFixed(0)}`} />
+              <Row label="Handling fee" value={`₹0`} />
+              <Row label="Visiting charges" value={`₹0`} />
+              {/* <Row label="" value={`₹${subtotal.toFixed(0)}`} /> */}
+              {/* <Row label="Taxes & Fees" value={`₹${tax.toFixed(0)}`} /> */}
               {discount > 0 && (
                 <Row
                   label="Discount"
@@ -172,7 +175,7 @@ export default function CartPage() {
                   Amount Payable
                 </span>
                 <span className="text-3xl font-black tracking-tighter">
-                  ₹{total.toFixed(0)}
+                  ₹{subtotal.toFixed(0)}
                 </span>
               </div>
             </div>

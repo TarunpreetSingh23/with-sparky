@@ -151,7 +151,7 @@ export default function ServiceDetailPage() {
         <Image src={selected.image} alt={selected.title} fill className="object-cover" priority />
         <div className="absolute bottom-6 left-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm flex items-center gap-2 border border-gray-100">
            <Clock size={14} className="text-blue-600" />
-           <span className="text-[11px] font-black tracking-tight text-gray-800 uppercase">Arriving in 15 mins</span>
+           <span className="text-[11px] font-black tracking-tight text-gray-800 uppercase">Arriving in 40 mins</span>
         </div>
       </div>
 
@@ -175,7 +175,7 @@ export default function ServiceDetailPage() {
             <div className="flex items-center gap-2 mt-4 pt-2 border-t border-gray-50">
               <span className="text-2xl font-black text-[#1a1a1a]">₹{selected.price}</span>
               <span className="text-gray-400 text-sm line-through font-medium">MRP ₹{selected.price + 200}</span>
-              <span className="bg-grey-700 text-white text-[9px] font-black px-2 py-1 rounded-md uppercase shadow-sm">24% OFF</span>
+              {/* <span className="bg-grey-700 text-white text-[9px] font-black px-2 py-1 rounded-md uppercase shadow-sm">24% OFF</span> */}
             </div>
           </div>
         </section>

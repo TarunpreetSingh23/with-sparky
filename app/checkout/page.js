@@ -59,7 +59,7 @@ export default function Checkout() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [loginPhone, setloginPhone] = useState("");
-  const [pincode, setPincode] = useState("");
+  const [pincode, setPincode] = useState("143001");
   const [date, setDate] = useState("");
   const [timeSlot, setTimeSlot] = useState("");
   const [errors, setErrors] = useState({});
@@ -155,8 +155,59 @@ export default function Checkout() {
     }
   };
 
+const draw = {
+  hidden: { pathLength: 0, opacity: 0 },
+  visible: {
+    pathLength: 1,
+    opacity: 1,
+    transition: {
+      pathLength: { delay: 0.3, type: "spring", duration: 1.5, bounce: 0 },
+      opacity: { delay: 0.3, duration: 0.01 }
+    }
+  }
+};
   const next5Days = Array.from({ length: 5 }, (_, i) => addDays(new Date(), i));
-  const slots = ["09:00 - 10:00", "10:30 - 11:30", "12:00 - 13:00", "15:00 - 16:00", "16:30 - 17:30"];
+  const slots = [
+  "09:00 AM",
+  "10:00 AM",
+  "11:00 AM",
+  "12:00 PM",
+  "01:00 PM",
+  "02:00 PM",
+  "03:00 PM",
+  "04:00 PM",
+  "05:00 PM",
+  
+];
+ const parseTime = (timeStr) => {
+  const [time, modifier] = timeStr.split(" ");
+  let [hours, minutes] = time.split(":").map(Number);
+
+  if (modifier === "PM" && hours !== 12) hours += 12;
+  if (modifier === "AM" && hours === 12) hours = 0;
+
+  const date = new Date();
+  date.setHours(hours, minutes, 0, 0);
+  return date;
+};
+const now = new Date();
+const oneHourLater = new Date(now.getTime() + 60 * 60 * 1000);
+const isToday =
+  date === format(new Date(), "yyyy-MM-dd");
+
+const filteredSlots = slots.map(slot => {
+  if (!isToday) {
+    return { slot, isPast: false };
+  }
+
+  const slotTime = parseTime(slot);
+  return {
+    slot,
+    isPast: slotTime < oneHourLater,
+  };
+});
+
+
 
   // ---------------- UI HELPERS ----------------
   const steps = [
@@ -208,59 +259,82 @@ export default function Checkout() {
 
       {/* --- Success Modal --- */}
       <AnimatePresence>
-        {orderSuccess && (
-          <motion.div 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            className="fixed inset-0 z-[100] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+      {orderSuccess && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[100] bg-black/40 backdrop-blur-md flex items-center justify-center p-6"
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="bg-white rounded-[3rem] p-10 w-full max-w-sm text-center shadow-[0_20px_50px_rgba(0,0,0,0.15)] relative overflow-hidden"
           >
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }} 
-              animate={{ scale: 1, opacity: 1 }} 
-              className="bg-white rounded-[2.5rem] p-8 w-full max-w-sm text-center shadow-2xl relative overflow-hidden"
-            >
-              <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 to-emerald-400" />
-              <div className="mx-auto w-24 h-24 rounded-full bg-emerald-50 border-4 border-emerald-100 flex items-center justify-center mb-6">
-                <CheckCircle2 size={48} className="text-emerald-500" />
-              </div>
-              <h2 className="text-3xl font-black mb-2 tracking-tight text-gray-900">Booked!</h2>
-              <p className="text-gray-500 text-sm mb-8 font-medium leading-relaxed">
-                Your service order <span className="font-bold text-gray-900">#{orderId}</span> has been successfully placed.
-              </p>
-              
-              <div className="space-y-3">
-                <Link
-                  href={invoiceUrl}
-                  target="_blank"
-                  className="block w-full py-4 bg-gray-900 text-white rounded-2xl font-bold uppercase text-xs tracking-widest hover:bg-black transition-colors"
-                >
-                  Download Invoice
-                </Link>
-                <button onClick={() => router.push("/")} className="block w-full py-4 text-gray-400 font-bold uppercase text-xs tracking-widest hover:text-gray-600">
-                  Return Home
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {/* Success Animation Circle */}
+            <div className="relative mx-auto w-24 h-24 mb-8">
+              <motion.div 
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+                className="absolute inset-0 bg-emerald-500 rounded-full" 
+              />
+              <svg
+                className="absolute inset-0 w-full h-full"
+                viewBox="0 0 100 100"
+              >
+                <motion.path
+                  d="M30 50L45 65L70 35"
+                  fill="transparent"
+                  strokeWidth="8"
+                  stroke="white"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  variants={draw}
+                  initial="hidden"
+                  animate="visible"
+                />
+              </svg>
+            </div>
 
+            {/* <h2 className="text-2xl font-bold mb-2 text-gray-800">Payment Successful</h2> */}
+            <p className="text-gray-500 text-sm mb-10 leading-relaxed px-4">
+              Order <span className="text-gray-900 font-semibold">#{orderId}</span> confirmed. 
+              We've sent the details in your whatsapp.
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <div
+              
+                
+                className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl font-semibold transition-all shadow-lg shadow-emerald-200 active:scale-95"
+              >
+                Invoice will be send on whatsapp
+              </div>
+              
+              <button 
+                onClick={() => router.push("/")} 
+                className="w-full py-4 text-gray-500 font-medium hover:text-gray-800 transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
       {/* --- Main App Header --- */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
-              <ShieldCheck size={20} />
-            </div>
-            <span className="font-black text-xl tracking-tight hidden sm:block">SecureCheckout</span>
-          </div>
+        <div className="max-w-6xl mx-auto px-4 h-20 flex items-center justify-center">
+          
           
           {/* Custom Stepper */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-6 sm:gap-4">
             {steps.map((s, i) => (
               <div key={s.num} className="flex items-center gap-2">
                 <div className={`
-                  flex items-center gap-2 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide transition-all
+                  flex items-center gap-4 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wide transition-all
                   ${step === s.num ? "bg-blue-600 text-white shadow-md shadow-blue-500/20" : step > s.num ? "bg-emerald-50 text-emerald-600 border border-emerald-100" : "bg-gray-100 text-gray-400"}
                 `}>
                   <s.icon size={12} />
@@ -292,7 +366,7 @@ export default function Checkout() {
                   value={name} 
                   onChange={(e) => setName(e.target.value)} 
                   error={errors.name} 
-                  placeholder="e.g. John Doe" 
+                  placeholder="Enter Your Name" 
                   icon={User}
                 />
                 <InputField 
@@ -362,7 +436,7 @@ export default function Checkout() {
                     {errors.address && <span className="text-red-500 text-[10px] font-bold uppercase">{errors.address}</span>}
                   </div>
                   
-                  <InputField label="Pincode" value={pincode} onChange={(e) => setPincode(e.target.value)} error={errors.pincode} placeholder="e.g. 110001" icon={MapPin} />
+                  {/* <InputField label="Pincode" value={pincode} onChange={(e) => setPincode(e.target.value)} error={errors.pincode} placeholder="e.g. 110001" icon={MapPin} /> */}
                 </div>
 
                 <div className="mt-10">
@@ -410,14 +484,26 @@ export default function Checkout() {
                  <div className="space-y-4">
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2"><Clock size={14}/> Select Time Slot</label>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {slots.map((slot, i) => (
-                        <button key={i} onClick={() => setTimeSlot(slot)}
-                          className={`py-4 px-2 rounded-xl font-bold text-xs border-2 transition-all
-                            ${timeSlot === slot ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20" : "bg-white border-gray-100 text-gray-500 hover:border-blue-200"}`}>
-                          {slot}
-                        </button>
-                      ))}
-                    </div>
+  {filteredSlots.map(({ slot, isPast }, i) => (
+    <button
+      key={i}
+      disabled={isPast}
+      onClick={() => !isPast && setTimeSlot(slot)}
+      className={`py-4 px-2 rounded-xl font-bold text-xs border-2 transition-all
+        ${
+          isPast
+            ? "bg-gray-100 border-gray-200 text-gray-400 line-through cursor-not-allowed"
+            : timeSlot === slot
+            ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-600/20"
+            : "bg-white border-gray-100 text-gray-500 hover:border-blue-200"
+        }
+      `}
+    >
+      {slot}
+    </button>
+  ))}
+</div>
+
                  </div>
 
                  <div className="mt-12 pt-8 border-t border-gray-100">
@@ -457,16 +543,24 @@ export default function Checkout() {
               </div>
 
               <div className="mt-6 pt-6 border-t border-dashed border-gray-200 space-y-2">
-                <div className="flex justify-between items-center text-xs text-gray-500 font-medium">
-                  <span>Subtotal</span>
+                <div className="flex justify-between items-center text-s text-gray-500 font-medium">
+                  <span>Total</span>
                   <span>₹{subtotal}</span>
                 </div>
-                <div className="flex justify-between items-center text-xs text-green-600 font-bold">
+                <div className="flex justify-between items-center text-s text-green-600 font-bold">
                   <span>Discount (10%)</span>
                   <span>- ₹{discount.toFixed(0)}</span>
                 </div>
+                <div className="flex justify-between items-center text-s text-green-600 font-bold">
+                  <span>Handling charges</span>
+                  <span>- ₹0</span>
+                </div>
+                <div className="flex justify-between items-center text-s text-green-600 font-bold">
+                  <span>Visiting charges</span>
+                  <span>- ₹0</span>
+                </div>
                 <div className="flex justify-between items-center pt-4">
-                   <span className="text-xs font-black uppercase text-gray-400">Total to Pay</span>
+                   <span className="text-s font-black uppercase text-gray-800">Grand total</span>
                    <span className="text-3xl font-black text-gray-900 tracking-tighter">₹{total.toFixed(0)}</span>
                 </div>
               </div>

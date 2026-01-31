@@ -11,13 +11,7 @@ import { LocateFixed, Search, Loader2 } from "lucide-react";
 const mapContainerStyle = {
   width: "100%",
   height: "100%",
-
   borderRadius: "1.5rem",
-
-  borderRadius: "1.5rem", // matches rounded-3xl
-
-  borderRadius: "1.5rem",
-
 };
 
 const mapOptions = {
@@ -31,7 +25,10 @@ const mapOptions = {
 };
 
 export default function UserMap({ setAddress, setPincode }) {
-  const [center, setCenter] = useState({ lat: 28.6139, lng: 77.2090 }); 
+
+  // ✅ CHANGED: Default center set to Amritsar
+  const [center, setCenter] = useState({ lat: 31.6340, lng: 74.8723 });
+
   const [isDragging, setIsDragging] = useState(false);
   const [loadingAddress, setLoadingAddress] = useState(false);
   
@@ -57,40 +54,45 @@ export default function UserMap({ setAddress, setPincode }) {
             lng: position.coords.longitude,
           };
           setCenter(pos);
-          if(mapRef.current) {
+          if (mapRef.current) {
             mapRef.current.panTo(pos);
           }
           setLoadingAddress(false);
         },
         () => {
+          // ❗ If user denies location → stays in Amritsar
           setLoadingAddress(false);
         }
       );
     }
   };
 
-  const reverseGeocode = async (lat, lng) => {
-    try {
-      setLoadingAddress(true);
-      const res = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+ const reverseGeocode = async (lat, lng) => {
+  try {
+    setLoadingAddress(true);
+    const res = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`
+    );
+    const data = await res.json();
+
+    if (data.results?.[0]) {
+      const result = data.results[0];
+
+      // ✅ THIS IS THE FIX
+      setAddress(result.formatted_address, lat, lng);
+
+      const pin = result.address_components.find((c) =>
+        c.types.includes("postal_code")
       );
-      const data = await res.json();
-      
-      if (data.results?.[0]) {
-        const result = data.results[0];
-        setAddress(result.formatted_address);
-        const pin = result.address_components.find((c) =>
-          c.types.includes("postal_code")
-        );
-        if (pin && setPincode) setPincode(pin.long_name);
-      }
-    } catch (error) {
-      console.error("Geocoding error:", error);
-    } finally {
-      setLoadingAddress(false);
+      if (pin && setPincode) setPincode(pin.long_name);
     }
-  };
+  } catch (error) {
+    console.error("Geocoding error:", error);
+  } finally {
+    setLoadingAddress(false);
+  }
+};
+
 
   const onLoad = useCallback((map) => {
     mapRef.current = map;
@@ -132,7 +134,7 @@ export default function UserMap({ setAddress, setPincode }) {
   return (
     <div className="relative w-full h-full rounded-[2rem] overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-gray-100 bg-gray-50 group">
       
-      {/* --- Top Search Bar --- */}
+      {/* Top Search Bar */}
       <div className="absolute top-4 left-4 right-4 z-50">
         <div className="relative bg-white shadow-xl shadow-black/5 rounded-2xl flex items-center p-1 transition-all focus-within:ring-2 focus-within:ring-blue-500/20">
           <div className="pl-3 text-gray-400">
@@ -152,44 +154,25 @@ export default function UserMap({ setAddress, setPincode }) {
         </div>
       </div>
 
-      {/* --- CUSTOM CENTER MARKER --- */}
-      {/* FIX: z-index set to 50 to appear above map tiles */}
+      {/* Center Marker */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none flex flex-col items-center pb-[50px]">
-        
-        {/* Tooltip */}
-        <div 
-          className={`mb-3 px-4 py-2 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded-full shadow-2xl transition-all duration-200 transform
+        <div
+          className={`mb-3 px-4 py-2 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded-full shadow-2xl transition-all duration-200
             ${isDragging ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"}
           `}
         >
           {loadingAddress ? "Locating..." : "Deliver Here"}
         </div>
 
-        {/* CUSTOM IMAGE PIN */}
-        {/* Replace '/pin.png' with your actual image path */}
         <div className={`relative transition-transform duration-200 ${isDragging ? "-translate-y-4 scale-110" : "translate-y-0 scale-100"}`}>
-            {/* If you don't have an image yet, this SVG acts as a nice placeholder */}
-             <img 
-               src="https://cdn-icons-png.flaticon.com/512/927/927667.png" 
-               alt="Location Marker" 
-               className="w-12 h-12 drop-shadow-2xl"
-             />
-             {/* Pin Shadow */}
-             <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-2 bg-black/20 rounded-full blur-[2px]" />
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/927/927667.png"
+            alt="Location Marker"
+            className="w-12 h-12 drop-shadow-2xl"
+          />
+          <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-2 bg-black/20 rounded-full blur-[2px]" />
         </div>
       </div>
-
-      {/* --- Locate Me Button --- */}
-      <button
-        onClick={getCurrentLocation}
-        className="absolute bottom-6 right-6 z-50 bg-white text-blue-600 p-4 rounded-2xl shadow-xl shadow-blue-900/10 border border-gray-50 active:scale-95 transition-all hover:bg-blue-50"
-      >
-        {loadingAddress && isDragging ? (
-          <Loader2 size={22} className="animate-spin" />
-        ) : (
-          <LocateFixed size={22} />
-        )}
-      </button>
 
       <GoogleMap
         mapContainerStyle={mapContainerStyle}

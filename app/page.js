@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import FloatingOrderTracker from "@/components/FloatingOrderTracker";
+
 import { useRef, useState, useEffect } from "react";
 import {
   Search,
@@ -83,16 +85,50 @@ const want = [
   { id: 7, name: 'Makeup', icon: Smile },
   { id: 8, name: 'Message', icon: MessageCircle },
 ];
-
+const MOCK_ORDERS = [
+  {
+    orderId: "ORD-99283",
+    status: "pending", // Should show in floating card
+    serviceName: "Gold Facial",
+    price: 999,
+    date: "2026-01-31",
+    customerName: "Guest User"
+  },
+  {
+    orderId: "ORD-88122",
+    status: "accepted", // Should show in floating card
+    serviceName: "AC Repair",
+    price: 499,
+    date: "2026-01-30",
+    customerName: "Guest User"
+  },
+  {
+    orderId: "ORD-77100",
+    status: "completed", // Filter should ignore this
+    serviceName: "Manicure",
+    price: 199,
+    date: "2026-01-28",
+    customerName: "Guest User"
+  },
+  {
+    orderId: "ORD-00123",
+    status: "cancelled", // Filter should ignore this
+    serviceName: "Deep Cleanup",
+    price: 799,
+    date: "2026-01-25",
+    customerName: "Guest User"
+  }
+];
 /* ================= PAGE ================= */
 
 export default function SparkyServiceApp() {
+  
   const beautyRef = useRef(null);
   const beatiqueRef = useRef(null);
   const techRef = useRef(null);
   const searchRef = useRef(null);
   const router = useRouter();
-  
+  const [orders, setorders] = useState([])
   const [services, setServices] = useState([]);
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
@@ -100,6 +136,9 @@ export default function SparkyServiceApp() {
   const [loading, setLoading] = useState(true);
   const [selectedService, setSelectedService] = useState(null);
   const [selected, setSelected] = useState(null);
+  const active = orders.find(order => 
+   order.status !== 'cancelled' && order.status !== 'completed'
+   );
 
   const refs = { beautyRef, beatiqueRef, techRef };
 
@@ -117,7 +156,23 @@ export default function SparkyServiceApp() {
     };
     fetchServices();
   }, []);
-
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await fetch("/api/orders/by-phone");
+        const data = await res.json();
+        setorders(data);
+        
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, []);
+// Filter for orders that are neither 'cancelled' nor 'completed'
+   
   const handleBooking = (service) => {
     const itemToAdd = {
       title: service.name || service.title,
@@ -135,17 +190,25 @@ export default function SparkyServiceApp() {
   };
 
   useEffect(() => {
-    if (query.length < 2) {
-      setResults([]);
-      setOpen(false);
-      return;
-    }
-    const filtered = STATIC_SERVICES.filter((s) =>
-      s.title.toLowerCase().includes(query.toLowerCase())
-    );
-    setResults(filtered.slice(0, 5));
-    setOpen(true);
-  }, [query]);
+  // Only search if user has typed at least 2 characters
+  if (query.trim().length < 2) {
+    setResults([]);
+    setOpen(false);
+    return;
+  }
+
+  // Filter the services fetched from your database API
+  const filtered = services.filter((s) => {
+    const serviceTitle = (s.name || s.title || "").toLowerCase();
+    const serviceCategory = (s.category || "").toLowerCase();
+    const searchTerm = query.toLowerCase();
+    
+    return serviceTitle.includes(searchTerm) || serviceCategory.includes(searchTerm);
+  });
+
+  setResults(filtered.slice(0, 6)); // Show top 6 matches
+  setOpen(true);
+}, [query, services]);
 
   useEffect(() => {
     const handler = (e) => {
@@ -227,19 +290,80 @@ export default function SparkyServiceApp() {
           </div>
 
           {/* Search Dropdown with CSS Transition */}
-          <div className={`absolute z-50 w-full mt-2 bg-white rounded-2xl border border-gray-100 shadow-xl overflow-hidden transition-all duration-200 ${open && results.length > 0 ? "opacity-100 translate-y-0 visible" : "opacity-0 -translate-y-2 invisible"}`}>
-            {results.map((s) => (
-              <div key={s.title} onClick={() => { setSelectedService(s); setOpen(false); }} className="flex items-center gap-3 p-3 hover:bg-blue-50 cursor-pointer">
-                <div className="relative w-10 h-10 rounded-xl overflow-hidden border">
-                  <Image src={s.image} alt={s.title} fill className="object-cover" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-bold text-gray-800">{s.title}</p>
-                  <p className="text-xs text-blue-500 font-semibold">Starts ₹{s.price}</p>
-                </div>
-              </div>
-            ))}
+     <div
+  className={`absolute z-50 w-full mt-3 bg-white rounded-2xl border border-gray-100
+  shadow-[0_16px_40px_rgba(0,0,0,0.12)]
+  transition-all duration-200 origin-top
+  ${
+    open
+      ? "opacity-100 scale-100 translate-y-0 visible"
+      : "opacity-0 scale-95 -translate-y-2 invisible"
+  }`}
+>
+  {results.length > 0 ? (
+    <div className="max-h-[420px] overflow-y-auto overscroll-contain">
+      {results.map((s, index) => (
+        <div
+          key={s.id || s.title || index}
+          onClick={() => {
+            setSelectedService(s);
+            setOpen(false);
+            setQuery("");
+          }}
+          className="group flex items-center gap-4 px-4 py-3 cursor-pointer
+          hover:bg-blue-50 transition-colors
+          border-b border-gray-100 last:border-0"
+        >
+          {/* Image */}
+          <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+            <Image
+              src={s.image || "/images/placeholder.jpg"}
+              alt={s.name || s.title}
+              fill
+              className="object-cover"
+            />
           </div>
+
+          {/* Title + Category */}
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-gray-900 truncate">
+              {s.name || s.title}
+            </p>
+            <p className="text-[11px] text-gray-400 uppercase tracking-wide mt-0.5 truncate">
+              {s.category}
+            </p>
+          </div>
+
+          {/* Price + Arrow */}
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-sm font-bold text-blue-600">
+              ₹{s.price}
+            </span>
+            <ArrowRight
+              size={16}
+              className="text-gray-900 group-hover:text-blue-600 transition-colors"
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  ) : (
+    /* No Results */
+    <div className="px-6 py-10 text-center">
+      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3">
+        <Search size={18} className="text-gray-400" />
+      </div>
+      <p className="text-sm font-semibold text-gray-800">
+        No services found
+      </p>
+      <p className="text-xs text-gray-400 mt-1">
+        Try searching for <span className="font-semibold">Facial</span> or{" "}
+        <span className="font-semibold">AC</span>
+      </p>
+    </div>
+  )}
+</div>
+
         </div>
 
         {/* <div className="flex gap-6 justify-center overflow-x-auto no-scrollbar pt-2">
@@ -303,7 +427,7 @@ export default function SparkyServiceApp() {
 
         <section ref={beautyRef} className="pt-2">
   <SectionTitle title="BEAUTY SERVICES" />
-  
+  <FloatingOrderTracker activeOrder={active} />
   {/* We define the sub-categories we want to extract */}
   {["Waxing", "Facial", "Spa", "Haircut", "Nails", "Makeup"].map((subCat) => {
     // Filter services that belong to "Woman Services" AND match the sub-category name
@@ -509,8 +633,7 @@ function ServiceAppCard({ item }) {
   );
 }
 
-
-
+ 
 function SectionTitle({ title }) {
   return (
     <div className="flex justify-between items-end mb-5 px-4">
