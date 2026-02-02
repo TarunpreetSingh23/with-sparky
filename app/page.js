@@ -721,7 +721,7 @@ function ServiceAppCard({ item }) {
  
 function SectionTitle({ title }) {
   return (
-    <div className="flex justify-between items-center mb-8 px-4 group">
+    <div className="flex justify-center items-center mb-8 px-4 group">
       <div className="relative">
         {/* Unique Floating Accent */}
         <div className="absolute -top-3 left-0 flex gap-1">
