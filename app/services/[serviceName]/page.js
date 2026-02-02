@@ -80,6 +80,9 @@ export default function ServiceDetailPage() {
   const [showDrawer, setShowDrawer] = useState(false);
   const [workers, setWorkers] = useState([]);
   const [workersLoading, setWorkersLoading] = useState(true);
+  const MIN_CART_VALUE = 300;
+const [minCartError, setMinCartError] = useState("");
+
 
   const normalize = (s) => s?.toLowerCase().replace(/[\s-]+/g, "") || "";
 
@@ -120,14 +123,39 @@ export default function ServiceDetailPage() {
   }, [selected]);
 
   useEffect(() => { window.scrollTo(0, 0); }, [serviceName]);
+const getCartTotal = () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  return cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
+};
 
-  const addToCart = (item) => {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push(item);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    toast.success("Added to cart");
-    // router.push("/checkout");
-  };
+ const addToCart = (item) => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  cart.push({
+    title: item.title,
+    price: item.price,
+    image: item.image,
+    earning:item.earning,
+    profit:item.profit,
+    quantity: 1,
+    category: item.category,
+  });
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  const total = getCartTotal();
+
+  if (total < MIN_CART_VALUE) {
+    const remaining = MIN_CART_VALUE - total;
+    setMinCartError(`Add at least ₹${remaining} service `);
+    return;
+  }
+
+  setMinCartError("");
+  toast.success("Added to cart");
+  router.push("/checkout");
+};
+
 
   if (loading) return <PageLoader />;
   if (!selected) return <div className="p-10 text-center font-bold">Service not found</div>;
@@ -179,81 +207,128 @@ export default function ServiceDetailPage() {
             </div>
           </div>
         </section>
-
-        {/* ✨ NEW: SERVICE STEPS SECTION (Urban Company Style) */}
-  {selected.steps && selected.steps.length > 0 && (
-  <section className="bg-[#f8faff] py-10 px-5">
-    {/* Section Header */}
-    <div className="mb-8 text-center">
-      <h2 className="text-[20px] font-black tracking-tight text-[#101a3c]">
-        How it works
-      </h2>
-      <div className="flex items-center justify-center gap-1.5 mt-1">
-        <Sparkles size={14} className="text-blue-500" />
-        <span className="text-[11px] font-bold text-blue-500 uppercase tracking-[0.1em]">
-          The Sparky Protocol
-        </span>
+{minCartError && (
+  <div className="fixed bottom-19 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-sm z-[100]
+    bg-white/80 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] 
+    rounded-[2rem] p-4 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-500"
+  >
+    {/* Icon with Ring Progress Glow */}
+    <div className="relative shrink-0">
+      <div className="absolute inset-0 bg-blue-400 blur-lg opacity-20 rounded-full animate-pulse" />
+      <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 
+        flex items-center justify-center text-white shadow-lg shadow-blue-200"
+      >
+        <span className="text-xl font-black">₹</span>
       </div>
     </div>
 
-    {/* Steps Grid/List */}
-    <div className="space-y-4">
+    {/* Text Content */}
+    <div className="flex-1">
+      <h4 className="text-[13px] font-black text-gray-900 uppercase tracking-tight leading-none mb-1">
+        Almost there!
+      </h4>
+      <p className="text-[11px] font-bold text-gray-500 leading-tight">
+         <span className="text-blue-600">{minCartError}</span> more to unlock checkout
+      </p>
+      
+      {/* Tiny Progress Bar */}
+      <div className="mt-2 w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+        <div 
+          className="h-full bg-blue-500 transition-all duration-1000 ease-out"
+          style={{ width: '70%' }} // You can calculate percentage if you have current total
+        />
+      </div>
+    </div>
+
+    {/* Close or Arrow */}
+    {/* <button className="p-2 text-gray-400 hover:text-gray-900">
+       <ArrowRight size={18} />
+    </button> */}
+  </div>
+)}
+        {/* ✨ NEW: SERVICE STEPS SECTION (Urban Company Style) */}
+{selected.steps && selected.steps.length > 0 && (
+  <section className="bg-[#fcfdff] py-14 px-6 overflow-hidden">
+    {/* Section Header */}
+    <div className="mb-12">
+      <div className="flex items-center gap-3 mb-3">
+        <span className="h-[1.5px] w-10 bg-blue-600 rounded-full" />
+        <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">
+          The Workflow
+        </span>
+      </div>
+      <h2 className="text-3xl font-black text-[#101a3c] tracking-tight leading-none">
+        Service Protocol
+      </h2>
+    </div>
+
+    {/* Steps Journey */}
+    <div className="space-y-8 border-2-black">
       {selected.steps.map((step, idx) => {
-        const [title, desc] = step.split(" — ");
+        // Splitting logic: Handle "Step X – Title: Description"
+        // This splits at the first "–" and then separates the title from desc at the ":"
+        const [stepLabel, rest] = step.split(" – ");
+        const [title, desc] = rest ? rest.split(": ") : [rest, ""];
+
         return (
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: idx * 0.1 }}
             key={idx}
-            className="bg-white rounded-[1.5rem] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-blue-50/50 flex gap-4"
+            className="group relative bg-white p-6 rounded-[2rem] border border-blue-50/50 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] transition-all duration-300 hover:shadow-xl hover:shadow-blue-900/5 hover:-translate-y-1"
           >
-            {/* Left Side: Numbering */}
-            <div className="flex flex-col items-center shrink-0">
-              <div className="w-9 h-9 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-100">
-                <span className="text-sm font-black text-white">{idx + 1}</span>
+            <div className="flex flex-col gap-4">
+              {/* Top Row: Step Tag and Index */}
+              <div className="flex items-center justify-between">
+                <div className="px-3 py-1 bg-blue-50 rounded-full">
+                  <span className="text-[10px] font-black text-blue-600 uppercase tracking-wider">
+                    {stepLabel}
+                  </span>
+                </div>
+                <span className="text-2xl font-black text-blue-100/50 group-hover:text-blue-100 transition-colors">
+                  0{idx + 1}
+                </span>
               </div>
-              {idx !== selected.steps.length - 1 && (
-                <div className="w-[2px] h-full bg-blue-50 mt-4 rounded-full" />
-              )}
-            </div>
 
-            {/* Right Side: Content */}
-            <div className="pb-2">
-              <h3 className="text-[15px] font-black text-[#101a3c] leading-none mb-2">
-                {title}
-              </h3>
-              <p className="text-[13px] font-medium text-gray-500 leading-[1.6] tracking-tight">
-                {desc}
-              </p>
+              {/* Bottom Row: Content */}
+              <div>
+                <h3 className="text-[17px] font-black text-[#101a3c] mb-2 leading-tight">
+                  {title}
+                </h3>
+                <p className="text-[14px] font-medium text-gray-500 leading-relaxed italic border-l-2 border-blue-100 pl-4">
+                  {desc}
+                </p>
+              </div>
             </div>
           </motion.div>
         );
       })}
     </div>
 
-    {/* Premium Trust Footer */}
-    <div className="mt-8 bg-[#101a3c] rounded-[2rem] p-5 flex items-center gap-4 shadow-xl shadow-blue-900/20">
-      <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
-        <div className="w-6 h-6 rounded-full bg-green-400 flex items-center justify-center">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4">
-            <polyline points="20 6 9 17 4 12" />
-          </svg>
-        </div>
+    {/* Trust Footer */}
+    <div className="mt-12 p-8 bg-[#101a3c] rounded-[2.5rem] relative shadow-2xl shadow-blue-900/30 overflow-hidden">
+      <div className="absolute top-0 right-0 p-4 opacity-10">
+        <Sparkles size={80} className="text-white" />
       </div>
-      <div>
-        <p className="text-xs font-black text-white uppercase tracking-wider">
-          Standardized Quality
-        </p>
-        <p className="text-[11px] font-medium text-blue-200/80 leading-tight mt-0.5">
-          Every professional is trained to follow this specific {selected.steps.length}-step protocol.
-        </p>
+      
+      <div className="relative z-10 flex flex-col gap-4">
+        <div className="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center border border-blue-400/30">
+          <Star className="text-blue-400" fill="currentColor" size={20} />
+        </div>
+        <div>
+          <h4 className="text-white text-lg font-black tracking-wide">
+            Sparky Guarantee
+          </h4>
+          <p className="text-blue-200/60 text-xs font-medium leading-relaxed mt-1">
+            Standardized {selected.steps.length}-step procedure followed by every certified expert to ensure quality results.
+          </p>
+        </div>
       </div>
     </div>
   </section>
 )}
-
         {/* Card 2: Professional List */}
         {/* <section className="bg-white p-5 shadow-sm border-y border-gray-100">
           <h2 className="text-[13px] font-black uppercase tracking-[0.15em] text-gray-400 mb-4">Available Specialists</h2>

@@ -79,13 +79,13 @@ const want = [
   { id: 1, name: 'Pedicure', icon: Scissors },
   { id: 2, name: 'Manicure', icon: Zap },
   { id: 3, name: 'Facial', icon: Sparkles },
-  { id: 4, name: 'bleech', icon: Palette },
+  { id: 4, name: 'bleach', icon: Palette },
   { id: 5, name: 'cleanup', icon: Waves },
   { id: 6, name: 'Waxing', icon: Wind },
   { id: 7, name: 'Makeup', icon: Smile },
   { id: 8, name: 'Threading', icon: MessageCircle },
-  { id: 7, name: 'Haircare', icon: Smile },
-  { id: 8, name: 'Mehandi', icon: MessageCircle },
+  { id: 7, name: 'Hair', icon: Smile },
+  { id: 8, name: 'Mehndi', icon: MessageCircle },
 ];
 const MOCK_ORDERS = [
   {
@@ -143,7 +143,7 @@ export default function SparkyServiceApp() {
   const active = orders.find(order => 
    order.status !== 'cancelled' && order.status !== 'completed'
    );
-
+  console.log(active)
   const refs = { beautyRef, beatiqueRef, techRef };
 
   useEffect(() => {
@@ -204,7 +204,7 @@ const handleBooking = (service) => {
 
   if (total < MIN_CART_VALUE) {
     const remaining = MIN_CART_VALUE - total;
-    setMinCartError(`Add ₹${remaining} more to continue booking`);
+    setMinCartError(`Add at least ₹${remaining} service`);
     return; // ❌ Stop navigation
   }
 
@@ -438,7 +438,7 @@ const handleBooking = (service) => {
               </div>
               
               {/* Label */}
-              <span className={`mt-2 text-[11px] font-bold tracking-tight transition-colors ${
+              <span className={`mt-2 text-[13px] font-bold tracking-tight transition-colors ${
                 isActive ? "text-[#101a3c]" : "text-grey-800"
               }`}>
                 {service.name}
@@ -470,7 +470,7 @@ const handleBooking = (service) => {
         Almost there!
       </h4>
       <p className="text-[11px] font-bold text-gray-500 leading-tight">
-        Add <span className="text-blue-600">₹{minCartError}</span> more to unlock checkout
+        <span className="text-blue-600">{minCartError}</span> more to unlock checkout
       </p>
       
       {/* Tiny Progress Bar */}
@@ -492,7 +492,7 @@ const handleBooking = (service) => {
   <SectionTitle title="BEAUTY SERVICES" />
   <FloatingOrderTracker activeOrder={active} />
 
-  {["Waxing", "Facial", "Mehandi", "Haircut", "Threading", "Makeup"].map((subCat) => {
+  {["Waxing", "Facial", "Mehandi", "Haircare", "Threading", "Makeup","Bleach","Cleanup","Manicure","Pedicure","Hair" ,"Mehndi"].map((subCat) => {
     const filteredServices = services.filter(
       (item) =>
         item.category === "Woman Services" &&
@@ -519,18 +519,18 @@ const handleBooking = (service) => {
           ))}
 
           {/* View More Card */}
-          <button 
-            onClick={() => handleWantClick(subCat)}
-            className="group relative flex w-full h-[200px] flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#030712] to-[#1b3c94] p-3 rounded-2xl border border-dashed border-blue-200 transition-all duration-300 hover:border-blue-400 hover:shadow-md"
-          >
-            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-              <LayoutGrid size={24} />
-            </div>
-            <div className="text-center">
-              <span className="block text-xs font-bold text-white uppercase tracking-tighter">View All</span>
-              <span className="text-[10px] font-medium text-white">{filteredServices.length}+ Services</span>
-            </div>
-          </button>
+       <button 
+  onClick={() => router.push(`/beauty?category=${subCat.toUpperCase()}`)}
+  className="group relative flex w-full h-[200px] flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#030712] to-[#1b3c94] p-3 rounded-2xl border border-dashed border-blue-200 transition-all duration-300 hover:border-blue-400 hover:shadow-md"
+>
+  <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+    <LayoutGrid size={24} />
+  </div>
+  <div className="text-center">
+    <span className="block text-xs font-bold text-white uppercase tracking-tighter">View All</span>
+    <span className="text-[10px] font-medium text-white">{filteredServices.length}+ Services</span>
+  </div>
+</button>
         </div>
       </div>
     );
@@ -693,7 +693,7 @@ function ServiceAppCard({ item }) {
       {/* Content Section - Fixed heights for uniformity */}
       <div className="flex flex-col flex-1 justify-between py-1">
         {/* Title - Fixed height for 2 lines */}
-        <h3 className="text-[11px] font-bold text-[#101a3c] line-clamp-2 leading-tight h-[28px]">
+        <h3 className="text-[13px] font-bold text-[#101a3c] line-clamp-2 leading-tight h-[30px]">
           {item.name || item.title}
         </h3>
 
@@ -721,29 +721,28 @@ function ServiceAppCard({ item }) {
  
 function SectionTitle({ title }) {
   return (
-    <div className="flex justify-between items-end mb-5 px-4">
-      <div className="flex flex-col">
-        {/* Subtle Accent Line */}
-        <div className="w-8 h-[3px] bg-blue-500 rounded-full mb-1.5 opacity-80" />
+    <div className="flex justify-between items-center mb-8 px-4 group">
+      <div className="relative">
+        {/* Unique Floating Accent */}
+        <div className="absolute -top-3 left-0 flex gap-1">
+          <div className="w-4 h-[3px] bg-blue-600 rounded-full" />
+          <div className="w-1.5 h-[3px] bg-blue-300 rounded-full" />
+        </div>
         
-        <h2 className="text-[20px] font-black text-gray-800 leading-none tracking-tight">
+        <h2 className="text-[22px] font-[900] text-[#101a3c] leading-none tracking-tight">
           {title}
+          <span className="block w-full h-[1px] bg-gradient-to-r from-blue-100 to-transparent mt-1.5" />
         </h2>
       </div>
 
-      {/* Re-enabled 'See All' with better styling */}
-      {/* <button className="flex items-center group">
-        <span className="text-[12px] font-extrabold text-blue-400 uppercase tracking-[0.05em] transition-colors group-hover:text-blue-300">
-          See All
+      {/* Professional "See All" with Arrow Action */}
+      {/* <button className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-xl hover:bg-blue-50 transition-all active:scale-95 group/btn">
+        <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.15em] ml-0.5">
+          Explore
         </span>
-        <svg 
-          className="w-3.5 h-3.5 ml-1 text-blue-400 transition-transform group-hover:translate-x-0.5" 
-          fill="none" 
-          viewBox="0 0 24 24" 
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 5l7 7-7 7" />
-        </svg>
+        <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center shadow-sm group-hover/btn:translate-x-0.5 transition-transform">
+          <ArrowRight size={12} className="text-blue-600" strokeWidth={3} />
+        </div>
       </button> */}
     </div>
   );

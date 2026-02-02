@@ -153,7 +153,19 @@ export default function UserMap({ setAddress, setPincode }) {
           </Autocomplete>
         </div>
       </div>
-
+<div className="absolute bottom-6 right-6 z-50">
+        <button
+          onClick={getCurrentLocation}
+          disabled={loadingAddress}
+          className="w-12 h-12 bg-white rounded-2xl shadow-2xl flex items-center justify-center text-gray-700 hover:text-blue-600 active:scale-90 transition-all border border-gray-100 group/loc"
+        >
+          {loadingAddress ? (
+            <Loader2 size={20} className="animate-spin text-blue-500" />
+          ) : (
+            <LocateFixed size={20} className="group-hover/loc:scale-110 transition-transform" />
+          )}
+        </button>
+      </div>
       {/* Center Marker */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none flex flex-col items-center pb-[50px]">
         <div

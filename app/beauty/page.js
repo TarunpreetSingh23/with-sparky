@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { X, ShoppingCart, Trash2, Star, ShieldCheck, Zap, Wind,Flame,Smile,LayoutGrid,ChevronRight, ChevronLeft, Share2, Search, Clock, Sparkles } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // --- Custom "Out of this World" Loader ---
 function PageLoader() {
@@ -60,12 +60,27 @@ export default function CleaningPage() {
   const [loading, setLoading] = useState(true);
   const [selectedService, setSelectedService] = useState(null);
   const [cartOpen, setCartOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const [minCartError, setMinCartError] = useState("");
+
   const router = useRouter();
+  const MIN_CART_VALUE = 300;
+
+const cartTotal = cart.reduce(
+  (sum, item) => sum + item.price * (item.quantity || 1),
+  0
+);
+
 
   useEffect(() => {
     if (!loading) window.scrollTo(0, 0);
   }, [loading]);
-
+useEffect(() => {
+    const catFromUrl = searchParams.get("category");
+    if (catFromUrl) {
+      setSelectedCategory(catFromUrl.toUpperCase());
+    }
+  }, [searchParams]);
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -205,7 +220,7 @@ export default function CleaningPage() {
     <div 
       key={service._id} 
       className="flex gap-4 items-center bg-transparent group cursor-pointer"
-      onClick={() => setSelectedService(service)}
+      onClick={() => { router.push(`services/${service.title}`) }} 
     >
       {/* 1. Image Container - Matches rounded corners from screenshot */}
       <div className="relative w-32 h-32 flex-shrink-0 rounded-[2rem] overflow-hidden shadow-sm">
@@ -225,7 +240,7 @@ export default function CleaningPage() {
         
         {/* Meta Info (Matches the grey text in screenshot) */}
         <div className="flex flex-wrap gap-x-2 gap-y-1 mb-3">
-          <span className="text-[11px] text-slate-400 font-medium">{service.description}</span>
+          <span className="text-[11px] text-grey-600 font-medium">{service.description}</span>
           {/* <span className="text-[11px] text-slate-400 font-medium">Package</span>
           <span className="text-[11px] text-slate-400 font-medium">Offer till Sep 18, 2021</span> */}
         </div>
@@ -271,6 +286,45 @@ export default function CleaningPage() {
           </div>
         </div>
       </div>
+      {minCartError && (
+  <div className="fixed bottom-19 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-sm z-[100]
+    bg-white/80 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] 
+    rounded-[2rem] p-4 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-500"
+  >
+    {/* Icon with Ring Progress Glow */}
+    <div className="relative shrink-0">
+      <div className="absolute inset-0 bg-blue-400 blur-lg opacity-20 rounded-full animate-pulse" />
+      <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 
+        flex items-center justify-center text-white shadow-lg shadow-blue-200"
+      >
+        <span className="text-xl font-black">₹</span>
+      </div>
+    </div>
+
+    {/* Text Content */}
+    <div className="flex-1">
+      <h4 className="text-[13px] font-black text-gray-900 uppercase tracking-tight leading-none mb-1">
+        Almost there!
+      </h4>
+      <p className="text-[11px] font-bold text-gray-500 leading-tight">
+         <span className="text-blue-600">{minCartError}</span> more to unlock checkout
+      </p>
+      
+      {/* Tiny Progress Bar */}
+      <div className="mt-2 w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+        <div 
+          className="h-full bg-blue-500 transition-all duration-1000 ease-out"
+          style={{ width: '70%' }} // You can calculate percentage if you have current total
+        />
+      </div>
+    </div>
+
+    {/* Close or Arrow */}
+    {/* <button className="p-2 text-gray-400 hover:text-gray-900">
+       <ArrowRight size={18} />
+    </button> */}
+  </div>
+)}
 
       {/* 📱 Detail Modal */}
       <div className={`fixed inset-0 z-[60] flex items-end justify-center transition-opacity duration-300 ${selectedService ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
@@ -350,9 +404,23 @@ export default function CleaningPage() {
               <span className="text-slate-400 font-black uppercase text-[9px] tracking-widest">Total</span>
               <span className="text-3xl font-black tracking-tighter italic text-[#030712]">₹{cart.reduce((s, i) => s + i.price, 0)}</span>
             </div>
-            <button onClick={() => router.push("/checkout")} className="w-full py-4 bg-[#030712] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all">
-              Confirm & Book
-            </button>
+           <button
+  onClick={() => {
+    if (cartTotal < MIN_CART_VALUE) {
+      setMinCartError(`Add ₹${MIN_CART_VALUE - cartTotal} more to continue booking`);
+      return;
+    }
+    router.push("/checkout");
+  }}
+  className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all
+    ${cartTotal < MIN_CART_VALUE
+      ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+      : "bg-[#030712] text-white active:scale-95"
+    }`}
+>
+  Confirm & Book
+</button>
+
           </div>
         </div>
       </div>
