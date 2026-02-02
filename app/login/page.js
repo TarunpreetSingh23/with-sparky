@@ -13,7 +13,7 @@ import {
   Smartphone,
 } from "lucide-react";
 
-const INITIAL_TIMER = 120; // 2 minutes logic
+const INITIAL_TIMER = 120; 
 
 export default function Login() {
   const [phone, setPhone] = useState("");

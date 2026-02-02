@@ -22,10 +22,46 @@ export const viewport = {
 
 /* ✅ METADATA */
 export const metadata = {
-  title: "Shop ON",
-  description: "Leading ecommerce platform",
+  title: "Sparky | Trusted Home & Beauty Services Near You",
+  description:
+    "Book reliable home services with Sparky – beauty, salon at home, AC repair, cleaning, plumbing & more. Verified professionals. Affordable pricing. Fast service.",
+  keywords: [
+    "home services",
+    "beauty services at home",
+    "salon at home",
+    "AC repair",
+    "home cleaning",
+    "plumbing services",
+    "electrician near me",
+    "Sparky services"
+  ],
+  openGraph: {
+    title: "Sparky | Trusted Home & Beauty Services",
+    description:
+      "From salon at home to AC repair and cleaning, Sparky connects you with verified professionals for fast, affordable home services.",
+    url: "https://sparky.in", // change to your real domain
+    siteName: "Sparky",
+    images: [
+      {
+        url: "/images/og-image.jpg", // add this image
+        width: 1200,
+        height: 630,
+        alt: "Sparky Home Services"
+      }
+    ],
+    locale: "en_IN",
+    type: "website"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sparky | Home & Beauty Services",
+    description:
+      "Book trusted home services – beauty, salon, AC repair, cleaning & more with Sparky.",
+    images: ["/images/og-image.jpg"]
+  },
   manifest: "/manifest.json",
 };
+
 
 export default function RootLayout({ children }) {
   return (

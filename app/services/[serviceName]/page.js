@@ -126,14 +126,14 @@ export default function ServiceDetailPage() {
     cart.push(item);
     localStorage.setItem("cart", JSON.stringify(cart));
     toast.success("Added to cart");
-    router.push("/checkout");
+    // router.push("/checkout");
   };
 
   if (loading) return <PageLoader />;
   if (!selected) return <div className="p-10 text-center font-bold">Service not found</div>;
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] text-[#1f1f1f] pb-32 font-sans selection:bg-green-100">
+    <div className="min-h-screen bg-white text-[#1f1f1f] pb-32 font-sans selection:bg-green-100">
       
       {/* 📍 Header Overlay */}
       {/* <header className="fixed top-0 inset-x-0 z-[50] flex justify-between items-center px-4 py-4 pointer-events-none">
@@ -181,44 +181,78 @@ export default function ServiceDetailPage() {
         </section>
 
         {/* ✨ NEW: SERVICE STEPS SECTION (Urban Company Style) */}
-        {selected.steps && selected.steps.length > 0 && (
-          <section className="bg-white p-5 shadow-sm border-y border-gray-100">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
-                <Sparkles size={16} className="text-blue-600" />
+  {selected.steps && selected.steps.length > 0 && (
+  <section className="bg-[#f8faff] py-10 px-5">
+    {/* Section Header */}
+    <div className="mb-8 text-center">
+      <h2 className="text-[20px] font-black tracking-tight text-[#101a3c]">
+        How it works
+      </h2>
+      <div className="flex items-center justify-center gap-1.5 mt-1">
+        <Sparkles size={14} className="text-blue-500" />
+        <span className="text-[11px] font-bold text-blue-500 uppercase tracking-[0.1em]">
+          The Sparky Protocol
+        </span>
+      </div>
+    </div>
+
+    {/* Steps Grid/List */}
+    <div className="space-y-4">
+      {selected.steps.map((step, idx) => {
+        const [title, desc] = step.split(" — ");
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: idx * 0.1 }}
+            key={idx}
+            className="bg-white rounded-[1.5rem] p-5 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-blue-50/50 flex gap-4"
+          >
+            {/* Left Side: Numbering */}
+            <div className="flex flex-col items-center shrink-0">
+              <div className="w-9 h-9 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg shadow-blue-100">
+                <span className="text-sm font-black text-white">{idx + 1}</span>
               </div>
-              <h2 className="text-[15px] font-black uppercase tracking-tight text-gray-800">Service Protocol</h2>
+              {idx !== selected.steps.length - 1 && (
+                <div className="w-[2px] h-full bg-blue-50 mt-4 rounded-full" />
+              )}
             </div>
 
-            <div className="space-y-6 relative ml-4">
-              {/* Vertical Line */}
-              <div className="absolute left-0 top-2 bottom-2 w-[1.5px] bg-gray-100 -ml-[11px]" />
-
-              {selected.steps.map((step, idx) => {
-                const [title, desc] = step.split(" — ");
-                return (
-                  <motion.div 
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    key={idx} 
-                    className="relative pl-6"
-                  >
-                    {/* Step Bullet */}
-                    <div className="absolute left-0 top-1.5 w-5 h-5 bg-white border-2 border-blue-600 rounded-full -ml-[21px] flex items-center justify-center z-10">
-                       <div className="w-1.5 h-1.5 bg-blue-600 rounded-full" />
-                    </div>
-
-                    <div className="flex flex-col">
-                      <span className="text-[11px] font-black text-blue-600 uppercase tracking-widest mb-0.5">{title}</span>
-                      <p className="text-[13px] font-medium text-gray-600 leading-snug">{desc}</p>
-                    </div>
-                  </motion.div>
-                );
-              })}
+            {/* Right Side: Content */}
+            <div className="pb-2">
+              <h3 className="text-[15px] font-black text-[#101a3c] leading-none mb-2">
+                {title}
+              </h3>
+              <p className="text-[13px] font-medium text-gray-500 leading-[1.6] tracking-tight">
+                {desc}
+              </p>
             </div>
-          </section>
-        )}
+          </motion.div>
+        );
+      })}
+    </div>
+
+    {/* Premium Trust Footer */}
+    <div className="mt-8 bg-[#101a3c] rounded-[2rem] p-5 flex items-center gap-4 shadow-xl shadow-blue-900/20">
+      <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
+        <div className="w-6 h-6 rounded-full bg-green-400 flex items-center justify-center">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </div>
+      </div>
+      <div>
+        <p className="text-xs font-black text-white uppercase tracking-wider">
+          Standardized Quality
+        </p>
+        <p className="text-[11px] font-medium text-blue-200/80 leading-tight mt-0.5">
+          Every professional is trained to follow this specific {selected.steps.length}-step protocol.
+        </p>
+      </div>
+    </div>
+  </section>
+)}
 
         {/* Card 2: Professional List */}
         {/* <section className="bg-white p-5 shadow-sm border-y border-gray-100">
@@ -240,17 +274,17 @@ export default function ServiceDetailPage() {
         </section> */}
 
         {/* Card 3: Recommended Items */}
-        <section className="bg-white p-5 shadow-sm border-t border-gray-100">
+        <section className="bg-white p-5  shadow-sm border-t border-gray-100">
            <h2 className="text-[13px] font-black uppercase tracking-[0.15em] text-gray-400 mb-5">Customers also booked</h2>
            <div className="grid grid-cols-2 gap-4">
-              {services.slice(0, 4).map((s, i) => (
-                <div key={i} onClick={() => router.push(`/services/${encodeURIComponent(s.title)}`)} className="bg-white border border-gray-200 rounded-2xl p-3 shadow-sm active:scale-[0.98] transition-all flex flex-col group">
+              {services.slice(0, 6).map((s, i) => (
+                <div key={i} onClick={() => router.push(`/services/${encodeURIComponent(s.title)}`)} className="bg-white border border-gray-200 h-[250px] rounded-2xl p-3 shadow-sm active:scale-[0.98] transition-all flex flex-col group">
                   <div className="relative aspect-square bg-[#F9FAFB] rounded-xl overflow-hidden mb-3 border border-gray-50">
                     <Image src={s.image} alt="Service" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                     <button className="absolute bottom-2 right-2 bg-white text-grey-900 border border-gray-200 rounded-lg px-3 py-1.5 text-[10px] font-black shadow-lg hover:bg-green-50 transition-colors uppercase">ADD</button>
                   </div>
-                  <p className="text-[11px] font-bold text-gray-700 line-clamp-1 uppercase tracking-tight mb-1">{s.title}</p>
-                  <p className="text-sm font-black text-gray-900 mt-auto tracking-tighter">₹{s.price}</p>
+                  <p className="text-[14px] font-bold text-gray-700 line-clamp-1 uppercase tracking-tight mb-1">{s.title}</p>
+                  <p className="text-sm font-black text-blue-600 mt-auto tracking-tighter">₹{s.price}</p>
                 </div>
               ))}
            </div>

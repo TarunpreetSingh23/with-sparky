@@ -13,7 +13,7 @@ import {
   ChevronDown,
   Clock,
   Sparkles,
-  
+  Plus,
   Wrench,
   X,
   Star,
@@ -76,14 +76,16 @@ const STATIC_SERVICES = [
   { title: "AC Repair", price: 499, image: "/images/ac.jpg", link: "/services/ac-repair" },
 ];
 const want = [
-  { id: 1, name: 'Haircut', icon: Scissors },
-  { id: 2, name: 'Nails', icon: Zap },
+  { id: 1, name: 'Pedicure', icon: Scissors },
+  { id: 2, name: 'Manicure', icon: Zap },
   { id: 3, name: 'Facial', icon: Sparkles },
-  { id: 4, name: 'Coloring', icon: Palette },
-  { id: 5, name: 'Spa', icon: Waves },
+  { id: 4, name: 'bleech', icon: Palette },
+  { id: 5, name: 'cleanup', icon: Waves },
   { id: 6, name: 'Waxing', icon: Wind },
   { id: 7, name: 'Makeup', icon: Smile },
-  { id: 8, name: 'Message', icon: MessageCircle },
+  { id: 8, name: 'Threading', icon: MessageCircle },
+  { id: 7, name: 'Haircare', icon: Smile },
+  { id: 8, name: 'Mehandi', icon: MessageCircle },
 ];
 const MOCK_ORDERS = [
   {
@@ -136,6 +138,8 @@ export default function SparkyServiceApp() {
   const [loading, setLoading] = useState(true);
   const [selectedService, setSelectedService] = useState(null);
   const [selected, setSelected] = useState(null);
+  const [minCartError, setMinCartError] = useState("");
+
   const active = orders.find(order => 
    order.status !== 'cancelled' && order.status !== 'completed'
    );
@@ -172,22 +176,42 @@ export default function SparkyServiceApp() {
     fetchOrders();
   }, []);
 // Filter for orders that are neither 'cancelled' nor 'completed'
-   
-  const handleBooking = (service) => {
-    const itemToAdd = {
-      title: service.name || service.title,
-      price: typeof service.price === 'string' ? parseInt(service.price.replace('₹', '')) : service.price,
-      image: service.image,
-      quantity: 1,
-      category: service.category,
-      earning:service.earning,
-      profit:service.profit,
-    };
-    const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-    existingCart.push(itemToAdd);
-    localStorage.setItem("cart", JSON.stringify(existingCart));
-    router.push("/checkout");
+   const getCartTotal = () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+};
+
+ const MIN_CART_VALUE = 300;
+
+const handleBooking = (service) => {
+  const itemToAdd = {
+    title: service.name || service.title,
+    price: typeof service.price === 'string'
+      ? parseInt(service.price.replace('₹', ''))
+      : service.price,
+    image: service.image,
+    quantity: 1,
+    category: service.category,
+    earning: service.earning,
+    profit: service.profit,
   };
+
+  const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+  existingCart.push(itemToAdd);
+  localStorage.setItem("cart", JSON.stringify(existingCart));
+
+  const total = getCartTotal();
+
+  if (total < MIN_CART_VALUE) {
+    const remaining = MIN_CART_VALUE - total;
+    setMinCartError(`Add ₹${remaining} more to continue booking`);
+    return; // ❌ Stop navigation
+  }
+
+  setMinCartError("");
+  router.push("/checkout");
+};
+
 
   useEffect(() => {
   // Only search if user has typed at least 2 characters
@@ -386,13 +410,14 @@ export default function SparkyServiceApp() {
 
       {/* ================= MAIN CONTENT ================= */}
       <main className="px-4 space-y-8 pt-2 ">
-  
+
+
         <div className="max-w-md mx-auto p-6 bg-white h-[50%] rounded-2xl">
       <h2 className="text-xl font-bold text-slate-800 mb-8">
         What do you want to do?
       </h2>
 
-      <div className="grid grid-cols-4 gap-y-8 gap-x-4">
+      <div className="grid grid-cols-5 gap-y-10 gap-x-6">
         {want.map((service) => {
           const IconComponent = service.icon;
           const isActive = selected === service.id;
@@ -424,21 +449,60 @@ export default function SparkyServiceApp() {
       </div>
     </div>
 
+{minCartError && (
+  <div className="fixed bottom-19 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-sm z-[100]
+    bg-white/80 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] 
+    rounded-[2rem] p-4 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-500"
+  >
+    {/* Icon with Ring Progress Glow */}
+    <div className="relative shrink-0">
+      <div className="absolute inset-0 bg-blue-400 blur-lg opacity-20 rounded-full animate-pulse" />
+      <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 
+        flex items-center justify-center text-white shadow-lg shadow-blue-200"
+      >
+        <span className="text-xl font-black">₹</span>
+      </div>
+    </div>
 
-        <section ref={beautyRef} className="pt-2">
+    {/* Text Content */}
+    <div className="flex-1">
+      <h4 className="text-[13px] font-black text-gray-900 uppercase tracking-tight leading-none mb-1">
+        Almost there!
+      </h4>
+      <p className="text-[11px] font-bold text-gray-500 leading-tight">
+        Add <span className="text-blue-600">₹{minCartError}</span> more to unlock checkout
+      </p>
+      
+      {/* Tiny Progress Bar */}
+      <div className="mt-2 w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+        <div 
+          className="h-full bg-blue-500 transition-all duration-1000 ease-out"
+          style={{ width: '70%' }} // You can calculate percentage if you have current total
+        />
+      </div>
+    </div>
+
+    {/* Close or Arrow */}
+    {/* <button className="p-2 text-gray-400 hover:text-gray-900">
+       <ArrowRight size={18} />
+    </button> */}
+  </div>
+)}
+       <section ref={beautyRef} className="pt-2">
   <SectionTitle title="BEAUTY SERVICES" />
   <FloatingOrderTracker activeOrder={active} />
-  {/* We define the sub-categories we want to extract */}
-  {["Waxing", "Facial", "Spa", "Haircut", "Nails", "Makeup"].map((subCat) => {
-    // Filter services that belong to "Woman Services" AND match the sub-category name
+
+  {["Waxing", "Facial", "Mehandi", "Haircut", "Threading", "Makeup"].map((subCat) => {
     const filteredServices = services.filter(
       (item) =>
         item.category === "Woman Services" &&
         (item.name || item.title || "").toLowerCase().includes(subCat.toLowerCase())
     );
 
-    // Only render the sub-section if we actually found matching services in the DB
     if (filteredServices.length === 0) return null;
+
+    // Logic: Take first 2 services
+    const displayServices = filteredServices.slice(0, 2);
 
     return (
       <div key={subCat} className="mb-8">
@@ -448,11 +512,25 @@ export default function SparkyServiceApp() {
         </h3>
         
         <div className="grid grid-cols-3 gap-3 px-1">
-          {filteredServices.map((item) => (
+          {displayServices.map((item) => (
             <div key={item.id} onClick={() => setSelectedService(item)}>
               <ServiceAppCard item={item} />
             </div>
           ))}
+
+          {/* View More Card */}
+          <button 
+            onClick={() => handleWantClick(subCat)}
+            className="group relative flex w-full h-[200px] flex-col items-center justify-center gap-2 bg-gradient-to-br from-[#030712] to-[#1b3c94] p-3 rounded-2xl border border-dashed border-blue-200 transition-all duration-300 hover:border-blue-400 hover:shadow-md"
+          >
+            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+              <LayoutGrid size={24} />
+            </div>
+            <div className="text-center">
+              <span className="block text-xs font-bold text-white uppercase tracking-tighter">View All</span>
+              <span className="text-[10px] font-medium text-white">{filteredServices.length}+ Services</span>
+            </div>
+          </button>
         </div>
       </div>
     );
@@ -521,7 +599,8 @@ export default function SparkyServiceApp() {
             </div>
             
             <p className="text-gray-500 leading-relaxed mb-8 font-medium text-sm">
-              Indulge in a premium service experience. Our certified professionals ensure top-tier hygiene and salon-grade results.
+              {selectedService.description}
+              {/* Indulge in a premium service experience. Our certified professionals ensure top-tier hygiene and salon-grade results. */}
             </p>
             
             <div className="flex gap-4">
@@ -588,45 +667,51 @@ function PageLoader() {
 // import { Plus } from 'lucide-react'; // Optional: Use an icon library like lucide-react
 
 function ServiceAppCard({ item }) {
+  // Generate a dummy price roughly 30% higher
+  const dummyPrice = Math.round(item.price * 1.3);
+
   return (
-    <div className="group relative flex w-full h-[200px] flex-col gap-3 bg-white p-3 rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:-translate-y-1 cursor-pointer">
+    <div className="group relative flex w-full flex-col gap-2 bg-white p-2.5 rounded-2xl border border-gray-100 transition-all duration-300 hover:shadow-[0_12px_24px_rgba(0,0,0,0.05)] hover:-translate-y-1 cursor-pointer h-full">
       
-      {/* Image Container with Zoom Effect */}
-      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-gray-50">
+      {/* Fixed Image Container */}
+      <div className="relative w-full aspect-square overflow-hidden rounded-xl bg-gray-50 shrink-0">
         <Image 
           src={item.image} 
           fill 
-          className="object-cover transition-transform duration-500 group-hover:scale-105" 
+          className="object-cover transition-transform duration-500 group-hover:scale-110" 
           alt={item.name || item.title} 
         />
         
-        {/* Optional: Floating Badge for Rating or Tag */}
+        {/* Rating Badge */}
         {item.rating && (
-           <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-1.5 py-0.5 rounded-md text-[10px] font-bold shadow-sm">
-             ★ {item.rating}
+           <div className="absolute top-1.5 right-1.5 bg-white/95 backdrop-blur-sm px-1.5 py-0.5 rounded-lg text-[9px] font-black shadow-sm flex items-center gap-0.5">
+             <Star size={8} fill="currentColor" className="text-yellow-500" /> {item.rating}
            </div>
         )}
       </div>
 
-      {/* Content Section */}
-      <div className="flex flex-col gap-1">
-        {/* Title */}
-        <h3 className="text-sm font-semibold text-blue-900 line-clamp-2 leading-tight">
-          {item.title}
+      {/* Content Section - Fixed heights for uniformity */}
+      <div className="flex flex-col flex-1 justify-between py-1">
+        {/* Title - Fixed height for 2 lines */}
+        <h3 className="text-[11px] font-bold text-[#101a3c] line-clamp-2 leading-tight h-[28px]">
+          {item.name || item.title}
         </h3>
 
-        {/* Price & Action Row */}
-        <div className="flex items-center justify-between mt-1">
+        {/* Price Row */}
+        <div className="flex items-center justify-between mt-2">
           <div className="flex flex-col">
-            <span className="text-xs text-red-400 font-medium">at Just</span>
-            <span className="text-sm font-bold text-blue-900">₹{item.price}</span>
+            <span className="text-[10px] text-gray-400 line-through leading-none">
+              ₹{dummyPrice}
+            </span>
+            <span className="text-[13px] font-black text-blue-600 leading-tight">
+              ₹{item.price}
+            </span>
           </div>
           
-          {/* subtle 'Add' button visual */}
-          {/* <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-600 transition-colors group-hover:bg-black group-hover:text-white">
-          
-            <span className="text-lg leading-none mb-0.5">+</span> 
-          </div> */}
+          {/* Subtle Add Button */}
+          <div className="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+            <Plus size={14} strokeWidth={3} />
+          </div>
         </div>
       </div>
     </div>
