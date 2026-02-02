@@ -163,7 +163,7 @@ useEffect(() => {
 
   {/* Horizontal Scroll Container */}
   <div className="flex overflow-x-auto no-scrollbar gap-4 pb-2 px-2 scroll-smooth items-start">
-    {["ALL", "FACIAL", "CLEANSING", "WAXING", "MAKEUP"].map((cat) => {
+    {["ALL", "FACIAL", "CLEANUP", "WAXING", "MAKEUP","MANICURE","PEDICURE","JUDA","BRAIDS","HAIR"].map((cat) => {
       const isActive = selectedCategory === cat;
       
       // Mapping text categories to Lucide Icons
