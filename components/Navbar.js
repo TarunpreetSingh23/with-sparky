@@ -32,6 +32,31 @@ export default function Navbar() {
   const [activeIndex, setActiveIndex] = useState(0);
 const [address, setAddress] = useState("Tap To select Address");
 const [pendingLocation, setPendingLocation] = useState(null);
+// Example: Custom Amritsar delivery boundary
+const AMRITSAR_BOUNDS = [
+  { lat: 31.709249, lng: 74.817049 }, // North-West
+  { lat: 31.666412, lng: 74.959695 }, // North-East
+  { lat: 31.569168, lng: 74.891628 }, // South-East
+  { lat: 31.626615, lng: 74.756365 }, // South-West
+];
+const isInsidePolygon = (point, polygon) => {
+  let inside = false;
+
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const xi = polygon[i].lat, yi = polygon[i].lng;
+    const xj = polygon[j].lat, yj = polygon[j].lng;
+
+    const intersect =
+      yi > point.lng !== yj > point.lng &&
+      point.lat <
+        ((xj - xi) * (point.lng - yi)) / (yj - yi) + xi;
+
+    if (intersect) inside = !inside;
+  }
+
+  return inside;
+};
+
   // Update index when active state changes to move the slider
   const handleItemClick = (name, index) => {
     setActive(name);
@@ -45,30 +70,17 @@ const [pendingLocation, setPendingLocation] = useState(null);
       .catch(() => setUser(null));
   }, []);
 const checkAmritsar = (lat, lng) => {
-    if (!lat || !lng) return false;
+  if (!lat || !lng) return false;
 
-    const CENTER = { lat: 31.6340, lng: 74.8723 }; // Amritsar center
-    const MAX_KM = 35;
+  const inside = isInsidePolygon(
+    { lat, lng },
+    AMRITSAR_BOUNDS
+  );
 
-    const toRad = (v) => (v * Math.PI) / 180;
-    const R = 6371;
+  setOutOfBounds(!inside);
+  return inside;
+};
 
-    const dLat = toRad(lat - CENTER.lat);
-    const dLng = toRad(lng - CENTER.lng);
-
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(toRad(CENTER.lat)) *
-        Math.cos(toRad(lat)) *
-        Math.sin(dLng / 2) ** 2;
-
-    const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const inside = distance <= MAX_KM;
-    
-    // We update the state here so the UI reacts
-    setOutOfBounds(!inside);
-    return inside;
-  };
   /* ================= SCROLL EFFECT ================= */
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);

@@ -7,11 +7,6 @@ import FloatingOrderTracker from "@/components/FloatingOrderTracker";
 import { useRef, useState, useEffect } from "react";
 import {
   Search,
-  Mic,
-  MapPin,
-  User,
-  ChevronDown,
-  Clock,
   Sparkles,
   Plus,
   Wrench,
