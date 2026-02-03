@@ -105,7 +105,7 @@ export default function CartPage() {
             {/* Cart Items */}
             <div className="space-y-3">
               {cartItems.map((item, index) => (
-                <div
+                <div onClick={() => router.push(`services/${item.title}`)}
                   key={index}
                   className="flex gap-4 bg-white border border-blue-100 p-4 rounded-2xl shadow-sm"
                 >
@@ -122,7 +122,7 @@ export default function CartPage() {
                       {item.name}
                     </h3>
                     <p className="text-xs text-gray-500 mt-0.5">
-                      Professional service
+                      {item.title}
                     </p>
                     <p className="text-blue-600 font-black text-sm mt-1">
                       ₹{item.price}

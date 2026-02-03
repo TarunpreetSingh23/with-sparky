@@ -721,29 +721,51 @@ function ServiceAppCard({ item }) {
  
 function SectionTitle({ title }) {
   return (
-    <div className="flex justify-center items-center mb-8 px-4 group">
-      <div className="relative">
-        {/* Unique Floating Accent */}
-        <div className="absolute -top-3 left-0 flex gap-1">
-          <div className="w-4 h-[3px] bg-blue-600 rounded-full" />
-          <div className="w-1.5 h-[3px] bg-blue-300 rounded-full" />
-        </div>
+    <div className="relative mt-0.5 mb-3 px-4">
+      <div className="flex items-center justify-between">
         
-        <h2 className="text-[22px] font-[900] text-[#101a3c] leading-none tracking-tight">
-          {title}
-          <span className="block w-full h-[1px] bg-gradient-to-r from-blue-100 to-transparent mt-1.5" />
-        </h2>
+        {/* Left Section: Typography focus */}
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2 mb-0.5">
+            {/* Minimalist Accent: A vertical pill instead of horizontal bars */}
+            <div className="w-1 h-6 bg-blue-600 rounded-full" />
+            
+            <h2 className="text-[22px] font-semibold tracking-tight text-grey-900 ">
+              {title}
+            </h2>
+          </div>
+
+          <div className="flex items-center gap-2 pl-3">
+             <div className="flex -space-x-1">
+                {[1, 2, 3,4].map((i) => (
+                  <div key={i} className="w-4 h-4 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center overflow-hidden">
+                    <Star size={8} fill="#94a3b8" className="text-slate-400" />
+                  </div>
+                ))}
+             </div>
+             <p className="text-[11px] text-slate-500 font-bold tracking-tight">
+               4.8 <span className="text-slate-300 mx-1">•</span> 100+ Bookings
+             </p>
+          </div>
+        </div>
+
+        {/* Right Section: Interactive/Status element */}
+        <div className="flex flex-col items-end gap-1">
+           <div className="bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100 flex items-center gap-1.5 shadow-sm">
+             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+             <span className="text-[9px] font-black uppercase tracking-tight text-emerald-700">
+               Best Price
+             </span>
+           </div>
+           {/* <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:bg-blue-50 px-2 py-1 rounded-md transition-colors">
+              See All
+           </button> */}
+        </div>
+
       </div>
 
-      {/* Professional "See All" with Arrow Action */}
-      {/* <button className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-xl hover:bg-blue-50 transition-all active:scale-95 group/btn">
-        <span className="text-[10px] font-black text-blue-600 uppercase tracking-[0.15em] ml-0.5">
-          Explore
-        </span>
-        <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center shadow-sm group-hover/btn:translate-x-0.5 transition-transform">
-          <ArrowRight size={12} className="text-blue-600" strokeWidth={3} />
-        </div>
-      </button> */}
+      {/* Optional: Subtle bottom divider that fades out */}
+      <div className="mt-4 w-full h-[1px] bg-gradient-to-r from-slate-100 via-slate-50 to-transparent" />
     </div>
   );
 }
