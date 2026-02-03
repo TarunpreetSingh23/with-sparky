@@ -356,7 +356,7 @@ const getCartTotal = () => {
                 <div key={i} onClick={() => router.push(`/services/${encodeURIComponent(s.title)}`)} className="bg-white border border-gray-200 h-[250px] rounded-2xl p-3 shadow-sm active:scale-[0.98] transition-all flex flex-col group">
                   <div className="relative aspect-square bg-[#F9FAFB] rounded-xl overflow-hidden mb-3 border border-gray-50">
                     <Image src={s.image} alt="Service" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
-                    <button className="absolute bottom-2 right-2 bg-white text-grey-900 border border-gray-200 rounded-lg px-3 py-1.5 text-[10px] font-black shadow-lg hover:bg-green-50 transition-colors uppercase">ADD</button>
+                    <button className="absolute bottom-2 right-2 bg-white text-grey-900 border border-gray-200 rounded-lg px-3 py-1.5 text-[10px] font-black shadow-lg hover:bg-green-50 transition-colors uppercase">view</button>
                   </div>
                   <p className="text-[14px] font-bold text-gray-700 line-clamp-1 uppercase tracking-tight mb-1">{s.title}</p>
                   <p className="text-sm font-black text-blue-600 mt-auto tracking-tighter">₹{s.price}</p>

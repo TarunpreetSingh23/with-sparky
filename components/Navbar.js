@@ -104,7 +104,7 @@ useEffect(() => {
   const mobileMenuItems = [
     { name: "Home", href: "/", icon: <IoHomeSharp /> },
     { name: "Beauty", href: "/beauty", icon: <GiHamburgerMenu /> },
-    { name: "buetique", href: "/botique", icon: <IoMdInformationCircleOutline /> },
+    // { name: "buetique", href: "/botique", icon: <IoMdInformationCircleOutline /> },
     { name: "Support", href: "/contact", icon: <FaPhoneAlt /> },
     
   ];
