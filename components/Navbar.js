@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
 import dynamic from "next/dynamic";
-import { X, MapPin, CheckCircle2, AlertTriangle } from "lucide-react";
+import { X, MapPin, CheckCircle2, User,AlertTriangle,Phone } from "lucide-react";
 // Icons
 import { GiHamburgerMenu } from "react-icons/gi";
 import {
@@ -326,107 +326,85 @@ useEffect(() => {
       </motion.nav>
 
       {/* ================= MOBILE TOP NAV ================= */}
-    <nav className="md:hidden fixed top-0 left-0 w-full bg-[#030712] backdrop-blur-xl px-4 py-1 pt-2 z-50 flex items-center justify-between border-b border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.3)]">
-      
-      {/* Glow Effect Element - Placed behind the time for focus */}
-      <div className="absolute top-0 left-4 w-24 h-12 bg-blue-500/10 blur-[40px] -z-10" />
-
-      {/* Left Section: Delivery Time & Address */}
-      <div className="flex flex-col tracking-tight">
-        <span className="text-[10px] font-black uppercase tracking-[0.1em] text-blue-400 leading-tight">
-          SPARKY in
-        </span>
-        
-        <div className="flex items-center mt-0.5 gap-1">
-          <h1 className="text-[21px] font-black text-white leading-none tracking-tighter drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">
-            40 minutes
-          </h1>
-        </div>
-
-        <button onClick={() => {
-  setOutOfBounds(false);
-  setShowMap(true);}} className="flex items-center gap-0.5 mt-1 group">
-            <span className="text-[13px] font-bold text-slate-100">HOME - </span>
-            <span className="text-[13px] font-medium text-slate-400 truncate max-w-[160px]">{address}</span>
-            <IoMdArrowDropdown className="text-base text-blue-400 group-hover:translate-y-0.5 transition-transform" />
-          </button>
-      </div>
-
-      {/* Right Section: Profile Icon with Glow Wrapper */}
-      <div className="flex items-center gap-4">
-               <Link href="/cart" className="relative">
-          <IoBagHandleOutline className="text-3xl text-white" />
-          {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
-              {cartCount}
-            </span>
-          )}
-        </Link>
-        <Link href="/user">
-          <div className="relative group">
-            {/* Glow behind profile */}
-            <div className="absolute inset-0 bg-blue-500/20 blur-lg rounded-full opacity-0 group-active:opacity-100 transition-opacity" />
-            
-            <div className="relative bg-slate-800/40 p-2 rounded-full border border-white/10 shadow-lg active:scale-90 transition-all backdrop-blur-md">
-              <FaUserCircle className="text-[26px] text-slate-200" />
-            </div>
-          </div>
-        </Link>
-      </div>
-    </nav>
+  
 
     {/* ================= MOBILE BOTTOM NAV ================= */}
- <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
+ {/* <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none"> */}
       
       {/* Navigation Container */}
-      <nav className="relative pointer-events-auto bg-[#030712] border-t border-white/10 px-2 pt-3 pb-2 flex justify-around items-center shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
-        
-        {/* The Sliding Indicator */}
-        {/* <div 
-          className="absolute top-2 h-10 bg-white/10 rounded-xl transition-all duration-300 ease-out pointer-events-none"
-          style={{
-            width: `${100 / mobileMenuItems.length}%`,
-            transform: `translateX(${activeIndex * 100}%) scale(0.85)`,
-          }}
-        /> */}
+       <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-100 px-3 pt-1 pb-3 flex justify-between items-center z-50 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
+  
+  <NavItem 
+    label="Home" 
+    onClick={() => router.push("/")}
+    active
+    icon={
+      <User
+        size={22}
+        className="mb-1 text-[#8a9a5b]"
+      />
+    } 
+  />
+  
+  <NavItem 
+    label="Beauty" 
+    onClick={() => router.push("/beauty")}
+    
+    icon={
+      <User
+        size={22}
+        className="mb-1 text-[#8a9a5b]"
+      />
+    } 
+  />
 
-        {mobileMenuItems.map((item, index) => {
-          const isActive = active === item.name;
-          
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              onClick={() => handleItemClick(item.name, index)}
-              className="relative flex flex-col items-center justify-center flex-1 transition-all z-10"
-            >
-              {/* Icon - Glow effect on active */}
-              <div
-                className={`text-2xl mb-1 transition-all duration-300 ${
-                  isActive ? "text-white scale-110 drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" : "text-slate-200"
-                }`}
-              >
-                {isActive ? item.icon : item.icon}
-              </div>
+  {/* CENTER ACTION BUTTON */}
+  <div 
+    className="relative -top-10 cursor-pointer group"
+    onClick={() => router.push("/cart")}
+  >
+    <div className="absolute inset-0 bg-[#8a9a5b]/10 rounded-full animate-ping scale-110 opacity-20" />
+    
+    <div className="relative w-16 h-16 bg-[#8a9a5b] rounded-full flex items-center justify-center p-1.5 shadow-[0_8px_25px_rgba(166,29,51,0.3)] border-[5px] border-white active:scale-90 transition-transform duration-200">
+      <div className="w-full h-full border border-white/20 rounded-full flex items-center justify-center">
+        <IoBagHandleOutline size={26} className="text-white" />
 
-              {/* Label */}
-              <span
-                className={`text-[10px] uppercase tracking-widest font-bold transition-colors duration-300 ${
-                  isActive ? "text-white" : "text-slate-200"
-                }`}
-              >
-                {item.name}
-              </span>
-
-              {/* Unique Bottom Line Slit */}
-              <div className={`mt-1.5 h-[2px] rounded-full transition-all duration-500 ${
-                isActive ? "w-4 bg-blue-400" : "w-0 bg-transparent"
-              }`} />
-            </Link>
-          );
-        })}
-      </nav>
+        {cartCount > 0 && (
+          <span className="absolute -top-1 -right-1 bg-[#f7b614] text-[#8a9a5b] text-[10px] w-6 h-6 rounded-full flex items-center justify-center font-black border-2 border-white shadow-md animate-in zoom-in">
+            {cartCount}
+          </span>
+        )}
+      </div>
     </div>
+
+    <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-black text-[#8a9a5b] uppercase tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity">
+      Cart
+    </span>
+  </div>
+
+  <NavItem 
+    label="Help" 
+    onClick={() => router.push("/contact")}
+    icon={
+      <Phone
+        size={22}
+        className="mb-1 text-gray-400 group-hover:text-[#a61d33]"
+      />
+    } 
+  />
+  
+  <NavItem 
+    label="Account" 
+    onClick={() => router.push("/user")}
+    icon={
+      <FaUserCircle
+        size={22}
+        className="mb-1 text-gray-400 group-hover:text-[#a61d33]"
+      />
+    } 
+  />
+</nav>
+    {/* </div> */}
 
       {/* ================= MOBILE SIDEBAR ================= */}
       <AnimatePresence>
@@ -485,5 +463,31 @@ useEffect(() => {
         )}
       </AnimatePresence>
     </>
+  );
+}
+function NavItem({ label, icon, active = false, onClick }) {
+  return (
+    <div
+      onClick={onClick}
+      className={`flex flex-col items-center gap-1 cursor-pointer group active:scale-95 transition-all ${
+        active ? "text-[#424A2B]" : "text-gray-400"
+      }`}
+    >
+      {/* Icon container */}
+      <div
+        className={`w-8 h-8 flex items-center justify-center rounded-xl transition-colors
+          ${
+            active
+              ? "bg-[#E0E5D2]"
+              : "bg-gray-100 group-hover:bg-gray-200"
+          }`}
+      >
+        {icon}
+      </div>
+
+      <span className="text-[10px] font-bold tracking-tight">
+        {label}
+      </span>
+    </div>
   );
 }

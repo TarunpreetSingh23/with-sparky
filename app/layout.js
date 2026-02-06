@@ -75,7 +75,7 @@ export default function RootLayout({ children }) {
       </head>
 
       <body
-        className={`${inter.variable} antialiased bg-[#edf4ff] overflow-x-hidden`}
+        className={`${inter.variable} antialiased bg-white overflow-x-hidden`}
       >
         {/* ✅ GOOGLE MAPS – LOAD ONCE, CLIENT ONLY */}
         <Script
