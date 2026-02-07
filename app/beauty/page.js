@@ -6,13 +6,16 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function CleaningPage() {
-  const [selectedCategory, setSelectedCategory] = useState("ALL");
+ const searchParams = useSearchParams();
+  const urlCategory = searchParams.get("category")?.toUpperCase() || "ALL";
+  
+  const [selectedCategory, setSelectedCategory] = useState(urlCategory);
   const [services, setServices] = useState([]);
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cartOpen, setCartOpen] = useState(false);
   const [minCartError, setMinCartError] = useState("");
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
   const router = useRouter();
 
   const MIN_CART_VALUE = 300;
@@ -23,7 +26,14 @@ export default function CleaningPage() {
   const SAGA_MAROON = "#a61d33";
 
   const cartTotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
-
+useEffect(() => {
+    const cat = searchParams.get("category")?.toUpperCase();
+    if (cat) {
+      setSelectedCategory(cat);
+    } else {
+      setSelectedCategory("ALL");
+    }
+  }, [searchParams]);
   useEffect(() => {
     const fetchServices = async () => {
       try {
@@ -130,7 +140,7 @@ export default function CleaningPage() {
                 <span className="text-[10px] text-[#4F6F52] font-black flex items-center gap-1 opacity-60"><Clock size={12}/> 45 Mins</span>
               </div>
               
-              <p className="text-[11px] text-gray-400 font-bold leading-relaxed mb-4 line-clamp-2">{service.description}</p>
+              <p className="text-[11px] text-gray-700 font-bold leading-relaxed mb-4 line-clamp-2">{service.description}</p>
               
               <button 
                 onClick={() => router.push(`services/${service.title}`)} 
@@ -156,78 +166,126 @@ export default function CleaningPage() {
       </main>
 
       {/* 4. PREMIUM FLOATING CART BAR */}
-      {cart.length > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-xl border-t border-[#f1f3eb] z-50">
-          <div 
-            onClick={() => setCartOpen(true)}
-            className="max-w-2xl mx-auto bg-[#3A4D39] text-white px-6 py-4 rounded-2xl shadow-[0_15px_30px_rgba(58,77,57,0.3)] flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all"
-          >
-            <div className="flex items-center gap-4">
-                <div className="bg-white/10 p-2 rounded-xl border border-white/10"><ShoppingCart size={20} color={SAGA_ACCENT} /></div>
-                <div>
-                    <span className="block text-sm font-black tracking-tight italic">₹{cartTotal} • {cart.length} Service{cart.length > 1 ? 's' : ''}</span>
-                    <span className="text-[10px] font-bold text-[#f7b614] uppercase tracking-tighter">View ritual bag</span>
-                </div>
-            </div>
-            <div className="bg-[#f7b614] text-[#3A4D39] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-1 shadow-md">
-              Review <ChevronRight size={14} />
-            </div>
+    {cart.length > 0 && (
+  <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-xl border-t border-[#f1f3eb] z-50">
+    <div className="max-w-2xl mx-auto flex items-center gap-3">
+      
+      {/* 1. MAIN CLICKABLE CART AREA */}
+      <div 
+        onClick={() => setCartOpen(true)}
+        className="flex-1 bg-[#3A4D39] text-white px-6 py-4 rounded-2xl shadow-[0_15px_30px_rgba(58,77,57,0.3)] flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all"
+      >
+        <div className="flex items-center gap-4">
+          <div className="bg-white/10 p-2 rounded-xl border border-white/10">
+            <ShoppingCart size={20} color={SAGA_ACCENT} />
+          </div>
+          <div>
+            <span className="block text-sm font-black tracking-tight italic">
+              ₹{cartTotal} • {cart.length} Service{cart.length > 1 ? 's' : ''}
+            </span>
+            <span className="text-[10px] font-bold text-[#f7b614] uppercase tracking-tighter">
+              View ritual bag
+            </span>
           </div>
         </div>
-      )}
-
-      {/* 5. SAGA DRAWER (Bottom Sheet) */}
-      <div className={`fixed inset-0 z-[100] transition-opacity duration-500 ${cartOpen ? 'bg-black/60 opacity-100 visible' : 'bg-black/0 opacity-0 invisible'}`} onClick={() => setCartOpen(false)}>
-        <div 
-          onClick={(e) => e.stopPropagation()}
-          className={`absolute bottom-0 left-0 right-0 bg-white rounded-t-[3rem] p-8 transition-transform duration-700 ease-out transform ${cartOpen ? 'translate-y-0' : 'translate-y-full shadow-[0_-20px_50px_rgba(0,0,0,0.2)]'}`}
-        >
-          <div className="w-16 h-1.5 bg-[#f2f4ed] rounded-full mx-auto mb-8" />
-          
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-2xl font-[1000] text-[#1A2421] italic">My  <span className="text-[#a61d33]">Bag</span></h2>
-            <button onClick={() => setCartOpen(false)} className="p-3 bg-[#f2f4ed] rounded-full text-[#3A4D39]"><X size={20}/></button>
-          </div>
-
-          <div className="max-h-[45vh] overflow-y-auto no-scrollbar space-y-4 mb-8">
-            {cart.map((item, i) => (
-              <div key={i} className="flex items-center justify-between bg-[#fbfcfa] p-4 rounded-[1.5rem] border border-[#f1f3eb] group">
-                <div className="flex items-center gap-4">
-                  <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-[#f2f4ed] border border-[#f1f3eb]"><Image src={item.image} fill className="object-cover" alt="img"/></div>
-                  <div>
-                    <p className="text-[13px] font-black text-[#1A2421] leading-tight">{item.title}</p>
-                    <p className="text-[#3A4D39] font-black text-xs mt-1">₹{item.price}</p>
-                  </div>
-                </div>
-                <button onClick={() => {
-                   const updated = cart.filter((_, idx) => idx !== i);
-                   setCart(updated);
-                   localStorage.setItem("cart", JSON.stringify(updated));
-                }} className="p-2.5 text-rose-400 bg-rose-50 rounded-xl active:scale-90 transition-transform opacity-0 group-hover:opacity-100"><Trash2 size={18}/></button>
-              </div>
-            ))}
-          </div>
-
-          <div className="border-t border-[#f1f3eb] pt-8 space-y-6">
-            <div className="flex justify-between items-end px-2">
-              <span className="text-[#4F6F52] font-black uppercase text-[10px] tracking-widest opacity-60">Amount Payable</span>
-              <span className="text-4xl font-[1000] text-[#1A2421] tracking-tighter leading-none">₹{cartTotal}</span>
-            </div>
-            <button 
-              onClick={() => {
-                if (cartTotal < MIN_CART_VALUE) {
-                  setMinCartError(`Add ₹${MIN_CART_VALUE - cartTotal} more to book`);
-                  return;
-                }
-                router.push("/checkout");
-              }}
-              className="w-full py-5 bg-[#3A4D39] text-white rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs shadow-2xl shadow-[#3a4d39]/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-            >
-              Confirm Ritual <ChevronRight size={16} />
-            </button>
-          </div>
+        
+        <div className="bg-[#f7b614] text-[#3A4D39] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-1 shadow-md">
+          Review <ChevronRight size={14} />
         </div>
       </div>
+
+      {/* 2. PREMIUM REMOVE ACTION */}
+     
+
+    </div>
+  </div>
+)}
+
+      {/* 5. SAGA DRAWER (Bottom Sheet) */}
+     <div className={`fixed inset-0 z-[100] transition-opacity duration-500 ${cartOpen ? 'bg-black/60 opacity-100 visible' : 'bg-black/0 opacity-0 invisible'}`} onClick={() => setCartOpen(false)}>
+  <div 
+    onClick={(e) => e.stopPropagation()}
+    className={`absolute bottom-0 left-0 right-0 bg-white rounded-t-[3rem] p-8 transition-transform duration-700 ease-out transform ${cartOpen ? 'translate-y-0' : 'translate-y-full shadow-[0_-20px_50px_rgba(0,0,0,0.2)]'}`}
+  >
+    <div className="w-16 h-1.5 bg-[#f2f4ed] rounded-full mx-auto mb-8" />
+    
+    <div className="flex justify-between items-center mb-8">
+      <div className="flex flex-col">
+        <h2 className="text-2xl font-[1000] text-[#1A2421] italic leading-none">My <span className="text-[#a61d33]">Bag</span></h2>
+        <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[#4F6F52] opacity-50 mt-1">{cart.length} Services Added</span>
+      </div>
+
+      <div className="flex items-center gap-3">
+        {/* NEW: CLEAR ALL BUTTON */}
+        {/* <button 
+          onClick={() => {
+            if(confirm("Empty your ritual bag?")) {
+              setCart([]);
+              localStorage.removeItem("cart");
+              toast.success("Bag cleared");
+            }
+          }}
+          className="px-4 py-2 rounded-xl bg-rose-50 text-[#a61d33] text-[10px] font-[1000] uppercase tracking-widest border border-rose-100 active:scale-95 transition-all"
+        >
+          Clear
+        </button> */}
+        
+        <button onClick={() => setCartOpen(false)} className="p-3 bg-[#f2f4ed] rounded-full text-[#3A4D39] active:scale-90 transition-all">
+          <X size={20}/>
+        </button>
+      </div>
+    </div>
+
+    {/* ITEM LIST */}
+    <div className="max-h-[45vh] overflow-y-auto no-scrollbar space-y-4 mb-8">
+      {cart.map((item, i) => (
+        <div key={i} className="flex items-center justify-between bg-[#fbfcfa] p-4 rounded-[1.5rem] border border-[#f1f3eb] group">
+          <div className="flex items-center gap-4">
+            <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-[#f2f4ed] border border-[#f1f3eb]">
+              <Image src={item.image} fill className="object-cover" alt="img"/>
+            </div>
+            <div>
+              <p className="text-[13px] font-black text-[#1A2421] leading-tight">{item.title}</p>
+              <p className="text-[#3A4D39] font-black text-xs mt-1">₹{item.price}</p>
+            </div>
+          </div>
+
+          {/* INDIVIDUAL REMOVE BUTTON (Already in your code, now always visible for easier mobile access) */}
+          <button 
+            onClick={() => {
+              const updated = cart.filter((_, idx) => idx !== i);
+              setCart(updated);
+              localStorage.setItem("cart", JSON.stringify(updated));
+            }} 
+            className="p-2.5 text-[#a61d33] bg-rose-50 rounded-xl active:scale-90 transition-transform"
+          >
+            <Trash2 size={18}/>
+          </button>
+        </div>
+      ))}
+    </div>
+
+    {/* FOOTER ACTION */}
+    <div className="border-t border-[#f1f3eb] pt-8 space-y-6">
+      <div className="flex justify-between items-end px-2">
+        <span className="text-[#4F6F52] font-black uppercase text-[10px] tracking-widest opacity-60">Amount Payable</span>
+        <span className="text-4xl font-[1000] text-[#1A2421] tracking-tighter leading-none">₹{cartTotal}</span>
+      </div>
+      <button 
+        onClick={() => {
+          if (cartTotal < MIN_CART_VALUE) {
+            setMinCartError(`Add ₹${MIN_CART_VALUE - cartTotal} more to book`);
+            return;
+          }
+          router.push("/checkout");
+        }}
+        className="w-full py-5 bg-[#3A4D39] text-white rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs shadow-2xl shadow-[#3a4d39]/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+      >
+        Confirm  <ChevronRight size={16} />
+      </button>
+    </div>
+  </div>
+</div>
 
       {/* 6. SAGA MIN-CART TOAST */}
       {minCartError && (

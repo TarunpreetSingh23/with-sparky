@@ -143,7 +143,7 @@ export default function ServiceDetailPage() {
         {minCartError && (
           <motion.div 
             initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-            className="bg-white border-2 border-[#E0E5D2] shadow-2xl rounded-[2rem] p-5 flex items-center gap-4"
+            className="fixed bottom-23 left-6 right-6 md:left-1/2 md:-translate-x-1/2 md:max-w-sm z-[110] bg-white/90 backdrop-blur-xl border-2 border-[#E0E5D2] shadow-2xl rounded-[2rem] p-5 flex items-center gap-4 animate-in slide-in-from-bottom-10 duration-500"
           >
             <div className="w-12 h-12 rounded-2xl bg-[#a61d33] flex items-center justify-center text-white font-[1000] text-xl italic shadow-lg">₹</div>
             <div className="flex-1">
@@ -262,8 +262,8 @@ export default function ServiceDetailPage() {
       active:scale-[0.97] transition-all
     "
   >
-    Add to Cart
-    <ChevronRight size={18} className="text-[#f7b614]" />
+    Book Now
+    {/* <ChevronRight size={18} className="text-[#f7b614]" /> */}
   </button>
 </div>
 

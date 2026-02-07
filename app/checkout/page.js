@@ -77,15 +77,15 @@ export default function Checkout() {
   const [orderId, setOrderId] = useState("");
 
   /* ================= AUTH & LOGIC (UNCHANGED) ================= */
-  // useEffect(() => {
-  //   fetch("/api/me").then(res => res.json()).then(data => {
-  //     if (!data?.user) router.push("/login");
-  //     else {
-  //       setUser(data.user); setName(data.user.name || "");
-  //       setPhone(data.user.phone || ""); setloginPhone(data.user.phone);
-  //     }
-  //   }).catch(() => router.push("/login"));
-  // }, [router]);
+  useEffect(() => {
+    fetch("/api/me").then(res => res.json()).then(data => {
+      if (!data?.user) router.push("/login");
+      else {
+        setUser(data.user); setName(data.user.name || "");
+        setPhone(data.user.phone || ""); setloginPhone(data.user.phone);
+      }
+    }).catch(() => router.push("/login"));
+  }, [router]);
 
   useEffect(() => {
     const saved = localStorage.getItem("cart");

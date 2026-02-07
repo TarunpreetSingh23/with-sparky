@@ -605,14 +605,16 @@ setShowMap(false);
       <main className="px-4 space-y-8 pt-2 ">
 
 
-     <section className="mt-4 px-4">
-  <div className="max-w-md mx-auto p-3 bg-white rounded-[2.5rem] shadow-sm">
-   <h2 className="text-center text-[#121212] text-2xl mb-2  font-medium tracking-wide">
+     <section className="mt-4 px-2">
+  <div className="max-w-md mx-auto p-5 bg-white rounded-[2.5rem] shadow-sm">
+   <h2 className="text-center text-[26px] mb-0.5 font-serif font-light italic text-[#1A2421] tracking-tight">
   Our Services
 </h2>
+{/* <div className="mx-auto mt-0.5 mb-0.5 w-10 h-[2px] bg-[#8A9A5B] rounded-full" /> */}
 
 
-   <div className="grid grid-cols-4 mb-2 gap-4">
+
+   <div className="grid grid-cols-4 mb-2 w-full gap-4">
          {want.map((cat, i) => (
   <button
     key={i}
@@ -628,7 +630,7 @@ setShowMap(false);
       />
     </div>
 
-    <span className="text-[13px] font-bold text-center leading-tight text-gray-700">
+    <span className="text-[13px] font-sans text-center leading-tight text-gray-700">
       {cat.name}
     </span>
   </button>
@@ -678,11 +680,11 @@ setShowMap(false);
     </button> */}
   </div>
 )}
- <section ref={beautyRef} className="pt-2">
-  <SectionTitle title="BEAUTY SERVICES" />
+<section ref={beautyRef} className="pt-0.5">
+  <SectionTitle title="Beauty Services" />
   <FloatingOrderTracker activeOrder={active} />
 
-  {["Waxing", "Facial", "Mehandi", "Haircare", "Threading", "Makeup", "Bleach", "Cleanup", "Manicure", "Pedicure", "Hair", "Mehndi"].map((subCat, index) => {
+  {["Waxing", "Facial", "Mehandi", "Haircare", "Threading", "Makeup", "Bleach", "Cleanup", "Manicure", "Pedicure", "Hair", "Mehndi"].map((subCat) => {
     const filteredServices = services.filter(
       (item) =>
         item.category === "Woman Services" &&
@@ -691,44 +693,38 @@ setShowMap(false);
 
     if (filteredServices.length === 0) return null;
 
-    const displayServices = filteredServices.slice(0, 2);
+    // Change display limit to 3 items
+    const displayServices = filteredServices.slice(0, 3);
 
     return (
       <div key={subCat} className="mb-10">
-        {/* Category Header */}
-        <h3 className="px-4 mb-4 text-[13px] font-black text-[#1A2421] uppercase tracking-[0.15em] flex items-center gap-2">
-          <span className="w-1 h-5 bg-[#4F6F52] rounded-full" />
-          {subCat}
-        </h3>
         
-        {/* Services Grid */}
+        {/* Category Header with Top-Aligned View All Button */}
+        <div className="flex items-center justify-between px-4 mb-4">
+          <h3 className="text-[13px] font-black text-[#1A2421] uppercase tracking-[0.15em] flex items-center gap-2">
+            <span className="w-1 h-5 bg-[#4F6F52] rounded-full" />
+            {subCat}
+          </h3>
+          
+          <button 
+            onClick={() => router.push(`/beauty?category=${subCat.toUpperCase()}`)}
+            className="flex items-center gap-1 bg-[#3A4D39]/5 text-[#3A4D39] px-3 py-1.5 rounded-full border border-[#3A4D39]/10 active:scale-95 transition-all"
+          >
+            <span className="text-[9px] font-black uppercase tracking-widest">View All</span>
+            {/* <ChevronRight size={12} strokeWidth={3} /> */}
+          </button>
+        </div>
+        
+        {/* Services Grid (3 Columns) */}
         <div className="grid grid-cols-3 gap-3 px-2">
           {displayServices.map((item) => (
             <div key={item.id} onClick={() => setSelectedService(item)}>
               <ServiceAppCard item={item} />
             </div>
           ))}
-
-          {/* View More Card */}
-          <button
-            onClick={() => router.push(`/beauty?category=${subCat.toUpperCase()}`)}
-            className="group relative flex w-full h-full min-h-[224px] flex-col items-center justify-center
-            rounded-[2rem] border border-[#E0E5D2] bg-[#f8f9f5]
-            transition-all duration-300 hover:shadow-lg active:scale-[0.98]"
-          >
-            <div className="w-14 h-14 rounded-full bg-white border border-[#E0E5D2]
-              flex items-center justify-center shadow-sm group-hover:bg-[#E0E5D2]/20 transition-colors"
-            >
-              <LayoutGrid size={22} className="text-[#3A4D39]" />
-            </div>
-            <div className="mt-3 text-center">
-              <span className="block text-[10px] font-black uppercase tracking-widest text-[#1A2421]">View All</span>
-              <span className="text-[10px] font-bold text-[#4F6F52]">{filteredServices.length}+ Options</span>
-            </div>
-          </button>
         </div>
 
-        {/* DYNAMIC HERO CAROUSEL (Yes Madam Style) */}
+        {/* DYNAMIC HERO CAROUSEL remains below the grid */}
         <div className="mt-6 px-2">
           <SubCategoryPromo subCat={subCat} />
         </div>
@@ -737,7 +733,7 @@ setShowMap(false);
   })}
 </section>
 
-        <section ref={beatiqueRef} className="pt-4">
+        {/* <section ref={beatiqueRef} className="pt-2">
           <SectionTitle title="The Beatique" />
           <div className="grid grid-cols-3 gap-3">
             {BESTSELLERS.map((item) => (
@@ -746,7 +742,7 @@ setShowMap(false);
               </div>
             ))}
           </div>
-        </section>
+        </section> */}
 
         {/* <section ref={techRef} className="pt-4">
           <SectionTitle title="Tech Masters" />
@@ -975,7 +971,7 @@ function ServiceAppCard({ item }) {
       </div>
 
       {/* Premium Accent Strip */}
-      <div className="absolute bottom-0 inset-x-0 h-[3px] bg-gradient-to-r from-transparent via-[#8A9A5B] to-transparent opacity-70" />
+      {/* <div className="absolute bottom-0 inset-x-0 h-[3px] bg-gradient-to-r from-transparent via-[#8A9A5B] to-transparent opacity-70" /> */}
     </div>
   );
 }
@@ -985,20 +981,20 @@ function ServiceAppCard({ item }) {
 function SectionTitle({ title }) {
   return (
     <div className="relative mt-0.5 mb-3 px-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-center">
         
         {/* Left Section: Typography focus */}
         <div className="flex flex-col">
-          <div className="flex items-center gap-2 mb-0.5">
+          <div className="w-full flex items-center  justify-center gap-2 mb-0.5">
             {/* Minimalist Accent: A vertical pill instead of horizontal bars */}
-            <div className="w-1 h-6 bg-[#424a2b] rounded-full" />
+            {/* <div className="w-1 h-6 bg-[#424a2b] text-center rounded-full" /> */}
             
-            <h2 className="text-[22px] font-semibold tracking-tight text-grey-900 ">
+            <h2 className="text-[29px] text-center font-bold text-grey-500  tracking-tight italic text-grey-900 ">
               {title}
             </h2>
           </div>
 
-          <div className="flex items-center gap-2 pl-3">
+          {/* <div className="flex items-center gap-2 pl-3">
              <div className="flex -space-x-1">
                 {[1, 2, 3,4].map((i) => (
                   <div key={i} className="w-4 h-4 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center overflow-hidden">
@@ -1009,21 +1005,21 @@ function SectionTitle({ title }) {
              <p className="text-[11px] text-slate-500 font-bold tracking-tight">
                4.8 <span className="text-slate-300 mx-1">•</span> 100+ Bookings
              </p>
-          </div>
+          </div> */}
         </div>
 
         {/* Right Section: Interactive/Status element */}
-        <div className="flex flex-col items-end gap-1">
+        {/* <div className="flex flex-col items-end gap-1">
            <div className="bg-emerald-50 px-2 py-1 rounded-lg border border-emerald-100 flex items-center gap-1.5 shadow-sm">
              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
              <span className="text-[9px] font-black uppercase tracking-tight text-emerald-700">
                Best Price
              </span>
            </div>
-           {/* <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:bg-blue-50 px-2 py-1 rounded-md transition-colors">
+           <button className="text-[10px] font-black text-blue-600 uppercase tracking-widest hover:bg-blue-50 px-2 py-1 rounded-md transition-colors">
               See All
-           </button> */}
-        </div>
+           </button>
+        </div> */}
 
       </div>
 
@@ -1099,7 +1095,7 @@ function ServiceSectionSkeleton() {
 }
 function SparkySkeletonPage() {
   return (
-    <div className="min-h-screen bg-white pb-32">
+    <div className="min-h-screen bg-white pb-3">
       <HeaderSkeleton />
       <ServicesGridSkeleton />
       <ServiceSectionSkeleton />
