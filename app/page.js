@@ -18,6 +18,7 @@ import {
   LayoutGrid,
   Scissors, 
   User,
+  
   Palette, 
   Wind, 
   CheckCircle2,
@@ -172,7 +173,7 @@ const navcolour = "#8a9a5b";    // Near-Black Green (Very high-end feel)
 const herocolour = "#b8c398";   // Soft Clay (Elegant background for text)
 const herobutton = "#5c673c";   // Forest Green (Clear action button)
 const mainbg = "#ebede9";       // Light Sage Grey (Sophisticated depth)
-
+// const router=useRouter();
 
   const beautyRef = useRef(null);
   const beatiqueRef = useRef(null);
@@ -514,44 +515,70 @@ setShowMap(false);
               <Search size={20} className="text-gray-500" />
             )}
           </div>
-          {open && results.length > 0 && (
-  <div className="absolute top-full mt-2 w-full bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
-    {results.map((item, i) => (
-      <div
-        key={i}
-        onClick={() => {
-          setQuery("");
-          setOpen(false);
-          setSelectedService(item); // OR router.push(...)
-        }}
-        className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 transition"
-      >
-        {/* Image */}
-        <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-gray-100">
-          <Image
-            src={item.image || "/images/placeholder.jpg"}
-            fill
-            className="object-cover"
-            alt={item.name || item.title}
-          />
-        </div>
+ {open && results.length > 0 && (
+  <div className="absolute top-full mt-3 w-full bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(58,77,57,0.15)] border border-[#f1f3eb] z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
+    {/* Header for Results */}
+    <div className="bg-[#fbfcfa] px-5 py-2.5 border-b border-[#f1f3eb]">
+      <p className="text-[9px] font-[1000] uppercase tracking-[0.2em] text-[#4F6F52] opacity-60">
+        Top  Matches
+      </p>
+    </div>
 
-        {/* Text */}
-        <div className="flex-1">
-          <p className="text-sm font-bold text-gray-800">
-            {item.name || item.title}
-          </p>
-          <p className="text-[11px] text-gray-400">
-            {item.category}
-          </p>
-        </div>
+    <div className="max-h-[380px] overflow-y-auto no-scrollbar">
+      {results.map((item, i) => (
+        <div
+          key={i}
+          onClick={() => {
+            setQuery("");
+            setOpen(false);
+            setSelectedService(item);
+          }}
+          className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-[#fbfcfa] transition-all border-b border-[#f1f3eb] last:border-0 group"
+        >
+          {/* Service Image with Saga Soft Background */}
+          <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-[#f2f4ed] shrink-0 border border-[#f1f3eb] shadow-sm">
+            <Image
+              src={item.image || "/images/placeholder.jpg"}
+              fill
+              className="object-cover group-hover:scale-110 transition-transform duration-500"
+              alt={item.name || item.title}
+            />
+          </div>
 
-        {/* Price */}
-        <span className="text-sm font-black text-blue-600">
-          ₹{item.price}
-        </span>
-      </div>
-    ))}
+          {/* Service Info */}
+          <div className="flex-1 min-w-0">
+            <p className="text-[14px] font-[1000] text-[#1A2421] leading-tight truncate uppercase tracking-tight">
+              {item.name || item.title}
+            </p>
+            <div className="flex items-center gap-2 mt-1">
+               <span className="text-[9px] font-black text-[#a61d33] uppercase tracking-widest bg-rose-50 px-1.5 py-0.5 rounded">
+                 Verified
+               </span>
+               <p className="text-[10px] font-bold text-[#4F6F52] opacity-50 truncate italic">
+                 {item.category}
+               </p>
+            </div>
+          </div>
+
+          {/* Price & Action */}
+          <div className="flex flex-col items-end gap-1">
+            <span className="text-[15px] font-[1000] text-[#3A4D39] tracking-tighter">
+              ₹{item.price}
+            </span>
+            <div className="w-5 h-5 rounded-full bg-[#3A4D39]/5 flex items-center justify-center group-hover:bg-[#3A4D39] transition-colors">
+               {/* <ChevronRight size={12} className="text-[#3A4D39] group-hover:text-white" /> */}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Footer for Dropdown */}
+    {/* <div className="bg-white px-5 py-3 text-center border-t border-[#f1f3eb]">
+       <button className="text-[10px] font-black uppercase tracking-[0.1em] text-[#a61d33] hover:opacity-70 transition-opacity">
+         View all matches
+       </button>
+    </div> */}
   </div>
 )}
 
@@ -1001,7 +1028,7 @@ function SectionTitle({ title }) {
       </div>
 
       {/* Optional: Subtle bottom divider that fades out */}
-      <div className="mt-4 w-full h-[1px] bg-gradient-to-r from-slate-100 via-slate-50 to-transparent" />
+      {/* <div className="mt-4 w-full h-[1px] bg-gradient-to-r from-slate-100 via-slate-50 to-transparent" /> */}
     </div>
   );
 }

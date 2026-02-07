@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,6 +9,8 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { FaUserCircle } from "react-icons/fa";
 import dynamic from "next/dynamic";
 import { X, MapPin, CheckCircle2, User,AlertTriangle,Phone } from "lucide-react";
+import { FaListUl } from "react-icons/fa";
+
 // Icons
 import { GiHamburgerMenu } from "react-icons/gi";
 import {
@@ -19,8 +22,10 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { BsShieldCheck } from "react-icons/bs";
+// import { useRouter } from "next/router";
 const UserMap = dynamic(() => import("@/components/UserMap"), { ssr: false });
 export default function Navbar() {
+  const router=useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [active, setActive] = useState("Home");
@@ -339,7 +344,7 @@ useEffect(() => {
     onClick={() => router.push("/")}
     active
     icon={
-      <User
+      <IoHomeSharp
         size={22}
         className="mb-1 text-[#8a9a5b]"
       />
@@ -351,16 +356,17 @@ useEffect(() => {
     onClick={() => router.push("/beauty")}
     
     icon={
-      <User
+      <FaListUl 
+
         size={22}
-        className="mb-1 text-[#8a9a5b]"
+        className="mb-1 text-gray-400"
       />
     } 
   />
 
   {/* CENTER ACTION BUTTON */}
   <div 
-    className="relative -top-10 cursor-pointer group"
+    className="relative -top-6 cursor-pointer group"
     onClick={() => router.push("/cart")}
   >
     <div className="absolute inset-0 bg-[#8a9a5b]/10 rounded-full animate-ping scale-110 opacity-20" />
