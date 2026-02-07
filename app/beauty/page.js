@@ -61,7 +61,8 @@ export default function CleaningPage() {
     ? services 
     : services.filter((s) => s.title.toLowerCase().includes(selectedCategory.toLowerCase()));
 
-  if (loading) return <PageLoader />;
+  if (loading) return <CleaningSkeleton />;
+
 
   return (
     <div className="bg-[#fbfcfa] min-h-screen text-[#1A2421] font-sans pb-32">
@@ -266,6 +267,71 @@ function PageLoader() {
         .loading-bar-element { animation: loading-slide 2s infinite cubic-bezier(0.65, 0, 0.35, 1); }
         @keyframes loading-slide { 0% { left: -100%; } 50% { left: 30%; } 100% { left: 100%; } }
       `}</style>
+    </div>
+  );
+}
+function CleaningSkeleton() {
+  return (
+    <div className="bg-[#fbfcfa] min-h-screen pb-32 animate-pulse">
+
+      {/* ===== HEADER SKELETON ===== */}
+      <div className="sticky top-0 z-40 bg-white shadow-[0_4px_20px_rgba(58,77,57,0.05)]">
+        <div className="flex items-center justify-between px-6 py-4">
+          <div className="w-10 h-10 rounded-full bg-[#f2f4ed]" />
+          <div className="h-5 w-32 rounded-lg bg-[#f2f4ed]" />
+          <div className="w-10 h-10 rounded-full bg-[#f2f4ed]" />
+        </div>
+
+        {/* Category Pills Skeleton */}
+        <div className="flex gap-3 px-6 pb-4 overflow-x-hidden">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-8 w-24 rounded-xl bg-[#f2f4ed]"
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* ===== SERVICES LIST SKELETON ===== */}
+      <main className="max-w-2xl mx-auto p-4 space-y-4">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="flex gap-4 p-4 bg-white rounded-[2rem] border border-[#f1f3eb]"
+          >
+            {/* LEFT CONTENT */}
+            <div className="flex-1 space-y-3">
+              <div className="h-3 w-20 rounded bg-[#f7b614]/30" />
+              <div className="h-5 w-3/4 rounded bg-[#f2f4ed]" />
+              <div className="h-4 w-32 rounded bg-[#e6eadf]" />
+              <div className="h-3 w-full rounded bg-[#f2f4ed]" />
+              <div className="h-3 w-2/3 rounded bg-[#f2f4ed]" />
+              <div className="h-3 w-24 rounded bg-[#f2f4ed]" />
+            </div>
+
+            {/* RIGHT IMAGE + BUTTON */}
+            <div className="relative w-28">
+              <div className="w-28 h-28 rounded-[1.5rem] bg-[#f2f4ed]" />
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-9 w-24 rounded-xl bg-white border border-[#e6eadf]" />
+            </div>
+          </div>
+        ))}
+      </main>
+
+      {/* ===== FLOATING CART BAR SKELETON ===== */}
+      <div className="fixed bottom-0 inset-x-0 p-6 bg-white/80 backdrop-blur-xl border-t border-[#f1f3eb]">
+        <div className="max-w-2xl mx-auto h-16 rounded-2xl bg-[#3A4D39]/20 flex items-center justify-between px-6">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-white/30" />
+            <div className="space-y-2">
+              <div className="h-4 w-32 rounded bg-white/30" />
+              <div className="h-3 w-20 rounded bg-[#f7b614]/40" />
+            </div>
+          </div>
+          <div className="h-9 w-20 rounded-xl bg-[#f7b614]/60" />
+        </div>
+      </div>
     </div>
   );
 }

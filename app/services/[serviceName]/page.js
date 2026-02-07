@@ -83,7 +83,8 @@ export default function ServiceDetailPage() {
     router.push("/checkout");
   };
 
-  if (loading) return <PageLoader />;
+  if (loading) return <ServiceDetailSkeleton />;
+
   if (!selected) return <div className="p-10 text-center font-black text-[#a61d33]">Service not found</div>;
 
   return (
@@ -111,7 +112,7 @@ export default function ServiceDetailPage() {
         </div>
       </div>
 
-      <main className="space-y-4 px-4 mt-[-40px] relative z-10">
+      <main className="space-y-4 px-4 mt-[-30px] relative z-10">
         
         {/* Card 1: Core Title & Pricing */}
         <section className="bg-white rounded-[2.5rem] p-8 shadow-[0_15px_40px_rgba(58,77,57,0.08)] border border-[#f1f3eb]">
@@ -212,7 +213,7 @@ export default function ServiceDetailPage() {
                   <ShieldCheck size={32} className="text-[#f7b614]" />
                </div>
             </div>
-            <h4 className="text-white text-lg font-[1000] tracking-widest uppercase italic">Saga Certified</h4>
+            <h4 className="text-white text-lg font-[1000] tracking-widest uppercase italic">Sparky Certified</h4>
             <p className="text-white/60 text-[11px] font-bold uppercase tracking-widest mt-2 leading-relaxed px-4">
               Premium Hygiene • Single-Use Kits • Background Verified Experts
             </p>
@@ -285,6 +286,93 @@ function PageLoader() {
         .loading-bar-element { animation: loading-slide 2s infinite cubic-bezier(0.65, 0, 0.35, 1); }
         @keyframes loading-slide { 0% { left: -100%; } 50% { left: 30%; } 100% { left: 100%; } }
       `}</style>
+    </div>
+  );
+}
+function ServiceDetailSkeleton() {
+  return (
+    <div className="min-h-screen bg-[#fbfcfa] pb-32 animate-pulse">
+
+      {/* ===== HEADER FLOATING BUTTONS ===== */}
+      <div className="fixed top-0 inset-x-0 z-[50] flex justify-between items-center px-4 py-4">
+        <div className="w-10 h-10 rounded-full bg-white shadow border border-[#f1f3eb]" />
+        <div className="w-10 h-10 rounded-full bg-white shadow border border-[#f1f3eb]" />
+      </div>
+
+      {/* ===== HERO IMAGE ===== */}
+      <div className="relative w-full h-[420px] rounded-b-[3.5rem] overflow-hidden bg-[#f2f4ed]">
+        <div className="absolute bottom-10 left-6 h-8 w-44 rounded-xl bg-white/80" />
+      </div>
+
+      {/* ===== MAIN CONTENT ===== */}
+      <main className="space-y-4 px-4 mt-[-40px] relative z-10">
+
+        {/* TITLE + PRICE CARD */}
+        <section className="bg-white rounded-[2.5rem] p-8 border border-[#f1f3eb] shadow-sm space-y-4">
+          <div className="flex gap-3">
+            <div className="h-6 w-32 rounded-full bg-[#f2f4ed]" />
+            <div className="h-6 w-20 rounded-full bg-[#f2f4ed]" />
+          </div>
+
+          <div className="h-7 w-3/4 rounded-xl bg-[#e6eadf]" />
+          <div className="h-4 w-full rounded-lg bg-[#f2f4ed]" />
+          <div className="h-4 w-2/3 rounded-lg bg-[#f2f4ed]" />
+
+          <div className="flex items-center gap-4 pt-4 border-t border-[#f1f3eb]">
+            <div className="h-8 w-24 rounded-xl bg-[#e6eadf]" />
+            <div className="h-6 w-16 rounded-lg bg-[#f2f4ed]" />
+            <div className="ml-auto h-7 w-24 rounded-xl bg-[#f2f4ed]" />
+          </div>
+        </section>
+
+        {/* SERVICE STEPS */}
+        <section className="bg-white rounded-[2.5rem] p-8 border border-[#f1f3eb] space-y-6">
+          <div className="h-6 w-48 rounded-xl bg-[#e6eadf]" />
+
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div
+              key={i}
+              className="bg-[#fbfcfa] p-6 rounded-[2rem] border border-[#f1f3eb] space-y-3"
+            >
+              <div className="flex justify-between">
+                <div className="h-3 w-24 rounded bg-[#f2f4ed]" />
+                <div className="h-8 w-8 rounded-lg bg-[#e6eadf]" />
+              </div>
+              <div className="h-5 w-2/3 rounded bg-[#e6eadf]" />
+              <div className="h-4 w-full rounded bg-[#f2f4ed]" />
+              <div className="h-4 w-3/4 rounded bg-[#f2f4ed]" />
+            </div>
+          ))}
+        </section>
+
+        {/* ADD-ONS GRID */}
+        <section className="bg-white rounded-[2.5rem] p-8 border border-[#f1f3eb]">
+          <div className="h-4 w-32 rounded bg-[#e6eadf] mb-6" />
+          <div className="grid grid-cols-2 gap-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="space-y-3">
+                <div className="aspect-square rounded-[1.5rem] bg-[#f2f4ed]" />
+                <div className="h-4 w-3/4 rounded bg-[#e6eadf]" />
+                <div className="h-4 w-16 rounded bg-[#f2f4ed]" />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* GUARANTEE BANNER */}
+        <div className="h-44 rounded-[3rem] bg-[#3A4D39]/20" />
+      </main>
+
+      {/* ===== STICKY BOTTOM BAR ===== */}
+      <div className="fixed bottom-0 inset-x-0 z-[60] bg-white/90 backdrop-blur-xl border-t border-[#e6eadf] px-6 py-5">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="h-7 w-24 rounded bg-[#e6eadf]" />
+            <div className="h-3 w-32 rounded bg-[#f2f4ed]" />
+          </div>
+          <div className="h-14 w-40 rounded-[1.25rem] bg-[#3A4D39]/30" />
+        </div>
+      </div>
     </div>
   );
 }
