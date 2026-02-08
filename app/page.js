@@ -584,7 +584,7 @@ setShowMap(false);
 
         </div>
       </header>
- <section className="px-4 -mt-0">
+ {/* <section className="px-4 -mt-0">
         <div 
         style={{ backgroundColor: herocolour }}
           onClick={() => router.push('/beauty')}
@@ -600,7 +600,7 @@ setShowMap(false);
           </div>
           <div className="absolute bottom-0 w-full h-12 bg-white/20 backdrop-blur-sm" />
         </div>
-      </section>
+      </section> */}
       {/* ================= MAIN CONTENT ================= */}
       <main className="px-4 space-y-8 pt-2 ">
 

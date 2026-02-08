@@ -164,7 +164,7 @@ export default function TrackBookingPage() {
               className="absolute h-full bg-gradient-to-r from-[#3A4D39] to-[#4F6F52] rounded-full shadow-[0_0_15px_rgba(58,77,57,0.3)]"
             />
           </div>
-          <p className="text-right text-[9px] font-[1000] uppercase tracking-widest text-gray-300 mt-3">Verified Saga Pipeline</p>
+          <p className="text-right text-[9px] font-[1000] uppercase tracking-widest text-gray-300 mt-3">Verified Sparky Pipeline</p>
         </section>
 
         {/* --- Premium OTP Verification --- */}
@@ -310,7 +310,7 @@ export default function TrackBookingPage() {
           </div>
           <div className="bg-[#fbfcfa] px-8 py-4 border-t border-[#f1f3eb] flex items-center gap-3">
              <ShieldCheck size={16} className="text-[#3A4D39] opacity-40" />
-             <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[#4F6F52] opacity-50">Saga Encrypted Security Protocol</span>
+             <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[#4F6F52] opacity-50">Sparky Encrypted Security Protocol</span>
           </div>
         </section>
 

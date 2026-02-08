@@ -281,7 +281,7 @@ export default function Login() {
                   disabled={loading}
                   className="w-full py-5 bg-[#a61d33] text-white rounded-[1.5rem] font-[1000] uppercase tracking-[0.2em] text-[11px] shadow-2xl shadow-rose-200 active:scale-95 transition-all"
                 >
-                  {loading ? "Verifying..." : "Confirm Ritual Unlock"}
+                  {loading ? "Verifying..." : "Confirm Otp"}
                 </button>
 
                 {timer === 0 && (

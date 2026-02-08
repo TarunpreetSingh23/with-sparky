@@ -59,6 +59,7 @@ export default function ProfilePage() {
     initProfile();
   }, [router]);
 
+
   const handleLogout = async () => {
     await fetch("/api/logout", { method: "POST" });
     router.push("/");
@@ -93,36 +94,37 @@ export default function ProfilePage() {
         </button>
       </header>
 
-      <main className="max-w-2xl mx-auto px-6 pt-10">
+      <main className="max-w-2xl mx-auto  pt-0.5">
         
         {/* 2. USER PROFILE CARD */}
-        <section className="mb-14 flex items-center gap-6 p-2">
-          <div className="relative">
-            <div className="w-24 h-24 bg-[#3A4D39] rounded-[2.5rem] flex items-center justify-center shadow-2xl shadow-[#3a4d39]/20 border-4 border-white overflow-hidden">
-               <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent" />
-               <IoPersonCircleOutline size={56} className="text-white relative z-10" />
+        <header className="relative pt-16 pb-12  overflow-hidden bg-gradient-to-b from-[#a4c4a7] to-[#F7F9F7]">
+        <div className="max-w-2xl mx-auto relative z-10 flex flex-col items-center">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="relative mb-6"
+          >
+            <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center shadow-xl border-4 border-white overflow-hidden">
+              <IoPersonCircleOutline size={100} className="text-gray-200" />
             </div>
-            <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-emerald-500 border-4 border-[#fbfcfa] rounded-full flex items-center justify-center shadow-md">
-                <IoShieldCheckmarkOutline size={12} className="text-white" />
+            <div className="absolute bottom-1 right-1 w-8 h-8 bg-emerald-500 border-4 border-white rounded-full flex items-center justify-center shadow-lg">
+              <IoShieldCheckmarkOutline size={14} className="text-white" />
             </div>
+          </motion.div>
+
+          <h1 className="text-3xl font-[1000] tracking-tight text-gray-900 mb-1">Your Account</h1>
+          <p className="text-gray-500 font-bold tracking-tight">{user.phone}</p>
+          
+          <div className="flex gap-2 mt-4">
+            <span className="text-[10px] font-black bg-white/80 backdrop-blur-md text-[#3A4D39] px-3 py-1 rounded-full shadow-sm border border-white/50 uppercase tracking-widest">Verified</span>
+            <span className="text-[10px] font-black bg-[#a61d33] text-white px-3 py-1 rounded-full shadow-lg uppercase tracking-widest">Premium Gold</span>
           </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-                <span className="text-[9px] font-[1000] text-white bg-[#3A4D39] px-2 py-0.5 rounded uppercase tracking-widest">Verified</span>
-                <span className="text-[9px] font-[1000] text-[#a61d33] bg-rose-50 px-2 py-0.5 rounded uppercase tracking-widest">Premium</span>
-            </div>
-            <h2 className="text-[28px] font-[1000] tracking-tighter leading-none italic">
-              {user.phone}
-            </h2>
-            <p className="text-[#4F6F52] text-[11px] font-black uppercase tracking-widest mt-1.5 opacity-60">
-              Gold Membership Tier
-            </p>
-          </div>
-        </section>
+        </div>
+      </header>
 
         {/* 3. ORDER HISTORY SECTION */}
-        <section>
-          <div className="flex justify-between items-end mb-8 px-1">
+        <section className="px-6">
+          <div className="flex justify-between px-1 items-end mb-8 ">
             <div>
                 <h3 className="text-[12px] font-[1000] uppercase tracking-[0.2em] text-[#4F6F52]">
                   Activity Log
@@ -204,8 +206,8 @@ export default function ProfilePage() {
         </section>
 
         {/* 4. PREMIUM SUPPORT CARD */}
-        <section className="mt-16 p-10 rounded-[3rem] bg-[#1A2421] text-white shadow-2xl relative overflow-hidden group">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-[#3A4D39] rounded-full blur-[60px] opacity-40 group-hover:scale-150 transition-transform duration-1000" />
+        {/* <section className="mt-16 p-10 rounded-[3rem]  bg-[#1A2421] text-white shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0  right-0 w-32 h-32 bg-[#3A4D39] rounded-full blur-[60px] opacity-40 group-hover:scale-150 transition-transform duration-1000" />
           
           <div className="relative z-10">
             <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10 mb-6">
@@ -222,7 +224,7 @@ export default function ProfilePage() {
               Contact Concierge
             </button>
           </div>
-        </section>
+        </section> */}
       </main>
 
       {/* Spacing for bottom navigation */}
