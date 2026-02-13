@@ -200,7 +200,7 @@ export default function CartPage() {
             </div>
 
             {/* 5. CHECKOUT ACTION BUTTON */}
-            <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-xl border-t border-[#E0E5D2] flex flex-col gap-3 z-50">
+            <div className="fixed bottom-0 left-0 right-0 p-3 bg-white/80 backdrop-blur-xl border-t border-[#E0E5D2] flex flex-col gap-3 z-50">
               <button
                 onClick={handleCheckout}
                 className="w-full bg-[#3A4D39] text-white py-5 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs shadow-[0_15px_30px_rgba(58,77,57,0.3)] hover:bg-[#2f3a1f] active:scale-[0.98] transition-all flex items-center justify-center gap-3"
@@ -208,12 +208,12 @@ export default function CartPage() {
                 Checkout Now <ArrowRight size={16} className="text-[#f7b614]" />
               </button>
 
-              <div className="flex justify-center items-center gap-2 text-[#4F6F52] opacity-60">
+              {/* <div className="flex justify-center items-center gap-2 text-[#4F6F52] opacity-60">
                 <ShieldCheck size={14} />
                 <span className="text-[9px] font-black uppercase tracking-[0.15em]">
                   100% Secure Checkout • Verified Partner
                 </span>
-              </div>
+              </div> */}
             </div>
           </>
         )}

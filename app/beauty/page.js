@@ -167,13 +167,13 @@ useEffect(() => {
 
       {/* 4. PREMIUM FLOATING CART BAR */}
     {cart.length > 0 && (
-  <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-xl border-t border-[#f1f3eb] z-50">
+  <div className="fixed bottom-0 left-0 right-0 p-2 bg-white/80 backdrop-blur-xl border-t border-[#f1f3eb] z-50">
     <div className="max-w-2xl mx-auto flex items-center gap-3">
       
       {/* 1. MAIN CLICKABLE CART AREA */}
       <div 
         onClick={() => setCartOpen(true)}
-        className="flex-1 bg-[#3A4D39] text-white px-6 py-4 rounded-2xl shadow-[0_15px_30px_rgba(58,77,57,0.3)] flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all"
+        className="flex-1 bg-[#3A4D39] text-white px-6 py-3 rounded-2xl shadow-[0_15px_30px_rgba(58,77,57,0.3)] flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all"
       >
         <div className="flex items-center gap-4">
           <div className="bg-white/10 p-2 rounded-xl border border-white/10">
@@ -184,7 +184,7 @@ useEffect(() => {
               ₹{cartTotal} • {cart.length} Service{cart.length > 1 ? 's' : ''}
             </span>
             <span className="text-[10px] font-bold text-[#f7b614] uppercase tracking-tighter">
-              View ritual bag
+              View bag
             </span>
           </div>
         </div>
