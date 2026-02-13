@@ -162,53 +162,70 @@ export default function Login() {
 
           <AnimatePresence mode="wait">
             {step === "phone" && (
-              <motion.div
-                key="phone"
-                initial={{ opacity: 0, x: 15 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -15 }}
-                className="space-y-6"
-              >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between px-1">
-                    <label className="text-[10px] font-[1000] uppercase tracking-widest text-[#3A4D39]">Mobile Number</label>
-                    <Smartphone size={14} className="text-[#E0E5D2]" />
-                  </div>
-                  <div className="relative group">
-                    <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center gap-2 border-r border-[#f1f3eb] pr-3">
-                        <span className="text-[#3A4D39] font-[1000] text-sm">+91</span>
-                    </div>
-                    <input
-                      type="tel"
-                      maxLength="10"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-                      className="w-full pl-16 pr-6 py-5 rounded-2xl bg-[#fbfcfa] text-[#1A2421] border-2 border-[#f1f3eb] focus:border-[#3A4D39] focus:bg-white outline-none font-[1000] transition-all text-lg tracking-wider"
-                      placeholder="00000 00000"
-                    />
-                  </div>
-                </div>
+             <motion.div
+  key="phone"
+  initial={{ opacity: 0, x: 20 }}
+  animate={{ opacity: 1, x: 0 }}
+  exit={{ opacity: 0, x: -20 }}
+  transition={{ duration: 0.35, ease: "easeOut" }}
+  className="space-y-8"
+>
+  {/* Label */}
+  <div className="space-y-3">
+    <div className="flex items-center justify-between">
+      <label className="text-xs font-semibold uppercase tracking-widest text-gray-500">
+        Mobile Number
+      </label>
+      <Smartphone size={16} className="text-gray-300" />
+    </div>
 
-                <button
-                  onClick={() => sendOtp("whatsapp")}
-                  disabled={loading}
-                  className="w-full py-5 bg-[#3A4D39] text-white rounded-[1.5rem] font-[1000] uppercase tracking-[0.2em] text-[11px] shadow-2xl shadow-[#3a4d39]/30 active:scale-95 transition-all flex items-center justify-center gap-3"
-                >
-                  {loading ? "Initializing..." : (
-                    <>
-                      Send WhatsApp OTP 
-                      <ArrowRight size={16} className="text-[#f7b614]" />
-                    </>
-                  )}
-                </button>
-                
-                {/* <button 
-                  onClick={() => setStep("email")}
-                  className="w-full text-center text-[10px] font-black uppercase tracking-widest text-[#a61d33] hover:opacity-70 transition-opacity"
-                >
-                  Use email instead
-                </button> */}
-              </motion.div>
+    {/* Input Field */}
+    <div className="relative group">
+      {/* Country Code */}
+      <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center gap-3 pr-4 border-r border-gray-200">
+        <span className="text-gray-900 font-semibold text-sm">+91</span>
+      </div>
+
+      <input
+        type="tel"
+        maxLength="10"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+        placeholder="Enter 10-digit number"
+        className="w-full pl-20 pr-6 py-5 rounded-2xl 
+                   bg-white border border-gray-200
+                   text-gray-900 text-base font-semibold
+                   placeholder:text-gray-400
+                   focus:border-[#3A4D39] focus:ring-4 focus:ring-[#3A4D39]/5
+                   transition-all outline-none"
+      />
+    </div>
+  </div>
+
+  {/* CTA Button */}
+  <button
+    onClick={() => sendOtp("whatsapp")}
+    disabled={loading || phone.length !== 10}
+    className={`w-full py-5 rounded-2xl font-semibold uppercase tracking-[0.15em] text-xs
+      transition-all duration-300 flex items-center justify-center gap-3
+      ${
+        phone.length === 10
+          ? "bg-[#1A2F25] text-white hover:shadow-xl active:scale-95"
+          : "bg-gray-200 text-gray-400 cursor-not-allowed"
+      }
+    `}
+  >
+    {loading ? (
+      "Sending OTP..."
+    ) : (
+      <>
+        Send WhatsApp OTP
+        <ArrowRight size={16} className="opacity-70" />
+      </>
+    )}
+  </button>
+</motion.div>
+
             )}
 
             {step === "email" && (
