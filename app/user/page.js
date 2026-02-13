@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+
 import {
   IoLogOutOutline,
   IoCalendarOutline,
@@ -12,6 +13,7 @@ import {
   IoPersonCircleOutline,
   IoShieldCheckmarkOutline
 } from "react-icons/io5";
+
 import { motion } from "framer-motion";
 
 export default function ProfilePage() {

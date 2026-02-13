@@ -7,7 +7,7 @@ import { Toaster } from "react-hot-toast";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
-  const hideLayout = pathname === "/t";
+  const hideLayout = pathname === "/checkout";
 
   return (
     <>

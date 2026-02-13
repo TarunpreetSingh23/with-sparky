@@ -10,7 +10,7 @@ export async function GET() {
   try {
     await connects();
     const services = await Service.find();
-    console.log(services);
+    
     return NextResponse.json(services, { status: 200 });
   } catch (error) {
     console.error("Error fetching cleaning services:", error);

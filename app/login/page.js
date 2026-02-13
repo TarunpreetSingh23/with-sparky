@@ -131,13 +131,13 @@ export default function Login() {
       
       {/* 1. BRAND LOGO */}
       <div className="mt-16 mb-12 text-center">
-        <Image 
-          src="/images/wLogo.png" 
+        {/* <Image 
+          src="/images/newlg.png" 
           alt="Saga Logo" 
           width={150} 
           height={50} 
           className="object-contain mx-auto" 
-        />
+        /> */}
       </div>
 
       <div className="w-full max-w-md relative">

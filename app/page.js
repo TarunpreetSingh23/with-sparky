@@ -457,14 +457,14 @@ setShowMap(false);
         )}
       </AnimatePresence>
       {/* ================= HEADER ================= */}
-     <header style={{ backgroundColor: navcolour }} className={` px-4 pt-4 pb-5 rounded-b-[2.5rem] shadow-lg`}>
+     <header style={{ backgroundColor: navcolour }}  className={` px-4 pt-4 pb-5 rounded-b-[2.5rem] shadow-lg`}>
   <div
   onClick={() => setShowMap(true)}
   className="flex items-center gap-3 text-white cursor-pointer group active:scale-[0.98] mb-3 transition-all duration-200"
 >
   {/* Location Icon */}
   <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-sm">
-    <MapPin size={16} className="text-[#1f2937]" />
+    <MapPin size={16} className="text-[#1f4637]" />
   </div>
 
   {/* Content */}
