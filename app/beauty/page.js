@@ -78,37 +78,110 @@ useEffect(() => {
     <div className="bg-[#fbfcfa] min-h-screen text-[#1A2421] font-sans pb-32">
       
       {/* 1. PREMIUM STICKY HEADER */}
-      <div className="sticky top-0 z-40 bg-white shadow-[0_4px_20px_rgba(58,77,57,0.05)]">
-        <div className="flex items-center justify-between px-6 py-4">
-          <button onClick={() => router.back()} className="p-2 hover:bg-[#f2f4ed] rounded-full transition-colors">
-            <ChevronLeft size={24} color={SAGA_GREEN} />
-          </button>
-          <h1 className="text-lg font-[1000] tracking-tight italic text-[#1A2421]">
-            {selectedCategory === "ALL" ? "All Services" : selectedCategory}
-          </h1>
-          <button className="p-2 relative" onClick={() => setCartOpen(true)}>
-             <ShoppingCart size={22} color={SAGA_GREEN} />
-             {cart.length > 0 && <span className="absolute top-0 right-0 bg-[#a61d33] text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-black border-2 border-white">{cart.length}</span>}
-          </button>
-        </div>
+     <div
+  className="
+    sticky top-0 z-40
+    bg-gradient-to-br from-white via-[#fbfcfa] to-[#f2f4ed]
+    shadow-[0_8px_30px_rgba(58,77,57,0.12)]
+    backdrop-blur-xl
+  "
+>
+  {/* TOP BAR */}
+  <div className="flex items-center justify-between px-6 py-4">
+    <button
+      onClick={() => router.back()}
+      className="
+        p-2 rounded-full
+        bg-white
+        shadow-[0_4px_12px_rgba(0,0,0,0.12)]
+        active:scale-95
+        transition
+      "
+    >
+      <ChevronLeft size={22} color={SAGA_GREEN} />
+    </button>
 
-        {/* 2. CATEGORY PILLS (Professional Style) */}
-        <div className="flex overflow-x-auto no-scrollbar gap-3 px-6 pb-4 scroll-smooth">
-          {["ALL", "FACIAL", "CLEANUP", "WAXING", "MAKEUP", "MANICURE"].map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border-2 ${
-                selectedCategory === cat 
-                ? "bg-[#3A4D39] border-[#3A4D39] text-white shadow-lg" 
-                : "bg-white border-[#f1f3eb] text-[#4F6F52] hover:border-[#3A4D39]"
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      </div>
+    <h1
+      className="
+        text-[17px]
+        font-[1000]
+        italic
+        tracking-tight
+        text-[#1A2421]
+      "
+    >
+      {selectedCategory === "ALL" ? "All Services" : selectedCategory}
+    </h1>
+
+    <button
+      onClick={() => setCartOpen(true)}
+      className="
+        p-2 relative rounded-full
+        bg-white
+        shadow-[0_4px_12px_rgba(0,0,0,0.12)]
+        active:scale-95
+        transition
+      "
+    >
+      <ShoppingCart size={20} color={SAGA_GREEN} />
+
+      {cart.length > 0 && (
+        <span
+          className="
+            absolute -top-1 -right-1
+            bg-gradient-to-br from-[#a61d33] to-[#7a1224]
+            text-white
+            text-[8px]
+            w-4 h-4
+            rounded-full
+            flex items-center justify-center
+            font-black
+            border-2 border-white
+            shadow-sm
+          "
+        >
+          {cart.length}
+        </span>
+      )}
+    </button>
+  </div>
+
+  {/* CATEGORY PILLS */}
+  <div className="flex overflow-x-auto no-scrollbar gap-3 px-6 pb-4 scroll-smooth">
+    {["ALL", "FACIAL", "CLEANUP", "WAXING", "MAKEUP", "MANICURE"].map((cat) => (
+      <button
+        key={cat}
+        onClick={() => setSelectedCategory(cat)}
+        className={`
+          px-5 py-2
+          rounded-xl
+          text-[9px]
+          font-black
+          uppercase
+          tracking-[0.22em]
+          transition-all
+          ${
+            selectedCategory === cat
+              ? `
+                bg-gradient-to-br from-[#3A4D39] to-[#2f3a1f]
+                text-white
+                shadow-[0_6px_18px_rgba(58,77,57,0.4)]
+              `
+              : `
+                bg-white
+                text-[#4F6F52]
+                border border-[#e5ead7]
+                shadow-[0_2px_6px_rgba(0,0,0,0.08)]
+                active:scale-95
+              `
+          }
+        `}
+      >
+        {cat}
+      </button>
+    ))}
+  </div>
+</div>
 
       <main className="max-w-2xl mx-auto p-4 space-y-4">
         {/* Trust Badge */}

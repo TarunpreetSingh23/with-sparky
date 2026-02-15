@@ -339,8 +339,17 @@ useEffect(() => {
  {/* <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none"> */}
       
       {/* Navigation Container */}
-  <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-[56px] flex items-center z-50">
-  
+ <nav
+  className="
+    fixed bottom-0 left-0 right-0 z-50
+    h-[60px]
+    bg-white/85 backdrop-blur-xl
+    border-t border-black/5
+    shadow-[0_-10px_30px_rgba(0,0,0,0.08)]
+    flex items-center
+  "
+>
+  {/* HOME */}
   <NavItem
     label="Home"
     onClick={() => router.push("/")}
@@ -348,6 +357,7 @@ useEffect(() => {
     icon={<IoHomeSharp size={18} />}
   />
 
+  {/* BEAUTY */}
   <NavItem
     label="Beauty"
     onClick={() => router.push("/beauty")}
@@ -355,19 +365,39 @@ useEffect(() => {
     icon={<FaListUl size={18} />}
   />
 
-  {/* CENTER SLOT (same width as others) */}
+  {/* CENTER CART (3-D FLOATING) */}
   <div
     onClick={() => router.push("/cart")}
     className="flex-1 flex justify-center"
   >
-    <div className="relative -top-3 flex flex-col items-center">
-      <div className="w-11 h-11 bg-[#8a9a5b] rounded-full flex items-center justify-center">
-        <IoBagHandleOutline size={18} className="text-white" />
+    <div className="relative -top-4 flex flex-col items-center">
+      
+      {/* Glow */}
+      <div className="absolute inset-0 rounded-full bg-[#8a9a5b]/40 blur-xl" />
+
+      {/* Button */}
+      <div
+        className="
+          relative
+          w-12 h-12
+          rounded-full
+          bg-gradient-to-br from-[#8a9a5b] via-[#7f8f52] to-[#6f7f46]
+          flex items-center justify-center
+          shadow-[0_10px_20px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.25)]
+          active:scale-90
+          transition
+        "
+      >
+        <IoBagHandleOutline size={20} className="text-white" />
       </div>
-      <span className="text-[9px] mt-[2px] text-gray-500">Cart</span>
+
+      <span className="text-[10px] mt-1 text-gray-600 font-medium">
+        Cart
+      </span>
     </div>
   </div>
 
+  {/* HELP */}
   <NavItem
     label="Help"
     onClick={() => router.push("/contact")}
@@ -375,6 +405,7 @@ useEffect(() => {
     icon={<Phone size={18} />}
   />
 
+  {/* ACCOUNT */}
   <NavItem
     label="Account"
     onClick={() => router.push("/user")}
@@ -447,15 +478,38 @@ function NavItem({ label, icon, active = false, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={`flex flex-col items-center justify-center cursor-pointer flex-1 ${
-        active ? "text-[#8a9a5b]" : "text-gray-400"
-      }`}
+      className="
+        flex-1 flex flex-col items-center justify-center
+        cursor-pointer select-none
+        active:scale-95 transition-all
+      "
     >
-      <div className="h-[20px] flex items-center justify-center">
+      {/* ICON */}
+      <div
+        className={`
+          w-8 h-8 rounded-xl flex items-center justify-center
+          transition-all duration-200
+          ${
+            active
+              ? "bg-gradient-to-br from-[#8a9a5b] to-[#6f7f46] text-white shadow-[0_6px_14px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.25)]"
+              : "text-gray-500"
+          }
+        `}
+      >
         {icon}
       </div>
 
-      <span className="text-[9px] font-medium leading-none mt-[2px]">
+      {/* LABEL */}
+      <span
+        className={`
+          mt-1 text-[10px] leading-none tracking-wide
+          ${
+            active
+              ? "text-[#8a9a5b] font-semibold"
+              : "text-gray-500 font-medium"
+          }
+        `}
+      >
         {label}
       </span>
     </div>

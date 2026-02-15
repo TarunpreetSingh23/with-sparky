@@ -75,79 +75,139 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-[#f8f9f5] text-[#1A2421] pb-32 font-sans">
       {/* 1. PREMIUM HEADER */}
-      <header className="bg-[#3A4D39] px-6 pt-8 pb-12 rounded-b-[3rem] shadow-lg relative z-20">
-        <div className="flex items-center justify-between mb-6">
-            <button onClick={() => router.back()} className="p-2 bg-white/10 rounded-full text-white backdrop-blur-md">
-                <ChevronLeft size={20} />
-            </button>
-            <h1 className="text-xl font-black text-white tracking-tight italic">My <span className="text-[#f7b614]">Basket</span></h1>
-            <div className="w-10 h-10" /> {/* Spacer */}
+     <header className="relative z-20 px-5 pt-3 pb-9 rounded-b-[3rem]
+  bg-gradient-to-br from-[#3A4D39] via-[#425b44] to-[#2f3a1f]
+  shadow-[0_20px_40px_rgba(0,0,0,0.25)]
+  overflow-hidden"
+>
+  {/* Subtle glow layer */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-white/5 pointer-events-none" />
+
+  {/* Title */}
+  <div className="flex justify-center mb-3 relative z-10">
+    <h1 className="text-[20px] font-black tracking-tight italic text-white">
+      My <span className="text-[#f7b614] drop-shadow-sm">Basket</span>
+    </h1>
+  </div>
+
+  {/* Floating summary card */}
+  <div className="relative z-10 bg-white/15 backdrop-blur-xl rounded-2xl p-4
+    border border-white/20
+    shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_10px_30px_rgba(0,0,0,0.25)]
+  ">
+    <div className="flex items-center gap-4">
+      
+      {/* Icon */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-[#f7b614]/40 blur-lg rounded-full" />
+        <div className="relative w-11 h-11 bg-gradient-to-br from-[#f7b614] to-[#f5a623]
+          rounded-full flex items-center justify-center shadow-xl"
+        >
+          <ShoppingBag size={20} className="text-[#3A4D39]" />
         </div>
-        
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-            <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#f7b614] rounded-full flex items-center justify-center shadow-lg">
-                    <ShoppingBag size={20} className="text-[#3A4D39]" />
-                </div>
-                <div>
-                    <p className="text-white text-[13px] font-black uppercase tracking-widest">{cartItems.length} Services Selected</p>
-                    <p className="text-white/60 text-[10px] font-bold">Review your professional care bundle</p>
-                </div>
-            </div>
-        </div>
-      </header>
+      </div>
+
+      {/* Text */}
+      <div>
+        <p className="text-white text-[13px] font-black tracking-widest uppercase">
+          {cartItems.length} Services Selected
+        </p>
+        <p className="text-white/70 text-[10px] font-medium">
+          Review your professional care bundle
+        </p>
+      </div>
+    </div>
+  </div>
+</header>
 
       <div className="max-w-md mx-auto px-4 -mt-6 relative z-30 space-y-6">
         
         {cartItems.length === 0 ? (
-          <div className="bg-white border border-[#E0E5D2] rounded-[2.5rem] p-16 text-center shadow-sm">
-            <div className="w-20 h-20 bg-[#f2f4ed] rounded-full flex items-center justify-center mx-auto mb-6">
-                <ShoppingBag size={32} className="text-[#4F6F52]" />
-            </div>
-            <h2 className="text-xl font-black mb-2 tracking-tight">Your basket is empty</h2>
-            <p className="text-gray-400 text-xs mb-8 leading-relaxed">Looks like you haven't added any luxury services yet.</p>
-            <Link href="/" className="bg-[#3A4D39] text-white px-8 py-3 rounded-xl font-black text-[11px] uppercase tracking-[0.2em] shadow-lg">
-              Explore Services
-            </Link>
-          </div>
+         <div className="bg-white rounded-[2rem] p-10 text-center
+  shadow-[0_12px_30px_rgba(0,0,0,0.06)]
+  border border-[#E0E5D2]">
+  
+  <div className="w-16 h-16 mx-auto mb-5 rounded-full
+    bg-gradient-to-br from-[#f2f4ed] to-white
+    flex items-center justify-center shadow-inner">
+    <ShoppingBag size={26} className="text-[#4F6F52]" />
+  </div>
+
+  <h2 className="text-[17px] font-semibold text-gray-900">
+    Basket is empty
+  </h2>
+
+  <p className="text-[11px] text-gray-400 mt-1 mb-6">
+    Add services to continue
+  </p>
+
+  <Link
+    href="/"
+    className="inline-flex items-center justify-center
+      px-6 py-3 rounded-xl
+      bg-gradient-to-br from-[#3A4D39] to-[#2f3a1f]
+      text-white text-[11px] font-semibold tracking-wide
+      shadow-[0_8px_18px_rgba(58,77,57,0.35)]
+      active:scale-95 transition"
+  >
+    Explore Services
+  </Link>
+</div>
         ) : (
           <>
             {/* 2. CART ITEMS: SAGA GREEN STYLE */}
             <div className="space-y-4">
               {cartItems.map((item, index) => (
-                <div 
-                  key={index}
-                  className="flex gap-4 bg-white border border-[#E0E5D2] p-3 rounded-[2rem] shadow-[0_8px_30px_rgba(58,77,57,0.04)] group transition-all"
-                >
-                  <div className="w-24 h-24 rounded-[1.5rem] overflow-hidden bg-[#f2f4ed] shrink-0 border border-[#f1f3eb]">
-                    <img
-                      src={item.image || "/placeholder.png"}
-                      alt={item.name}
-                      className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500"
-                    />
-                  </div>
+             <div
+  key={index}
+  className="
+    flex gap-3 p-3 rounded-[1.6rem]
+    bg-gradient-to-br from-white to-[#fbfcfa]
+    border border-[#E0E5D2]
+    shadow-[0_10px_25px_rgba(58,77,57,0.08)]
+    active:scale-[0.99] transition
+  "
+>
+  {/* Image */}
+  <div className="w-20 h-20 rounded-[1.25rem] overflow-hidden
+    bg-[#f2f4ed] shrink-0
+    shadow-inner">
+    <img
+      src={item.image || "/placeholder.png"}
+      alt={item.name}
+      className="w-full h-full object-cover"
+    />
+  </div>
 
-                  <div className="flex-1 py-1">
-                    {/* <span className="text-[9px] font-black text-[#4F6F52] uppercase tracking-widest opacity-60">Saga Premium</span> */}
-                    <h3 className="text-[14px] font-black text-[#1A2421] leading-tight mt-0.5 line-clamp-1">
-                      {item.name}
-                    </h3>
-                    <p className="text-[10px] text-gray-400 font-bold mt-1 uppercase tracking-tighter">
-                      {item.title}
-                    </p>
-                    <div className="flex items-center justify-between mt-3">
-                        <p className="text-[#3A4D39] font-black text-[16px] tracking-tight">
-                            ₹{item.price}
-                        </p>
-                        <button
-                            onClick={() => removeItem(index)}
-                            className="p-2 bg-rose-50 text-rose-500 rounded-xl active:scale-90 transition-transform"
-                        >
-                            <Trash2 size={16} />
-                        </button>
-                    </div>
-                  </div>
-                </div>
+  {/* Info */}
+  <div className="flex-1">
+    <h3 className="text-[13px] font-semibold text-[#1A2421] truncate">
+      {item.name}
+    </h3>
+    <p className="text-[10px] text-gray-400 mt-0.5 truncate">
+      {item.title}
+    </p>
+
+    <div className="flex items-center justify-between mt-2">
+      <span className="text-[15px] font-semibold text-[#3A4D39]">
+        ₹{item.price}
+      </span>
+
+      <button
+        onClick={() => removeItem(index)}
+        className="
+          w-fit h-fit rounded-lg
+          bg-gradient-to-br from-rose-50 to-white
+          text-rose-500
+          shadow-[0_4px_10px_rgba(0,0,0,0.08)]
+          active:scale-90 transition
+        "
+      >
+        <Trash2 size={14} />
+      </button>
+    </div>
+  </div>
+</div>
               ))}
             </div>
 
@@ -171,50 +231,65 @@ export default function CartPage() {
             </div> */}
 
             {/* 4. BILL SUMMARY: CLEAN & STRUCTURED */}
-            <div className="bg-white border border-[#E0E5D2] rounded-[2.5rem] p-8 space-y-5 shadow-sm">
-              <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-[#4F6F52]">Payment Summary</h4>
-              
-              <div className="space-y-3">
-                <Row label="Subtotal" value={`₹${subtotal.toFixed(0)}`} />
-                <Row label="Handling fee" value="FREE" highlightColor="text-emerald-500" />
-                <Row label="Saga Visiting charges" value="₹0" />
-                
-                {discount > 0 && (
-                  <div className="flex justify-between items-center py-2 px-3 bg-emerald-50 rounded-xl border border-emerald-100">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700">Coupon Savings</span>
-                    <span className="text-xs font-black text-emerald-700">- ₹{(subtotal * discount).toFixed(0)}</span>
-                  </div>
-                )}
-              </div>
+           <div className="
+  bg-gradient-to-br from-white to-[#fbfcfa]
+  rounded-[2rem] p-6
+  border border-[#E0E5D2]
+  shadow-[0_12px_30px_rgba(0,0,0,0.06)]
+">
+  <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-4">
+    Payment Summary
+  </p>
 
-              <div className="pt-5 border-t border-dashed border-[#E0E5D2] flex justify-between items-center">
-                <div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">Total Payable</span>
-                    <p className="text-3xl font-[1000] text-[#1A2421] tracking-tighter mt-1">₹{subtotal.toFixed(0)}</p>
-                </div>
-                <div className="text-right">
-                    <div className="bg-emerald-50 text-emerald-600 text-[9px] font-black px-2 py-1 rounded-md uppercase mb-1">Secure Transaction</div>
-                    <p className="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">Incl. of all taxes</p>
-                </div>
-              </div>
-            </div>
+  <Row label="Subtotal" value={`₹${subtotal.toFixed(0)}`} />
+  <Row label="Handling Fee" value="FREE" highlightColor="text-emerald-500" />
+
+  <div className="mt-4 pt-4 border-t border-dashed border-[#E0E5D2]
+    flex justify-between items-center">
+    <div>
+      <p className="text-[10px] uppercase tracking-widest text-gray-400">
+        Total
+      </p>
+      <p className="text-[24px] font-semibold text-[#1A2421]">
+        ₹{subtotal.toFixed(0)}
+      </p>
+    </div>
+
+    <div className="text-right">
+      <span className="text-[9px] font-semibold uppercase text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md">
+        Secure
+      </span>
+    </div>
+  </div>
+</div>
 
             {/* 5. CHECKOUT ACTION BUTTON */}
-            <div className="fixed bottom-0 left-0 right-0 p-3 bg-white/80 backdrop-blur-xl border-t border-[#E0E5D2] flex flex-col gap-3 z-50">
-              <button
-                onClick={handleCheckout}
-                className="w-full bg-[#3A4D39] text-white py-5 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs shadow-[0_15px_30px_rgba(58,77,57,0.3)] hover:bg-[#2f3a1f] active:scale-[0.98] transition-all flex items-center justify-center gap-3"
-              >
-                Checkout Now <ArrowRight size={16} className="text-[#f7b614]" />
-              </button>
-
-              {/* <div className="flex justify-center items-center gap-2 text-[#4F6F52] opacity-60">
-                <ShieldCheck size={14} />
-                <span className="text-[9px] font-black uppercase tracking-[0.15em]">
-                  100% Secure Checkout • Verified Partner
-                </span>
-              </div> */}
-            </div>
+            <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-3 bg-white/85 backdrop-blur-xl border-t border-[#E0E5D2]">
+  <button
+    onClick={handleCheckout}
+    className="
+      w-full
+      h-14
+      rounded-2xl
+      bg-gradient-to-br from-[#3A4D39] via-[#465f45] to-[#2f3a1f]
+      text-white
+      text-[13px]
+      font-semibold
+      tracking-wide
+      shadow-[0_10px_20px_rgba(58,77,57,0.35),inset_0_1px_0_rgba(255,255,255,0.2)]
+      active:scale-[0.97]
+      active:shadow-[0_6px_14px_rgba(58,77,57,0.35)]
+      transition-all
+      flex
+      items-center
+      justify-center
+      gap-2
+    "
+  >
+    <span>Checkout</span>
+    <ArrowRight size={16} className="text-[#f7b614]" />
+  </button>
+</div>
           </>
         )}
       </div>

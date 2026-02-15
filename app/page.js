@@ -457,27 +457,38 @@ setShowMap(false);
         )}
       </AnimatePresence>
       {/* ================= HEADER ================= */}
-     <header
-  style={{ backgroundColor: navcolour }}
-  className="px-4 pt-3 pb-4 rounded-b-[2rem]"
+  <header
+  className="
+    relative
+    px-4 pt-3 pb-5
+    rounded-b-[2.2rem]
+    bg-gradient-to-br from-[#6f7f46] to-[#8a9a5b]
+    shadow-[0_18px_40px_rgba(0,0,0,0.35)]
+    
+  "
 >
+  {/* Soft 3D highlight */}
+  <div className="absolute inset-0 bg-gradient-to-t rounded-b-[2.2rem] from-black/25 via-transparent to-white/10 pointer-events-none" />
+
   {/* TOP ROW */}
   <div
     onClick={() => setShowMap(true)}
-    className="flex items-center justify-between text-white cursor-pointer mb-2"
+    className="relative z-10 flex items-center justify-between text-white cursor-pointer mb-3"
   >
     {/* LEFT — LOCATION */}
     <div className="flex items-center gap-2 min-w-0">
-      <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center shrink-0">
-        <MapPin size={14} className="text-[#1f4637]" />
+      <div className="relative">
+        <div className="absolute inset-0 bg-white/40 blur-md rounded-full" />
+        <div className="relative w-7 h-7 rounded-full bg-white flex items-center justify-center shadow-md">
+          <MapPin size={14} className="text-[#1f4637]" />
+        </div>
       </div>
 
       <div className="flex flex-col leading-none min-w-0">
-        <span className="text-[12px] font-medium flex items-center gap-1">
+        <span className="text-[12px] font-medium tracking-wide">
           Home
-          <ArrowRight size={10} className="rotate-90 opacity-60" />
         </span>
-        <span className="text-[10px] text-white/70 truncate max-w-[160px]">
+        <span className="text-[10px] text-white/80 truncate max-w-[160px]">
           {address}
         </span>
       </div>
@@ -485,80 +496,65 @@ setShowMap(false);
 
     {/* RIGHT — BRAND */}
     <div className="flex flex-col items-end leading-none">
-      <span className="text-[14px] font-semibold tracking-[0.2em]">
+      <span className="text-[14px] font-semibold tracking-[0.25em]">
         SPARKY
       </span>
-      <span className="text-[9px] text-white/70 tracking-wide">
+      <span className="text-[9px] text-white/70 tracking-widest">
         in 40 mins
       </span>
     </div>
   </div>
 
   {/* SEARCH */}
-  <div className="relative">
-    <div className="flex items-center bg-white rounded-full px-3 py-2 border border-black/5">
-      <Search size={14} className="text-gray-400 mr-2" />
-
-      <input
-        placeholder="Search services"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="flex-1 bg-transparent outline-none text-[12px] text-gray-800 placeholder:text-gray-400"
+<div ref={searchRef} className="relative z-10">
+  {/* SEARCH BAR */}
+  <div className="flex items-center bg-white/95 rounded-full px-3 py-2 border border-white/30 shadow backdrop-blur-md">
+    <Search size={14} className="text-gray-400 mr-2" />
+    <input
+      placeholder="Search services"
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      className="flex-1 bg-transparent outline-none text-[12px] text-gray-800"
+    />
+    {query && (
+      <X
+        size={12}
+        className="text-gray-400 cursor-pointer"
+        onClick={() => setQuery("")}
       />
-
-      {query && (
-        <X
-          size={12}
-          className="text-gray-400 cursor-pointer"
-          onClick={() => setQuery("")}
-        />
-      )}
-    </div>
-
-    {/* SEARCH DROPDOWN */}
-    {open && results.length > 0 && (
-      <div className="absolute top-full mt-2 w-full bg-white rounded-[1.5rem] border border-gray-100 shadow-sm z-[100] overflow-hidden">
-        <div className="max-h-[400px] overflow-y-auto no-scrollbar">
-          {results.map((item, i) => (
-            <div
-              key={i}
-              onClick={() => {
-                setQuery("");
-                setOpen(false);
-                setSelectedService(item);
-              }}
-              className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 transition border-b last:border-0"
-            >
-              {/* IMAGE */}
-              <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-gray-100 shrink-0">
-                <Image
-                  src={item.image || "/images/placeholder.jpg"}
-                  fill
-                  className="object-cover"
-                  alt={item.name || item.title}
-                />
-              </div>
-
-              {/* INFO */}
-              <div className="flex-1 min-w-0">
-                <p className="text-[12px] font-medium text-gray-900 truncate">
-                  {item.name || item.title}
-                </p>
-                <p className="text-[10px] text-gray-400 truncate">
-                  {item.category}
-                </p>
-              </div>
-
-              {/* PRICE */}
-              <span className="text-[13px] font-semibold text-gray-800">
-                ₹{item.price}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
     )}
   </div>
+
+  {/* DROPDOWN */}
+  {open && results.length > 0 && (
+    <div className="absolute top-full mt-2 w-full bg-white rounded-[1.6rem] shadow-xl z-[999] overflow-hidden">
+      {results.map((item, i) => (
+        <div
+          key={i}
+          onClick={() => {
+            setQuery("");
+            setOpen(false);
+            setSelectedService(item);
+          }}
+          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer"
+        >
+          <Image
+            src={item.image || "/images/placeholder.jpg"}
+            width={40}
+            height={40}
+            className="rounded-xl object-cover"
+            alt=""
+          />
+          <div className="flex-1">
+            <p className="text-sm font-semibold">{item.name || item.title}</p>
+            <p className="text-xs text-gray-400">{item.category}</p>
+          </div>
+          <span className="font-bold text-sm">₹{item.price}</span>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
 </header>
  {/* <section className="px-4 -mt-0">
         <div 
@@ -606,7 +602,7 @@ setShowMap(false);
       />
     </div>
 
-    <span className="text-[13px] font-sans text-center leading-tight text-gray-700">
+    <span className="text-[13px] font-sans text-center leading-tight text-gray-800">
       {cat.name}
     </span>
   </button>
@@ -656,51 +652,98 @@ setShowMap(false);
     </button> */}
   </div>
 )}
-<section ref={beautyRef} className="pt-0.5">
+<section ref={beautyRef} className="pt-1">
   <SectionTitle title="Beauty Services" />
   <FloatingOrderTracker activeOrder={active} />
 
-  {["Waxing", "Facial", "Mehandi", "Haircare", "Threading", "Makeup", "Bleach", "Cleanup", "Manicure", "Pedicure", "Hair", "Mehndi"].map((subCat) => {
+  {[
+    "Waxing","Facial","Mehandi","Haircare","Threading",
+    "Makeup","Bleach","Cleanup","Manicure","Pedicure","Hair","Mehndi"
+  ].map((subCat) => {
     const filteredServices = services.filter(
       (item) =>
         item.category === "Woman Services" &&
-        (item.name || item.title || "").toLowerCase().includes(subCat.toLowerCase())
+        (item.name || item.title || "")
+          .toLowerCase()
+          .includes(subCat.toLowerCase())
     );
 
     if (filteredServices.length === 0) return null;
-
-    // Change display limit to 3 items
     const displayServices = filteredServices.slice(0, 3);
 
     return (
-      <div key={subCat} className="mb-10">
-        
-        {/* Category Header with Top-Aligned View All Button */}
+      <div key={subCat} className="mb-12">
+
+        {/* 🌷 CATEGORY HEADER */}
         <div className="flex items-center justify-between px-4 mb-4">
-          <h3 className="text-[13px] font-black text-[#1A2421] uppercase tracking-[0.15em] flex items-center gap-2">
-            <span className="w-1 h-5 bg-[#4F6F52] rounded-full" />
+          <h3
+            className="
+              flex items-center gap-3
+              text-[14px]
+              font-serif italic
+              tracking-tight
+              text-[#1A2421]
+            "
+          >
+            <span
+              className="
+                w-1.5 h-6 rounded-full
+                bg-gradient-to-b from-[#8A9A5B] to-[#6f7f46]
+                shadow-[0_2px_6px_rgba(0,0,0,0.25)]
+              "
+            />
             {subCat}
           </h3>
-          
-          <button 
+
+       {/* <button
+  onClick={() =>
+    router.push(`/beauty?category=${subCat.toUpperCase()}`)
+  }
+  className="
+    text-[8px] 
+    font-black
+    uppercase
+    tracking-[0.12em]
+    px-2 py-0.5
+    rounded-full
+    bg-white/80
+    border border-[#8A9A5B]/20
+    text-[#3A4D39]
+    shadow-[0_1px_4px_rgba(0,0,0,0.05)]
+    active:scale-90
+    transition-all
+    duration-200
+  "
+>
+  View all
+</button>  */}
+<button 
             onClick={() => router.push(`/beauty?category=${subCat.toUpperCase()}`)}
-            className="flex items-center gap-1 bg-[#3A4D39]/5 text-[#3A4D39] px-3 py-1.5 rounded-full border border-[#3A4D39]/10 active:scale-95 transition-all"
+            className="flex items-center gap-1 bg-[#3A4D39]/5 text-[#3A4D39]  px-3 py-1.5 rounded-full border border-[#3A4D39]/10 active:scale-95 transition-all"
           >
             <span className="text-[9px] font-black uppercase tracking-widest">View All</span>
             {/* <ChevronRight size={12} strokeWidth={3} /> */}
           </button>
         </div>
-        
-        {/* Services Grid (3 Columns) */}
+
+        {/* 🧊 SERVICES GRID */}
         <div className="grid grid-cols-3 gap-3 px-2">
           {displayServices.map((item) => (
-            <div key={item.id} onClick={() => setSelectedService(item)}>
+            <div
+              key={item.id}
+              onClick={() => setSelectedService(item)}
+              className="
+                transform-gpu
+                transition
+                hover:-translate-y-[2px]
+              "
+            >
               <ServiceAppCard item={item} />
             </div>
           ))}
         </div>
 
-        {/* DYNAMIC HERO CAROUSEL remains below the grid */}
+        {/* 🌈 SUBCATEGORY PROMO */}
         <div className="mt-6 px-2">
           <SubCategoryPromo subCat={subCat} />
         </div>
@@ -740,20 +783,26 @@ setShowMap(false);
       />
       
       {/* Drawer */}
-      <div
-  className={`fixed bottom-0 left-0 right-0 bg-[#fdfefb] rounded-t-[2.75rem] z-[70]
-  shadow-[0_-20px_60px_rgba(66,74,43,0.25)] overflow-hidden
+   <div
+  className={`fixed bottom-0 left-0 right-0 z-[70]
+  bg-gradient-to-b from-[#ffffff] via-[#fbfcf8] to-[#f4f6ef]
+  rounded-t-[2.75rem]
+  shadow-[0_-18px_45px_rgba(66,74,43,0.22)]
+  overflow-hidden
   transition-transform duration-300 ease-out transform
   ${selectedService ? "translate-y-0" : "translate-y-full"}`}
 >
   {/* Drag Handle */}
-  <div className="w-12 h-1.5 bg-[#8A9A5B]/30 rounded-full mx-auto mt-4 mb-3" />
+  <div className="w-10 h-1.5 bg-[#8A9A5B]/40 rounded-full mx-auto mt-3 mb-3" />
 
   {selectedService && (
-    <div className="px-6 pb-8 pt-2">
+    <div className="px-6 pb-7 pt-1">
 
       {/* Image */}
-      <div className="relative w-full h-64 rounded-[2rem] overflow-hidden mb-6 shadow-md border border-[#8A9A5B]/20">
+      <div className="relative w-full h-56 rounded-[1.9rem] overflow-hidden mb-5
+        shadow-[0_12px_28px_rgba(0,0,0,0.18)]
+        border border-white/60"
+      >
         <Image
           src={selectedService.image}
           fill
@@ -761,78 +810,105 @@ setShowMap(false);
           alt="Service Detail"
         />
 
-        {/* Soft overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#424A2B]/40 via-transparent to-transparent" />
+        {/* Glass overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-white/10" />
 
         {/* Close */}
         <button
           onClick={() => setSelectedService(null)}
-          className="absolute top-4 right-4 bg-white/90 backdrop-blur p-2.5 rounded-full shadow-md active:scale-90 transition"
+          className="
+            absolute top-3 right-3
+            bg-white/80 backdrop-blur
+            p-2 rounded-full
+            shadow-md
+            active:scale-90 transition
+          "
         >
-          <X size={18} className="text-[#424A2B]" />
+          <X size={16} className="text-[#2f3a1f]" />
         </button>
       </div>
 
       {/* Title + Price */}
-      <div className="flex justify-between items-start mb-4">
+      <div className="flex justify-between items-start mb-3">
         <div>
-          <h2 className="text-2xl font-black text-[#2f3a1f] tracking-tight leading-snug">
+          <h2 className="text-[20px] font-semibold text-[#2f3a1f] leading-snug tracking-tight">
             {selectedService.name || selectedService.title}
           </h2>
 
           <div className="flex items-center gap-2 mt-1">
             <div className="flex items-center text-yellow-500">
-              <Star size={14} fill="currentColor" />
-              <span className="ml-1 text-sm font-bold text-[#424A2B]">
+              <Star size={13} fill="currentColor" />
+              <span className="ml-1 text-[12px] font-semibold text-[#424A2B]">
                 4.9
               </span>
             </div>
 
             <span className="text-[#8A9A5B]">•</span>
 
-            <span className="text-[10px] font-black uppercase tracking-widest text-[#8A9A5B]">
-              Verified Expert
+            <span className="text-[9px] font-semibold uppercase tracking-widest text-[#8A9A5B]">
+              Verified
             </span>
           </div>
         </div>
 
         <div className="text-right">
-          <p className="text-2xl font-black text-[#424A2B] tracking-tight">
+          <p className="text-[22px] font-semibold text-[#424A2B] tracking-tight">
             ₹{selectedService.price || "799"}
           </p>
-          <p className="text-[9px] font-bold text-[#8A9A5B] uppercase tracking-widest">
-            Base Price
+          <p className="text-[9px] text-[#8A9A5B] uppercase tracking-widest">
+            Base
           </p>
         </div>
       </div>
 
       {/* Description */}
-      <p className="text-[#5f6b4a] leading-relaxed mb-8 font-medium text-sm">
+      <p className="text-[#5f6b4a] leading-relaxed mb-6 font-normal text-[13px]">
         {selectedService.description ||
-          "Enjoy a premium, hygienic, at-home service delivered by trained professionals using salon-grade products."}
+          "Premium at-home service delivered by trained professionals using hygienic, salon-grade products."}
       </p>
 
       {/* CTA Buttons */}
-      <div className="flex gap-4">
+      <div className="flex gap-3">
         {/* Primary */}
         <button
           onClick={() => handleBooking(selectedService)}
-          className="flex-1 bg-gradient-to-r from-[#8A9A5B] to-[#6f7f46]
-          text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest
-          shadow-lg shadow-[#8A9A5B]/40 active:scale-[0.97]
-          transition-all flex items-center justify-center gap-2"
+          className="
+            flex-1
+            py-3.5
+            rounded-xl
+            bg-gradient-to-br from-[#8A9A5B] to-[#6f7f46]
+            text-white
+            text-[11px]
+            font-semibold
+            uppercase tracking-widest
+            shadow-[0_8px_20px_rgba(138,154,91,0.45)]
+            active:scale-[0.97]
+            transition-all
+            flex items-center justify-center gap-2
+          "
         >
-          Book Now <ArrowRight size={16} />
+          Book <ArrowRight size={14} />
         </button>
 
         {/* Secondary */}
         <button
           onClick={() => router.push(`services/${selectedService.title}`)}
-          className="flex-1 bg-white text-[#424A2B] border border-[#8A9A5B]/30
-          py-4 rounded-2xl font-black text-xs uppercase tracking-widest
-          active:scale-[0.97] transition-all"
+          className="
+            flex-1
+            py-3.5
+            rounded-xl
+            bg-white
+            text-[#424A2B]
+            border border-[#8A9A5B]/30
+            text-[11px]
+            font-semibold
+            uppercase tracking-widest
+            shadow-sm
+            active:scale-[0.97]
+            transition-all
+          "
         >
-          View Details
+          Details
         </button>
       </div>
     </div>
@@ -895,63 +971,109 @@ function ServiceAppCard({ item }) {
   const dummyPrice = Math.round(item.price * 1.3);
 
   return (
-    <div className="group relative flex w-full flex-col bg-white rounded-[1.75rem] border border-[#8A9A5B]/15 overflow-hidden transition-all duration-300 hover:shadow-[0_18px_40px_rgba(66,74,43,0.18)] hover:-translate-y-1 cursor-pointer h-full">
-
-      {/* Image Section */}
-      <div className="relative w-full aspect-square bg-[#f4f6ef] overflow-hidden">
+    <div
+      className="
+        group relative flex w-full flex-col
+        rounded-[1.9rem]
+        bg-gradient-to-b from-white via-[#fbfcf7] to-[#f1f4ea]
+        border border-[#8A9A5B]/20
+        overflow-hidden
+        transition-all duration-300
+        hover:-translate-y-1
+        hover:shadow-[0_20px_45px_rgba(138,154,91,0.25)]
+        cursor-pointer
+        h-full
+      "
+    >
+      {/* IMAGE */}
+      <div className="relative w-full aspect-square overflow-hidden">
         <Image
           src={item.image}
           fill
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          className="
+            object-cover
+            transition-transform duration-700 ease-out
+            group-hover:scale-110
+          "
           alt={item.name || item.title}
         />
 
-        {/* Soft gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#424A2B]/50 via-transparent to-transparent" />
+        {/* Feminine soft overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#6f7f46]/45 via-transparent to-white/10" />
 
         {/* Rating Badge */}
         {item.rating && (
-          <div className="absolute top-2 right-2 bg-white/95 backdrop-blur px-2 py-1 rounded-full text-[10px] font-black text-[#424A2B] shadow-sm flex items-center gap-1">
+          <div
+            className="
+              absolute top-2.5 right-2.5
+              bg-white/85 backdrop-blur
+              px-2.5 py-1
+              rounded-full
+              text-[10px]
+              font-semibold
+              text-[#424A2B]
+              shadow-md
+              flex items-center gap-1
+            "
+          >
             <Star size={10} fill="#facc15" className="text-yellow-400" />
             {item.rating}
           </div>
         )}
       </div>
 
-      {/* Content */}
-      <div className="flex flex-col flex-1 justify-between p-3">
-        {/* Title */}
-        <h3 className="text-[13px] font-bold text-[#2f3a1f] leading-snug line-clamp-2 min-h-[34px]">
+      {/* CONTENT */}
+      <div className="flex flex-col flex-1 justify-between px-3.5 py-3">
+        {/* TITLE */}
+        <h3
+          className="
+            text-[13px]
+            font-semibold
+            text-[#2f3a1f]
+            leading-snug
+            line-clamp-2
+            min-h-[34px]
+            tracking-tight
+          "
+        >
           {item.name || item.title}
         </h3>
 
-        {/* Price + CTA */}
+        {/* PRICE + ACTION */}
         <div className="flex items-center justify-between mt-3">
           <div className="flex flex-col">
-            <span className="text-[10px] text-[#9ca38b] line-through leading-none">
+            <span className="text-[10px] text-[#b2b9a3] line-through leading-none">
               ₹{dummyPrice}
             </span>
-            <span className="text-[14px] font-black text-[#424A2B] leading-tight">
+            <span className="text-[14px] font-semibold text-[#3A4D39] leading-tight">
               ₹{item.price}
             </span>
           </div>
 
-          {/* Add Button */}
+          {/* ADD BUTTON — feminine 3D */}
           <button
-            className="w-9 h-9 rounded-full bg-[#8A9A5B]/15 text-[#424A2B] flex items-center justify-center 
-            group-hover:bg-[#8A9A5B] group-hover:text-white transition-all duration-300 shadow-sm active:scale-90"
+            className="
+              w-9 h-9 rounded-full
+              bg-gradient-to-br from-[#8A9A5B]/25 to-[#6f7f46]/25
+              text-[#3A4D39]
+              flex items-center justify-center
+              shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_4px_10px_rgba(0,0,0,0.15)]
+              transition-all duration-300
+              group-hover:from-[#8A9A5B] group-hover:to-[#6f7f46]
+              group-hover:text-white
+              active:scale-90
+            "
           >
-            <Plus size={16} strokeWidth={3} />
+            <Plus size={15} strokeWidth={2.8} />
           </button>
         </div>
       </div>
 
-      {/* Premium Accent Strip */}
-      {/* <div className="absolute bottom-0 inset-x-0 h-[3px] bg-gradient-to-r from-transparent via-[#8A9A5B] to-transparent opacity-70" /> */}
+      {/* Subtle luxury accent */}
+      <div className="absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#8A9A5B]/60 to-transparent opacity-70" />
     </div>
   );
 }
-
 
  
 function SectionTitle({ title }) {
