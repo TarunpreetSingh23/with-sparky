@@ -339,75 +339,49 @@ useEffect(() => {
  {/* <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none"> */}
       
       {/* Navigation Container */}
-   <nav className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-gray-100 px-3 pt-1 pb-3 flex justify-between items-center z-50 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
-      
-      <NavItem 
-        label="Home" 
-        onClick={() => router.push("/")}
-        active={isActive("/")} // Dynamic check
-        icon={
-          <IoHomeSharp
-            size={22}
-            className={`mb-1 transition-colors ${isActive("/") ? "text-[#8a9a5b]" : "text-gray-400"}`}
-          />
-        } 
-      />
-      
-      <NavItem 
-        label="Beauty" 
-        onClick={() => router.push("/beauty")}
-        active={isActive("/beauty")} // Now turns green when on /beauty
-        icon={
-          <FaListUl 
-            size={22}
-            className={`mb-1 transition-colors ${isActive("/beauty") ? "text-[#8a9a5b]" : "text-gray-400"}`}
-          />
-        } 
-      />
+  <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 h-[56px] flex items-center z-50">
+  
+  <NavItem
+    label="Home"
+    onClick={() => router.push("/")}
+    active={isActive("/")}
+    icon={<IoHomeSharp size={18} />}
+  />
 
-      {/* CENTER ACTION BUTTON - Fixed to Green */}
-      <div 
-        className="relative -top-6 cursor-pointer group"
-        onClick={() => router.push("/cart")}
-      >
-        <div className={`absolute inset-0 bg-[#8a9a5b]/10 rounded-full animate-ping scale-110 opacity-20 ${cartCount > 0 ? "block" : "hidden"}`} />
-        
-        <div className="relative w-16 h-16 bg-[#8a9a5b] rounded-full flex items-center justify-center p-1.5 shadow-[0_8px_25px_rgba(58,77,57,0.3)] border-[5px] border-white active:scale-90 transition-transform duration-200">
-          <div className="w-full h-full border border-white/20 rounded-full flex items-center justify-center">
-            <IoBagHandleOutline size={26} className="text-white" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#f7b614] text-[#8a9a5b] text-[10px] w-6 h-6 rounded-full flex items-center justify-center font-black border-2 border-white shadow-md animate-in zoom-in">
-                {cartCount}
-              </span>
-            )}
-          </div>
-        </div>
+  <NavItem
+    label="Beauty"
+    onClick={() => router.push("/beauty")}
+    active={isActive("/beauty")}
+    icon={<FaListUl size={18} />}
+  />
+
+  {/* CENTER SLOT (same width as others) */}
+  <div
+    onClick={() => router.push("/cart")}
+    className="flex-1 flex justify-center"
+  >
+    <div className="relative -top-3 flex flex-col items-center">
+      <div className="w-11 h-11 bg-[#8a9a5b] rounded-full flex items-center justify-center">
+        <IoBagHandleOutline size={18} className="text-white" />
       </div>
+      <span className="text-[9px] mt-[2px] text-gray-500">Cart</span>
+    </div>
+  </div>
 
-      <NavItem 
-        label="Help" 
-        onClick={() => router.push("/contact")}
-        active={isActive("/contact")}
-        icon={
-          <Phone
-            size={22}
-            className={`mb-1 transition-colors ${isActive("/contact") ? "text-[#8a9a5b]" : "text-gray-400"}`}
-          />
-        } 
-      />
-      
-      <NavItem 
-        label="Account" 
-        onClick={() => router.push("/user")}
-        active={isActive("/user")}
-        icon={
-          <FaUserCircle
-            size={22}
-            className={`mb-1 transition-colors ${isActive("/user") ? "text-[#8a9a5b]" : "text-gray-400"}`}
-          />
-        } 
-      />
-    </nav>
+  <NavItem
+    label="Help"
+    onClick={() => router.push("/contact")}
+    active={isActive("/contact")}
+    icon={<Phone size={18} />}
+  />
+
+  <NavItem
+    label="Account"
+    onClick={() => router.push("/user")}
+    active={isActive("/user")}
+    icon={<FaUserCircle size={18} />}
+  />
+</nav>
     {/* </div> */}
 
       {/* ================= MOBILE SIDEBAR ================= */}
@@ -473,28 +447,15 @@ function NavItem({ label, icon, active = false, onClick }) {
   return (
     <div
       onClick={onClick}
-      className={`flex flex-col items-center gap-1 cursor-pointer group active:scale-95 transition-all flex-1 ${
-        active ? "text-[#424A2B]" : "text-gray-400"
+      className={`flex flex-col items-center justify-center cursor-pointer flex-1 ${
+        active ? "text-[#8a9a5b]" : "text-gray-400"
       }`}
     >
-      {/* Icon container */}
-      <div
-        className={`w-10 h-10 flex items-center justify-center rounded-2xl transition-all duration-300
-          ${
-            active
-              ? "bg-[#E0E5D2] shadow-sm scale-110" 
-              : "bg-transparent group-hover:bg-gray-100"
-          }`}
-      >
-        {/* We wrap the icon to force it to inherit the active color */}
-        <div className={`${active ? "text-[#424A2B]" : "text-gray-400"} transition-colors`}>
-          {icon}
-        </div>
+      <div className="h-[20px] flex items-center justify-center">
+        {icon}
       </div>
 
-      <span className={`text-[10px] font-black uppercase tracking-widest transition-colors ${
-        active ? "text-[#424A2B]" : "text-gray-400"
-      }`}>
+      <span className="text-[9px] font-medium leading-none mt-[2px]">
         {label}
       </span>
     </div>

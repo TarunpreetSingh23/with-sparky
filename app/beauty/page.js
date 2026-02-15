@@ -166,37 +166,39 @@ useEffect(() => {
       </main>
 
       {/* 4. PREMIUM FLOATING CART BAR */}
-    {cart.length > 0 && (
-  <div className="fixed bottom-0 left-0 right-0 p-2 bg-white/80 backdrop-blur-xl border-t border-[#f1f3eb] z-50">
-    <div className="max-w-2xl mx-auto flex items-center gap-3">
+  {cart.length > 0 && (
+  <div className="fixed bottom-0 left-0 right-0 z-50 px-3 pb-3 pt-2 bg-white/85 backdrop-blur-xl border-t border-black/5">
+    <div className="max-w-md mx-auto">
       
-      {/* 1. MAIN CLICKABLE CART AREA */}
-      <div 
+      {/* MAIN CART CTA */}
+      <div
         onClick={() => setCartOpen(true)}
-        className="flex-1 bg-[#3A4D39] text-white px-6 py-3 rounded-2xl shadow-[0_15px_30px_rgba(58,77,57,0.3)] flex items-center justify-between cursor-pointer active:scale-[0.98] transition-all"
+        className="flex items-center justify-between gap-3 bg-[#3A4D39] text-white px-4 py-3 rounded-2xl
+        shadow-[0_12px_28px_rgba(58,77,57,0.25)]
+        active:scale-[0.97] transition"
       >
-        <div className="flex items-center gap-4">
-          <div className="bg-white/10 p-2 rounded-xl border border-white/10">
-            <ShoppingCart size={20} color={SAGA_ACCENT} />
+        {/* LEFT */}
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
+            <ShoppingCart size={18} className="text-[#f7b614]" />
           </div>
-          <div>
-            <span className="block text-sm font-black tracking-tight italic">
-              ₹{cartTotal} • {cart.length} Service{cart.length > 1 ? 's' : ''}
+
+          <div className="flex flex-col leading-none">
+            <span className="text-[13px] font-semibold tracking-tight">
+              ₹{cartTotal}
             </span>
-            <span className="text-[10px] font-bold text-[#f7b614] uppercase tracking-tighter">
-              View bag
+            <span className="text-[10px] text-white/70">
+              {cart.length} service{cart.length > 1 ? "s" : ""}
             </span>
           </div>
         </div>
-        
-        <div className="bg-[#f7b614] text-[#3A4D39] px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-1 shadow-md">
-          Review <ChevronRight size={14} />
+
+        {/* RIGHT */}
+        <div className="flex items-center gap-2 bg-[#f7b614] text-[#3A4D39] px-3 py-2 rounded-xl text-[10px] font-semibold uppercase tracking-wide">
+          Review
+          <ChevronRight size={14} />
         </div>
       </div>
-
-      {/* 2. PREMIUM REMOVE ACTION */}
-     
-
     </div>
   </div>
 )}

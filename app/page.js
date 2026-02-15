@@ -447,7 +447,7 @@ setShowMap(false);
                 className={`px-8 py-4 rounded-full font-bold uppercase tracking-widest text-sm flex items-center gap-3 transition-all ${
                   outOfBounds || !pendingLocation
                     ? "bg-gray-800 text-gray-500 opacity-50 cursor-not-allowed"
-                    : "bg-blue-600 text-white shadow-2xl active:scale-95"
+                    : "bg-[#8a9a5b] text-white shadow-2xl active:scale-95"
                 }`}
               >
                 <CheckCircle2 size={20} /> Confirm Location
@@ -457,133 +457,109 @@ setShowMap(false);
         )}
       </AnimatePresence>
       {/* ================= HEADER ================= */}
-     <header style={{ backgroundColor: navcolour }}  className={` px-4 pt-4 pb-5 rounded-b-[2.5rem] shadow-lg`}>
-  <div
-  onClick={() => setShowMap(true)}
-  className="flex items-center gap-3 text-white cursor-pointer group active:scale-[0.98] mb-3 transition-all duration-200"
+     <header
+  style={{ backgroundColor: navcolour }}
+  className="px-4 pt-3 pb-4 rounded-b-[2rem]"
 >
-  {/* Location Icon */}
-  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-sm">
-    <MapPin size={16} className="text-[#1f4637]" />
-  </div>
-
-  {/* Content */}
-  <div className="flex flex-1 items-center justify-between min-w-0">
-
-    {/* LEFT — Address */}
-    <div className="flex flex-col min-w-0">
-      <div className="flex items-center gap-1">
-        <span className="text-[14px] font-semibold tracking-tight leading-none">
-          Home
-        </span>
-        <ArrowRight
-          size={12}
-          className="text-white/60 rotate-90"
-        />
+  {/* TOP ROW */}
+  <div
+    onClick={() => setShowMap(true)}
+    className="flex items-center justify-between text-white cursor-pointer mb-2"
+  >
+    {/* LEFT — LOCATION */}
+    <div className="flex items-center gap-2 min-w-0">
+      <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center shrink-0">
+        <MapPin size={14} className="text-[#1f4637]" />
       </div>
 
-      <span className="mt-0.5 text-[11px] font-medium text-white/70 truncate max-w-[180px] tracking-wide">
-        {address}
-      </span>
+      <div className="flex flex-col leading-none min-w-0">
+        <span className="text-[12px] font-medium flex items-center gap-1">
+          Home
+          <ArrowRight size={10} className="rotate-90 opacity-60" />
+        </span>
+        <span className="text-[10px] text-white/70 truncate max-w-[160px]">
+          {address}
+        </span>
+      </div>
     </div>
 
-    {/* RIGHT — Brand */}
+    {/* RIGHT — BRAND */}
     <div className="flex flex-col items-end leading-none">
-      <span className="text-[18px] font-extrabold tracking-[0.14em]">
+      <span className="text-[14px] font-semibold tracking-[0.2em]">
         SPARKY
       </span>
-      <span className="mt-1 text-[10px] font-semibold uppercase tracking-widest text-white/70">
+      <span className="text-[9px] text-white/70 tracking-wide">
         in 40 mins
       </span>
     </div>
-
   </div>
-</div>
 
+  {/* SEARCH */}
+  <div className="relative">
+    <div className="flex items-center bg-white rounded-full px-3 py-2 border border-black/5">
+      <Search size={14} className="text-gray-400 mr-2" />
 
-        <div className="relative group">
-          <div className="flex items-center bg-white rounded-xl px-4 py-3 shadow-sm border border-transparent focus-within:border-amber-400 transition-all">
-            <input
-              placeholder="Search for Services..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-sm font-medium text-gray-800 placeholder:text-gray-400"
-            />
-            {query ? (
-              <X size={18} className="text-gray-400 cursor-pointer" onClick={() => setQuery("")} />
-            ) : (
-              <Search size={20} className="text-gray-500" />
-            )}
-          </div>
- {open && results.length > 0 && (
-  <div className="absolute top-full mt-3 w-full bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(58,77,57,0.15)] border border-[#f1f3eb] z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-300">
-    {/* Header for Results */}
-    <div className="bg-[#fbfcfa] px-5 py-2.5 border-b border-[#f1f3eb]">
-      <p className="text-[9px] font-[1000] uppercase tracking-[0.2em] text-[#4F6F52] opacity-60">
-        Top  Matches
-      </p>
+      <input
+        placeholder="Search services"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="flex-1 bg-transparent outline-none text-[12px] text-gray-800 placeholder:text-gray-400"
+      />
+
+      {query && (
+        <X
+          size={12}
+          className="text-gray-400 cursor-pointer"
+          onClick={() => setQuery("")}
+        />
+      )}
     </div>
 
-    <div className="max-h-[380px] overflow-y-auto no-scrollbar">
-      {results.map((item, i) => (
-        <div
-          key={i}
-          onClick={() => {
-            setQuery("");
-            setOpen(false);
-            setSelectedService(item);
-          }}
-          className="flex items-center gap-4 px-5 py-4 cursor-pointer hover:bg-[#fbfcfa] transition-all border-b border-[#f1f3eb] last:border-0 group"
-        >
-          {/* Service Image with Saga Soft Background */}
-          <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-[#f2f4ed] shrink-0 border border-[#f1f3eb] shadow-sm">
-            <Image
-              src={item.image || "/images/placeholder.jpg"}
-              fill
-              className="object-cover group-hover:scale-110 transition-transform duration-500"
-              alt={item.name || item.title}
-            />
-          </div>
+    {/* SEARCH DROPDOWN */}
+    {open && results.length > 0 && (
+      <div className="absolute top-full mt-2 w-full bg-white rounded-[1.5rem] border border-gray-100 shadow-sm z-[100] overflow-hidden">
+        <div className="max-h-[400px] overflow-y-auto no-scrollbar">
+          {results.map((item, i) => (
+            <div
+              key={i}
+              onClick={() => {
+                setQuery("");
+                setOpen(false);
+                setSelectedService(item);
+              }}
+              className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-50 transition border-b last:border-0"
+            >
+              {/* IMAGE */}
+              <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-gray-100 shrink-0">
+                <Image
+                  src={item.image || "/images/placeholder.jpg"}
+                  fill
+                  className="object-cover"
+                  alt={item.name || item.title}
+                />
+              </div>
 
-          {/* Service Info */}
-          <div className="flex-1 min-w-0">
-            <p className="text-[14px] font-[1000] text-[#1A2421] leading-tight truncate uppercase tracking-tight">
-              {item.name || item.title}
-            </p>
-            <div className="flex items-center gap-2 mt-1">
-               <span className="text-[9px] font-black text-[#a61d33] uppercase tracking-widest bg-rose-50 px-1.5 py-0.5 rounded">
-                 Verified
-               </span>
-               <p className="text-[10px] font-bold text-[#4F6F52] opacity-50 truncate italic">
-                 {item.category}
-               </p>
-            </div>
-          </div>
+              {/* INFO */}
+              <div className="flex-1 min-w-0">
+                <p className="text-[12px] font-medium text-gray-900 truncate">
+                  {item.name || item.title}
+                </p>
+                <p className="text-[10px] text-gray-400 truncate">
+                  {item.category}
+                </p>
+              </div>
 
-          {/* Price & Action */}
-          <div className="flex flex-col items-end gap-1">
-            <span className="text-[15px] font-[1000] text-[#3A4D39] tracking-tighter">
-              ₹{item.price}
-            </span>
-            <div className="w-5 h-5 rounded-full bg-[#3A4D39]/5 flex items-center justify-center group-hover:bg-[#3A4D39] transition-colors">
-               {/* <ChevronRight size={12} className="text-[#3A4D39] group-hover:text-white" /> */}
+              {/* PRICE */}
+              <span className="text-[13px] font-semibold text-gray-800">
+                ₹{item.price}
+              </span>
             </div>
-          </div>
+          ))}
         </div>
-      ))}
-    </div>
-
-    {/* Footer for Dropdown */}
-    {/* <div className="bg-white px-5 py-3 text-center border-t border-[#f1f3eb]">
-       <button className="text-[10px] font-black uppercase tracking-[0.1em] text-[#a61d33] hover:opacity-70 transition-opacity">
-         View all matches
-       </button>
-    </div> */}
+      </div>
+    )}
   </div>
-)}
-
-        </div>
-      </header>
+</header>
  {/* <section className="px-4 -mt-0">
         <div 
         style={{ backgroundColor: herocolour }}
@@ -602,7 +578,7 @@ setShowMap(false);
         </div>
       </section> */}
       {/* ================= MAIN CONTENT ================= */}
-      <main className="px-4 space-y-8 pt-2 ">
+      <main className="px-2 space-y-8 pt-2 ">
 
 
      <section className="mt-4 px-2">
