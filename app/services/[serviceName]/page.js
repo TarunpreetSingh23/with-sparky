@@ -115,44 +115,92 @@ export default function ServiceDetailPage() {
       <main className="space-y-4 px-4 mt-[-30px] relative z-10">
         
         {/* Card 1: Core Title & Pricing */}
-        <section className="bg-white rounded-[2.5rem] p-8 shadow-[0_15px_40px_rgba(58,77,57,0.08)] border border-[#f1f3eb]">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-               <span className="text-[10px] font-black text-[#a61d33] bg-rose-50 px-3 py-1 rounded-full uppercase tracking-widest">Premium Services</span>
-               <div className="flex items-center gap-1 bg-amber-50 px-3 py-1 rounded-full border border-amber-100">
-                  <Star size={12} fill="#f7b614" className="text-[#f7b614]" />
-                  <span className="text-[11px] font-[1000] text-[#3A4D39]">{selected.rating || "4.9"}</span>
-               </div>
-            </div>
-            
-            <h1 className="text-[26px] font-[1000] tracking-tight text-[#1A2421] leading-tight italic uppercase">
-              {selected.title}
-            </h1>
-            
-            <p className="text-[#4F6F52] text-[15px] font-bold leading-relaxed pt-2 opacity-80">{selected.description}</p>
-            
-            <div className="flex items-center gap-3 mt-6 pt-4 border-t border-[#f1f3eb]">
-              <span className="text-3xl font-[1000] text-[#3A4D39] tracking-tighter">₹{selected.price}</span>
-              <span className="text-gray-300 text-md line-through font-bold">₹{selected.price + 200}</span>
-              <span className="ml-auto bg-[#3A4D39] text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-lg uppercase italic tracking-widest">Best Value</span>
-            </div>
-          </div>
-        </section>
+       <section className="bg-white rounded-[2rem] p-6 shadow-[0_10px_30px_rgba(58,77,57,0.08)] border border-[#f1f3eb] transition-all hover:shadow-[0_12px_40px_rgba(58,77,57,0.12)]">
+  <div className="space-y-3">
+
+    {/* Tags & Rating */}
+    <div className="flex items-center gap-2">
+      <span className="text-[9px] font-extrabold text-[#a61d33] bg-rose-50 px-2.5 py-1 rounded-full uppercase tracking-widest shadow-inner">
+        Premium Services
+      </span>
+
+      <div className="flex items-center gap-1 bg-gradient-to-br from-[#fff9e6] to-[#fff1c4] px-2.5 py-1 rounded-full border border-amber-100 shadow-sm">
+        <Star size={12} fill="#f7b614" className="text-[#f7b614]" />
+        <span className="text-[10px] font-extrabold text-[#3A4D39]">{selected.rating || "4.9"}</span>
+      </div>
+    </div>
+
+    {/* Title */}
+    <h1 className="text-[22px] md:text-[26px] font-[1000] tracking-tight text-[#1A2421] leading-snug italic uppercase">
+      {selected.title}
+    </h1>
+
+    {/* Description */}
+    <p className="text-[#4F6F52] text-[14px] md:text-[15px] font-bold leading-relaxed opacity-80">
+      {selected.description}
+    </p>
+
+    {/* Price & Badge */}
+    <div className="flex items-center gap-3 mt-4 pt-3 border-t border-white">
+      <span className="text-2xl md:text-3xl  font-[1000] text-[#3A4D39] ">
+        ₹{selected.price}
+      </span>
+      <span className="text-[#a61d33] text-[14px] line-through font-bold">
+        ₹{selected.price + 200}
+      </span>
+      <span className="ml-auto bg-gradient-to-br from-[#3A4D39] to-[#4F6F52] text-white text-[9px] font-extrabold px-3 py-1.5 rounded-xl shadow-lg uppercase italic tracking-widest">
+        Best Value
+      </span>
+    </div>
+  </div>
+</section>
+
 
         {/* Min Cart Toast */}
-        {minCartError && (
-          <motion.div 
-            initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-            className="fixed bottom-23 left-6 right-6 md:left-1/2 md:-translate-x-1/2 md:max-w-sm z-[110] bg-white/90 backdrop-blur-xl border-2 border-[#E0E5D2] shadow-2xl rounded-[2rem] p-5 flex items-center gap-4 animate-in slide-in-from-bottom-10 duration-500"
-          >
-            <div className="w-12 h-12 rounded-2xl bg-[#a61d33] flex items-center justify-center text-white font-[1000] text-xl italic shadow-lg">₹</div>
-            <div className="flex-1">
-              <h4 className="text-[11px] font-black text-[#1A2421] uppercase tracking-widest">Almost there!</h4>
-              <p className="text-[12px] font-bold text-[#4F6F52]">{minCartError}</p>
-            </div>
-            <button onClick={() => setMinCartError("")}><X size={18} className="text-gray-300"/></button>
-          </motion.div>
-        )}
+      {minCartError && (
+  <div
+    className="fixed bottom-19 left-1/2 -translate-x-1/2 z-[100]
+    w-[90%] max-w-xs
+    bg-white/70 backdrop-blur-2xl
+    border border-white/40
+    shadow-[0_10px_40px_rgba(0,0,0,0.12)]
+    rounded-2xl px-4 py-3
+    flex items-center gap-3
+    animate-in fade-in slide-in-from-bottom-4 duration-300"
+  >
+    {/* Gradient 3D Icon */}
+    <div className="relative shrink-0">
+      <div className="w-10 h-10 rounded-xl
+        bg-gradient-to-br from-[#8a9a5b] via-[#7f8f52] to-[#6f7f46]
+        flex items-center justify-center
+        text-white text-sm font-semibold
+        shadow-md shadow-blue-300/40"
+      >
+        ₹
+      </div>
+    </div>
+
+    {/* Text */}
+    <div className="flex-1">
+      <p className="text-xs font-semibold text-gray-900 leading-tight">
+         <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#8a9a5b] via-[#7f8f52] to-[#6f7f46] font-bold">
+          {minCartError}
+        </span> more
+      </p>
+      <p className="text-[10px] text-gray-500 font-medium">
+        to proceed to checkout
+      </p>
+
+      {/* Minimal Progress */}
+      <div className="mt-2 h-[3px] w-full bg-gray-200/60 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-br from-[#8a9a5b] via-[#7f8f52] to-[#6f7f46]transition-all duration-700 ease-out rounded-full"
+          style={{ width: "70%" }} 
+        />
+      </div>
+    </div>
+  </div>
+)}
 
         {/* ✨ SERVICE STEPS: Saga Style */}
         {selected.steps && selected.steps.length > 0 && (
@@ -221,23 +269,29 @@ export default function ServiceDetailPage() {
       </main>
 
       {/* 🚀 Saga Sticky Checkout Bar */}
-     <div className="fixed bottom-0 inset-x-0 z-[60] 
+  <div className="fixed bottom-0 inset-x-0 z-60 
   bg-white/90 backdrop-blur-xl 
   border-t border-[#e6eadf] 
-  px-6 py-5 
+  px-6 py-4 
   flex items-center justify-between
-  shadow-[0_-12px_32px_rgba(58,77,57,0.08)]"
->
+  shadow-[0_-12px_32px_rgba(58,77,57,0.08)]
+  transition-all
+">
+
   {/* LEFT — Price */}
-  <div className="flex  flex-col">
+  <div className="flex flex-col">
     <div className="flex items-center gap-2">
-      <span className="text-[26px] font-extrabold text-[#1A2421] tracking-tight leading-none">
+      <span className="text-[24px] md:text-[26px] font-extrabold text-[#1A2421] tracking-tight leading-none">
         ₹{selected.price}
       </span>
 
-      <span className="bg-[#eef2e6] text-[#3A4D39] 
+      <span className="
+        bg-gradient-to-r from-[#3A4D39] to-[#4F6F52] 
+        text-white
         text-[9px] font-bold px-2 py-0.5 
-        rounded-full uppercase tracking-wide">
+        rounded-full uppercase tracking-wide
+        shadow-[0_2px_8px_rgba(58,77,57,0.25)]
+      ">
         Net Price
       </span>
     </div>
@@ -251,21 +305,21 @@ export default function ServiceDetailPage() {
   <button
     onClick={() => addToCart(selected)}
     className="
-      h-14 px-8 
-      rounded-[1.25rem] 
-      bg-[#3A4D39] 
-      hover:bg-[#2f3a1f]
+      h-12 md:h-14 px-6 md:px-8 
+      rounded-[1.5rem] 
+   bg-gradient-to-br from-[#3A4D39] via-[#465f45] to-[#2f3a1f]
       text-white 
       text-[12px] font-extrabold uppercase tracking-[0.18em]
-      shadow-lg shadow-[#3a4d39]/25
-      flex items-center gap-3
+      shadow-[0_6px_18px_rgba(58,77,57,0.3)]
+      flex items-center justify-center gap-3
       active:scale-[0.97] transition-all
     "
   >
     Book Now
-    {/* <ChevronRight size={18} className="text-[#f7b614]" /> */}
+    <ChevronRight size={18} className="text-[#f7b614]" />
   </button>
 </div>
+
 
     </div>
   );
