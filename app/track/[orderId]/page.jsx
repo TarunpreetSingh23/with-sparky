@@ -99,7 +99,7 @@ export default function TrackBookingPage() {
   if (loading) return (
     <div className="min-h-screen bg-[#fbfcfa] flex flex-col items-center justify-center gap-6">
       <div className="w-12 h-12 border-4 border-[#f2f4ed] border-t-[#3A4D39] rounded-full animate-spin" />
-      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#4F6F52] animate-pulse">Syncing Ritual...</span>
+      <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#4F6F52] animate-pulse">Syncing services...</span>
     </div>
   );
 
@@ -121,51 +121,88 @@ export default function TrackBookingPage() {
     <div className="min-h-screen bg-[#fbfcfa] pb-44 font-sans text-[#1A2421]">
       
       {/* --- Premium Header --- */}
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-2xl border-b border-[#f1f3eb]">
-        <div className="max-w-md mx-auto px-6 h-20 flex items-center justify-between">
-          <button onClick={() => router.back()} className="w-11 h-11 flex items-center justify-center rounded-2xl bg-[#f2f4ed] text-[#3A4D39] active:scale-90 transition-all">
-            <ChevronLeft size={22} />
-          </button>
-          <div className="flex flex-col items-center">
-            <span className="text-[9px] font-[1000] uppercase tracking-[0.2em] text-[#4F6F52] opacity-40">Ritual ID</span>
-            <span className="text-[15px] font-[1000] text-[#1A2421] tracking-tighter italic uppercase">#{task.order_id.slice(-6)}</span>
-          </div>
-          <div className="w-11" /> 
-        </div>
-      </header>
+     <header className="sticky top-0 z-40 bg-gradient-to-b from-white/90 to-[#f9faf7]/90 backdrop-blur-2xl border-b border-[#f1f3eb]">
+  <div className="max-w-md mx-auto px-6 h-16 flex items-center justify-between">
+    
+    {/* Back Button */}
+    <button 
+      onClick={() => router.back()} 
+      className="
+        w-10 h-10
+        flex items-center justify-center
+        rounded-xl
+        bg-gradient-to-br from-[#f2f4ed] to-[#e8f0e8]
+        shadow-[0_4px_12px_rgba(0,0,0,0.08)]
+        text-[#3A4D39]
+        active:scale-95 transition-all
+      "
+    >
+      <ChevronLeft size={20} />
+    </button>
+
+    {/* Center Info */}
+    <div className="flex flex-col items-center">
+      <span className="text-[8px] font-extrabold uppercase tracking-[0.15em] text-[#4F6F52] opacity-50">
+        Service ID
+      </span>
+      <span className="text-[14px] font-extrabold text-[#1A2421] tracking-tighter italic uppercase">
+        #{task.order_id.slice(-6)}
+      </span>
+    </div>
+
+    {/* Placeholder for spacing */}
+    <div className="w-10" />
+  </div>
+</header>
+
 
       <main className="max-w-md mx-auto px-6 pt-8 space-y-6">
         
         {/* --- Live Status Card --- */}
-        <section className="bg-white rounded-[2.5rem] p-8 shadow-[0_20px_50px_rgba(58,77,57,0.06)] border border-[#f1f3eb] relative overflow-hidden">
-          <div className="flex justify-between items-start mb-8 relative z-10">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="relative flex h-3 w-3">
-                  {!task.is_completed && <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#f7b614] opacity-75"></span>}
-                  <span className={`relative inline-flex rounded-full h-3 w-3 ${task.is_completed ? 'bg-emerald-500' : 'bg-[#f7b614]'}`}></span>
-                </span>
-                <span className="text-[10px] font-black text-[#a61d33] uppercase tracking-[0.15em]">Live Progress</span>
-              </div>
-              <h1 className="text-3xl font-[1000] text-[#1A2421] tracking-tighter leading-none italic uppercase">
-                {task.is_completed ? "Finished" : task.status}
-              </h1>
-            </div>
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner ${task.is_completed ? 'bg-emerald-50 text-emerald-600' : 'bg-[#f2f4ed] text-[#3A4D39]'}`}>
-              <CheckCircle2 size={28} />
-            </div>
-          </div>
+       <section className="bg-white rounded-[2.5rem] p-6 shadow-[0_20px_40px_rgba(58,77,57,0.08)] border border-[#f1f3eb] relative overflow-hidden">
+  {/* Header */}
+  <div className="flex justify-between items-start mb-6 relative z-10">
+    
+    {/* Status Info */}
+    <div>
+      <div className="flex items-center gap-2 mb-2">
+        <span className="relative flex h-3 w-3">
+          {!task.is_completed && (
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gradient-to-r from-[#f7b614]/60 to-[#f7b614]/30 opacity-75"></span>
+          )}
+          <span className={`relative inline-flex rounded-full h-3 w-3 ${task.is_completed ? 'bg-emerald-500' : 'bg-[#f7b614]'}`}></span>
+        </span>
+        <span className="text-[9px] font-extrabold uppercase tracking-[0.15em] text-[#a61d33]">
+          Live Progress
+        </span>
+      </div>
+      <h1 className="text-2xl md:text-3xl font-[1000] text-[#1A2421] tracking-tight leading-snug italic uppercase">
+        {task.is_completed ? "Finished" : task.status}
+      </h1>
+    </div>
 
-          <div className="relative w-full h-3 bg-[#f2f4ed] rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: getProgressWidth(task) }}
-              transition={{ duration: 2, ease: "circOut" }}
-              className="absolute h-full bg-gradient-to-r from-[#3A4D39] to-[#4F6F52] rounded-full shadow-[0_0_15px_rgba(58,77,57,0.3)]"
-            />
-          </div>
-          <p className="text-right text-[9px] font-[1000] uppercase tracking-widest text-gray-300 mt-3">Verified Sparky Pipeline</p>
-        </section>
+    {/* Status Icon */}
+    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shadow-[#3A4D39]/10 ${task.is_completed ? 'bg-emerald-50 text-emerald-600' : 'bg-[#f2f4ed] text-[#3A4D39]'}`}>
+      <CheckCircle2 size={28} />
+    </div>
+  </div>
+
+  {/* Progress Bar */}
+  <div className="relative w-full h-3 bg-[#f2f4ed] rounded-full overflow-hidden shadow-inner">
+    <motion.div
+      initial={{ width: 0 }}
+      animate={{ width: getProgressWidth(task) }}
+      transition={{ duration: 2, ease: "circOut" }}
+      className="absolute h-full bg-gradient-to-r from-[#3A4D39] to-[#4F6F52] rounded-full shadow-[0_0_15px_rgba(58,77,57,0.25)]"
+    />
+  </div>
+
+  {/* Footer Note */}
+  <p className="text-right text-[9px] font-bold uppercase tracking-widest text-gray-400 mt-3">
+    Verified Sparky Pipeline
+  </p>
+</section>
+
 
         {/* --- Premium OTP Verification --- */}
         <AnimatePresence>
