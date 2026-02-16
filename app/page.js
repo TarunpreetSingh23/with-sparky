@@ -614,46 +614,52 @@ setShowMap(false);
 </section>
 
 {minCartError && (
-  <div className="fixed bottom-19 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-sm z-[100]
-    bg-white/80 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] 
-    rounded-[2rem] p-4 flex items-center gap-4 animate-in fade-in slide-in-from-bottom-8 duration-500"
+  <div
+    className="fixed bottom-13 left-1/2 -translate-x-1/2 z-[100]
+    w-[90%] max-w-xs
+    bg-white/70 backdrop-blur-2xl
+    border border-white/40
+    shadow-[0_10px_40px_rgba(0,0,0,0.12)]
+    rounded-2xl px-4 py-3
+    flex items-center gap-3
+    animate-in fade-in slide-in-from-bottom-4 duration-300"
   >
-    {/* Icon with Ring Progress Glow */}
+    {/* Gradient 3D Icon */}
     <div className="relative shrink-0">
-      <div className="absolute inset-0 bg-blue-400 blur-lg opacity-20 rounded-full animate-pulse" />
-      <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 
-        flex items-center justify-center text-white shadow-lg shadow-blue-200"
+      <div className="w-10 h-10 rounded-xl
+        bg-gradient-to-br from-[#8a9a5b] via-[#7f8f52] to-[#6f7f46]
+        flex items-center justify-center
+        text-white text-sm font-semibold
+        shadow-md shadow-blue-300/40"
       >
-        <span className="text-xl font-black">₹</span>
+        ₹
       </div>
     </div>
 
-    {/* Text Content */}
+    {/* Text */}
     <div className="flex-1">
-      <h4 className="text-[13px] font-black text-gray-900 uppercase tracking-tight leading-none mb-1">
-        Almost there!
-      </h4>
-      <p className="text-[11px] font-bold text-gray-500 leading-tight">
-        <span className="text-blue-600">{minCartError}</span> more to unlock checkout
+      <p className="text-xs font-semibold text-gray-900 leading-tight">
+         <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#8a9a5b] via-[#7f8f52] to-[#6f7f46] font-bold">
+          {minCartError}
+        </span> more
       </p>
-      
-      {/* Tiny Progress Bar */}
-      <div className="mt-2 w-full h-1 bg-gray-100 rounded-full overflow-hidden">
-        <div 
-          className="h-full bg-blue-500 transition-all duration-1000 ease-out"
-          style={{ width: '70%' }} // You can calculate percentage if you have current total
+      <p className="text-[10px] text-gray-500 font-medium">
+        to proceed to checkout
+      </p>
+
+      {/* Minimal Progress */}
+      <div className="mt-2 h-[3px] w-full bg-gray-200/60 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-br from-[#8a9a5b] via-[#7f8f52] to-[#6f7f46]transition-all duration-700 ease-out rounded-full"
+          style={{ width: "70%" }} 
         />
       </div>
     </div>
-
-    {/* Close or Arrow */}
-    {/* <button className="p-2 text-gray-400 hover:text-gray-900">
-       <ArrowRight size={18} />
-    </button> */}
   </div>
 )}
+
 <section ref={beautyRef} className="pt-1">
-  <SectionTitle title="Beauty Services" />
+  {/* <SectionTitle title="Beauty Services" /> */}
   <FloatingOrderTracker activeOrder={active} />
 
   {[

@@ -147,235 +147,418 @@ useEffect(() => {
   </div>
 
   {/* CATEGORY PILLS */}
-  <div className="flex overflow-x-auto no-scrollbar gap-3 px-6 pb-4 scroll-smooth">
-    {["ALL", "FACIAL", "CLEANUP", "WAXING", "MAKEUP", "MANICURE"].map((cat) => (
-      <button
-        key={cat}
-        onClick={() => setSelectedCategory(cat)}
-        className={`
-          px-5 py-2
-          rounded-xl
-          text-[9px]
-          font-black
-          uppercase
-          tracking-[0.22em]
-          transition-all
-          ${
-            selectedCategory === cat
-              ? `
-                bg-gradient-to-br from-[#3A4D39] to-[#2f3a1f]
-                text-white
-                shadow-[0_6px_18px_rgba(58,77,57,0.4)]
-              `
-              : `
-                bg-white
-                text-[#4F6F52]
-                border border-[#e5ead7]
-                shadow-[0_2px_6px_rgba(0,0,0,0.08)]
-                active:scale-95
-              `
-          }
-        `}
-      >
-        {cat}
-      </button>
-    ))}
-  </div>
+ <div className="flex overflow-x-auto no-scrollbar gap-3 px-5 pb-4 scroll-smooth">
+
+  {["ALL", "FACIAL", "CLEANUP", "WAXING", "MAKEUP", "MANICURE"].map((cat) => (
+    <button
+      key={cat}
+      onClick={() => setSelectedCategory(cat)}
+      className={`
+        relative
+        px-4 py-2
+        rounded-full
+        text-[10px]
+        font-semibold
+        tracking-wide
+        whitespace-nowrap
+        transition-all duration-300
+        ${
+          selectedCategory === cat
+            ? `
+              bg-gradient-to-br from-[#3A4D39] via-[#344233] to-[#2f3a1f]
+              text-white
+              shadow-[0_8px_20px_rgba(58,77,57,0.35)]
+              border border-[#2f3a1f]
+            `
+            : `
+              bg-gradient-to-b from-white to-[#f8faf5]
+              text-[#4F6F52]
+              border border-[#e5ead7]
+              shadow-[0_3px_8px_rgba(0,0,0,0.06)]
+              hover:shadow-[0_6px_14px_rgba(0,0,0,0.08)]
+              active:scale-95
+            `
+        }
+      `}
+    >
+      {cat}
+    </button>
+  ))}
+
 </div>
 
-      <main className="max-w-2xl mx-auto p-4 space-y-4">
-        {/* Trust Badge */}
-        {/* <div className="bg-[#f2f4ed] rounded-[2rem] p-5 border border-[#E0E5D2] flex items-center gap-4">
-            <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
-                <ShieldCheck size={24} color={SAGA_GREEN} />
-            </div>
-            <div>
-                <p className="text-[10px] font-black text-[#3A4D39] uppercase tracking-widest">Saga Safety Standards</p>
-                <p className="text-xs text-[#4F6F52] opacity-80 font-bold">100% Hygienic & Certified Rituals</p>
-            </div>
-        </div> */}
+</div>
 
-        {/* 3. SERVICE CARDS (Yes Madam Horizontal Style) */}
-        {filteredServices.map((service) => (
-          <div 
-            key={service._id} 
-            className="flex gap-4 p-4 bg-white rounded-[2rem] border border-[#f1f3eb] shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-          >
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                 {/* <span className="text-[8px] font-black text-[#a61d33] bg-[#fff1f2] px-2 py-0.5 rounded-full uppercase tracking-tighter">Bestseller</span> */}
-                 <div className="flex items-center gap-1 text-[10px] font-bold text-[#f7b614]"><Star size={10} fill="currentColor"/> 4.8</div>
-              </div>
-              <h3 className="text-[15px] font-[1000] text-[#1A2421] mb-1 leading-snug tracking-tight">{service.title}</h3>
-              
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-lg font-black text-[#3A4D39]">₹{service.price}</span>
-                <span className="text-[10px] text-[#4F6F52] font-black flex items-center gap-1 opacity-60"><Clock size={12}/> 45 Mins</span>
-              </div>
-              
-              <p className="text-[11px] text-gray-700 font-bold leading-relaxed mb-4 line-clamp-2">{service.description}</p>
-              
-              <button 
-                onClick={() => router.push(`services/${service.title}`)} 
-                className="text-[10px] font-black text-[#a61d33] uppercase tracking-widest hover:underline flex items-center gap-1"
-              >
-                View Details <ChevronRight size={12} />
-              </button>
-            </div>
+     <main className="max-w-2xl mx-auto px-4 py-6 space-y-5">
 
-            <div className="relative flex flex-col items-center shrink-0">
-              <div className="relative w-28 h-28 rounded-[1.5rem] overflow-hidden border border-[#f1f3eb] shadow-inner bg-[#f2f4ed]">
-                <Image src={service.image} alt={service.title} fill className="object-cover" />
-              </div>
-              <button 
-                onClick={() => addToCart(service)}
-                className="absolute -bottom-2 w-24 bg-white border-2 border-[#E0E5D2] text-[#3A4D39] py-2 rounded-xl font-black text-[11px] shadow-xl hover:bg-[#3A4D39] hover:text-white hover:border-[#3A4D39] uppercase tracking-widest transition-all active:scale-90"
-              >
-                ADD
-              </button>
-            </div>
-          </div>
-        ))}
-      </main>
+  {filteredServices.map((service) => (
+    <div
+      key={service._id}
+      className="
+        group
+        flex gap-4
+        p-5
+        rounded-3xl
+        bg-gradient-to-br from-white via-[#fbfcfa] to-[#f2f4ed]
+        border border-[#f1f3eb]
+        shadow-[0_10px_30px_rgba(0,0,0,0.05)]
+        hover:shadow-[0_20px_45px_rgba(0,0,0,0.08)]
+        transition-all duration-300
+      "
+    >
+
+      {/* LEFT CONTENT */}
+      <div className="flex-1">
+
+        {/* Rating */}
+        <div className="flex items-center gap-1 mb-1 text-[10px] font-semibold text-[#f7b614]">
+          <Star size={10} fill="currentColor" />
+          4.8
+        </div>
+
+        {/* Title */}
+        <h3 className="text-[16px] font-extrabold tracking-tight text-[#1A2421] leading-snug mb-2">
+          {service.title}
+        </h3>
+
+        {/* Price & Duration */}
+        <div className="flex items-center gap-3 mb-3">
+          <span className="
+            text-lg font-black
+            bg-gradient-to-r from-[#3A4D39] to-[#2f3a1f]
+            bg-clip-text text-transparent
+          ">
+            ₹{service.price}
+          </span>
+
+          <span className="text-[11px] text-[#4F6F52] font-medium flex items-center gap-1 opacity-70">
+            <Clock size={12} /> 45 Mins
+          </span>
+        </div>
+
+        {/* Description */}
+        <p className="text-[12px] text-gray-600 leading-relaxed mb-4 line-clamp-2">
+          {service.description}
+        </p>
+
+        {/* View Details */}
+        <button
+          onClick={() => router.push(`services/${service.title}`)}
+          className="
+            text-[11px]
+            font-semibold
+            text-[#a61d33]
+            flex items-center gap-1
+            hover:gap-2
+            transition-all
+          "
+        >
+          View Details
+          <ChevronRight size={14} />
+        </button>
+
+      </div>
+
+      {/* RIGHT IMAGE + ADD */}
+      <div className="relative flex flex-col items-center shrink-0">
+
+        {/* Image */}
+        <div className="
+          relative w-28 h-28
+          rounded-2xl overflow-hidden
+          bg-gradient-to-br from-[#f2f4ed] to-[#e6eadf]
+          border border-[#f1f3eb]
+          shadow-inner
+        ">
+          <Image
+            src={service.image}
+            alt={service.title}
+            fill
+            className="object-cover group-hover:scale-105 transition duration-500"
+          />
+        </div>
+
+        {/* Add Button */}
+        <button
+          onClick={() => addToCart(service)}
+          className="
+            absolute -bottom-3
+            w-24 py-2
+            rounded-xl
+            text-[11px] font-semibold
+            bg-gradient-to-r from-[#ffffff] to-[#f2f4ed]
+            border border-[#E0E5D2]
+            text-[#3A4D39]
+            shadow-lg
+            hover:bg-gradient-to-r hover:from-[#3A4D39] hover:to-[#2f3a1f]
+            hover:text-white
+            hover:border-[#3A4D39]
+            transition-all
+            active:scale-90
+          "
+        >
+          Add
+        </button>
+
+      </div>
+
+    </div>
+  ))}
+
+</main>
+
 
       {/* 4. PREMIUM FLOATING CART BAR */}
-  {cart.length > 0 && (
-  <div className="fixed bottom-0 left-0 right-0 z-50 px-3 pb-3 pt-2 bg-white/85 backdrop-blur-xl border-t border-black/5">
-    <div className="max-w-md mx-auto">
-      
-      {/* MAIN CART CTA */}
+ {cart.length > 0 && (
+  <div className="fixed bottom-4 left-0 right-0 z-50 px-4">
+    <div className="max-w-sm mx-auto">
+
       <div
         onClick={() => setCartOpen(true)}
-        className="flex items-center justify-between gap-3 bg-[#3A4D39] text-white px-4 py-3 rounded-2xl
-        shadow-[0_12px_28px_rgba(58,77,57,0.25)]
-        active:scale-[0.97] transition"
+        className="
+        relative
+        flex items-center justify-between
+        px-4 py-2.5
+        rounded-2xl
+        bg-gradient-to-br from-[#3A4D39] via-[#465f45] to-[#2f3a1f]
+        text-white
+        shadow-[0_10px_30px_rgba(0,0,0,0.25)]
+        active:scale-[0.97]
+        transition-all duration-200
+        border border-white/5
+        backdrop-blur-xl
+        "
       >
+
+        {/* subtle top shine */}
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-transparent to-white/5 pointer-events-none" />
+
         {/* LEFT */}
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-            <ShoppingCart size={18} className="text-[#f7b614]" />
+        <div className="flex items-center gap-3 min-w-0 relative z-10">
+          
+          <div className="
+            w-8 h-8
+            rounded-lg
+            bg-gradient-to-br from-[#f7b614] to-[#ffcc4d]
+            flex items-center justify-center
+            shadow-md shadow-black/20
+          ">
+            <ShoppingCart size={16} className="text-black" />
           </div>
 
-          <div className="flex flex-col leading-none">
+          <div className="flex flex-col leading-tight">
             <span className="text-[13px] font-semibold tracking-tight">
               ₹{cartTotal}
             </span>
-            <span className="text-[10px] text-white/70">
-              {cart.length} service{cart.length > 1 ? "s" : ""}
+            <span className="text-[10px] text-white/60">
+              {cart.length} item{cart.length > 1 ? "s" : ""}
             </span>
           </div>
         </div>
 
-        {/* RIGHT */}
-        <div className="flex items-center gap-2 bg-[#f7b614] text-[#3A4D39] px-3 py-2 rounded-xl text-[10px] font-semibold uppercase tracking-wide">
+        {/* RIGHT MINI CTA */}
+        <div className="
+          relative z-10
+          px-3 py-1.5
+          rounded-lg
+          text-[10px]
+          font-medium
+          tracking-wide
+          bg-gradient-to-r from-white/10 to-white/5
+          border border-white/10
+          backdrop-blur-md
+          flex items-center gap-1
+        ">
           Review
-          <ChevronRight size={14} />
+          <ChevronRight size={13} className="opacity-70" />
         </div>
+
       </div>
+
     </div>
   </div>
 )}
 
+
       {/* 5. SAGA DRAWER (Bottom Sheet) */}
-     <div className={`fixed inset-0 z-[100] transition-opacity duration-500 ${cartOpen ? 'bg-black/60 opacity-100 visible' : 'bg-black/0 opacity-0 invisible'}`} onClick={() => setCartOpen(false)}>
-  <div 
+ <div
+  className={`fixed inset-0 z-[100] transition-all duration-500 ${
+    cartOpen
+      ? "bg-black/60 backdrop-blur-sm opacity-100 visible"
+      : "bg-black/0 opacity-0 invisible"
+  }`}
+  onClick={() => setCartOpen(false)}
+>
+  <div
     onClick={(e) => e.stopPropagation()}
-    className={`absolute bottom-0 left-0 right-0 bg-white rounded-t-[3rem] p-8 transition-transform duration-700 ease-out transform ${cartOpen ? 'translate-y-0' : 'translate-y-full shadow-[0_-20px_50px_rgba(0,0,0,0.2)]'}`}
+    className={`
+      absolute bottom-0 left-0 right-0
+      rounded-t-[3rem]
+      p-6
+      bg-gradient-to-b from-white via-[#fbfcfa] to-[#f2f4ed]
+      border-t border-[#f1f3eb]
+      shadow-[0_-25px_60px_rgba(0,0,0,0.18)]
+      transition-transform duration-700 ease-out
+      ${cartOpen ? "translate-y-0" : "translate-y-full"}
+    `}
   >
-    <div className="w-16 h-1.5 bg-[#f2f4ed] rounded-full mx-auto mb-8" />
-    
-    <div className="flex justify-between items-center mb-8">
-      <div className="flex flex-col">
-        <h2 className="text-2xl font-[1000] text-[#1A2421] italic leading-none">My <span className="text-[#a61d33]">Bag</span></h2>
-        <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[#4F6F52] opacity-50 mt-1">{cart.length} Services Added</span>
+    {/* Drag Handle */}
+    <div className="w-14 h-1.5 bg-gradient-to-r from-[#f2f4ed] to-[#e6eadf] rounded-full mx-auto mb-6" />
+
+    {/* HEADER */}
+    <div className="flex justify-between items-center mb-6">
+      <div>
+        <h2 className="text-2xl font-[1000] italic leading-none bg-gradient-to-r from-[#1A2421] to-[#3A4D39] bg-clip-text text-transparent">
+          My <span className="text-[#a61d33]">Bag</span>
+        </h2>
+        <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[#4F6F52] opacity-50 mt-1 block">
+          {cart.length} Services Added
+        </span>
       </div>
 
-      <div className="flex items-center gap-3">
-        {/* NEW: CLEAR ALL BUTTON */}
-        {/* <button 
-          onClick={() => {
-            if(confirm("Empty your ritual bag?")) {
-              setCart([]);
-              localStorage.removeItem("cart");
-              toast.success("Bag cleared");
-            }
-          }}
-          className="px-4 py-2 rounded-xl bg-rose-50 text-[#a61d33] text-[10px] font-[1000] uppercase tracking-widest border border-rose-100 active:scale-95 transition-all"
-        >
-          Clear
-        </button> */}
-        
-        <button onClick={() => setCartOpen(false)} className="p-3 bg-[#f2f4ed] rounded-full text-[#3A4D39] active:scale-90 transition-all">
-          <X size={20}/>
-        </button>
-      </div>
+      <button
+        onClick={() => setCartOpen(false)}
+        className="p-3 rounded-full
+        bg-gradient-to-br from-[#f2f4ed] to-[#e6eadf]
+        shadow-md shadow-[#3A4D39]/10
+        active:scale-90 transition-all"
+      >
+        <X size={18} className="text-[#3A4D39]" />
+      </button>
     </div>
 
     {/* ITEM LIST */}
-    <div className="max-h-[45vh] overflow-y-auto no-scrollbar space-y-4 mb-8">
+    <div className="max-h-[45vh] overflow-y-auto no-scrollbar space-y-4 mb-6">
       {cart.map((item, i) => (
-        <div key={i} className="flex items-center justify-between bg-[#fbfcfa] p-4 rounded-[1.5rem] border border-[#f1f3eb] group">
+        <div
+          key={i}
+          className="flex items-center justify-between
+          p-4 rounded-2xl
+          bg-gradient-to-br from-[#fbfcfa] to-[#f2f4ed]
+          border border-[#f1f3eb]
+          shadow-sm hover:shadow-md transition"
+        >
           <div className="flex items-center gap-4">
-            <div className="relative w-16 h-16 rounded-2xl overflow-hidden bg-[#f2f4ed] border border-[#f1f3eb]">
-              <Image src={item.image} fill className="object-cover" alt="img"/>
+            <div className="relative w-14 h-14 rounded-xl overflow-hidden
+              bg-gradient-to-br from-[#f2f4ed] to-[#e6eadf]
+              border border-[#f1f3eb]">
+              <Image src={item.image} fill className="object-cover" alt="img" />
             </div>
+
             <div>
-              <p className="text-[13px] font-black text-[#1A2421] leading-tight">{item.title}</p>
-              <p className="text-[#3A4D39] font-black text-xs mt-1">₹{item.price}</p>
+              <p className="text-[13px] font-black text-[#1A2421] leading-tight">
+                {item.title}
+              </p>
+              <p className="text-[#3A4D39] font-black text-xs mt-1">
+                ₹{item.price}
+              </p>
             </div>
           </div>
 
-          {/* INDIVIDUAL REMOVE BUTTON (Already in your code, now always visible for easier mobile access) */}
-          <button 
+          <button
             onClick={() => {
               const updated = cart.filter((_, idx) => idx !== i);
               setCart(updated);
               localStorage.setItem("cart", JSON.stringify(updated));
-            }} 
-            className="p-2.5 text-[#a61d33] bg-rose-50 rounded-xl active:scale-90 transition-transform"
+            }}
+            className="p-2.5 rounded-xl
+            bg-gradient-to-br from-rose-50 to-rose-100
+            shadow-sm
+            active:scale-90 transition"
           >
-            <Trash2 size={18}/>
+            <Trash2 size={16} className="text-[#a61d33]" />
           </button>
         </div>
       ))}
     </div>
 
-    {/* FOOTER ACTION */}
-    <div className="border-t border-[#f1f3eb] pt-8 space-y-6">
-      <div className="flex justify-between items-end px-2">
-        <span className="text-[#4F6F52] font-black uppercase text-[10px] tracking-widest opacity-60">Amount Payable</span>
-        <span className="text-4xl font-[1000] text-[#1A2421] tracking-tighter leading-none">₹{cartTotal}</span>
+    {/* FOOTER */}
+    <div className="border-t border-[#f1f3eb] pt-6 space-y-5">
+      <div className="flex justify-between items-end px-1">
+        <span className="text-[#4F6F52] font-black uppercase text-[10px] tracking-widest opacity-60">
+          Amount Payable
+        </span>
+        <span className="text-3xl font-[1000] tracking-tight
+          bg-gradient-to-r from-[#1A2421] to-[#3A4D39]
+          bg-clip-text text-transparent">
+          ₹{cartTotal}
+        </span>
       </div>
-      <button 
+
+      <button
         onClick={() => {
           if (cartTotal < MIN_CART_VALUE) {
-            setMinCartError(`Add ₹${MIN_CART_VALUE - cartTotal} more to book`);
+            setMinCartError(
+              `Add ₹${MIN_CART_VALUE - cartTotal} more to book`
+            );
             return;
           }
           router.push("/checkout");
         }}
-        className="w-full py-5 bg-[#3A4D39] text-white rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs shadow-2xl shadow-[#3a4d39]/30 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+        className="
+          w-full py-4 rounded-2xl
+          bg-gradient-to-r from-[#3A4D39] to-[#2f3a1f]
+          text-white
+          font-black uppercase tracking-[0.15em] text-xs
+          shadow-[0_15px_35px_rgba(58,77,57,0.35)]
+          active:scale-[0.98]
+          transition-all
+          flex items-center justify-center gap-2
+        "
       >
-        Confirm  <ChevronRight size={16} />
+        Confirm
+        <ChevronRight size={16} />
       </button>
     </div>
   </div>
 </div>
 
+
       {/* 6. SAGA MIN-CART TOAST */}
-      {minCartError && (
-        <div className="fixed bottom-28 left-6 right-6 md:left-1/2 md:-translate-x-1/2 md:max-w-sm z-[110] bg-white/90 backdrop-blur-xl border-2 border-[#E0E5D2] shadow-2xl rounded-[2rem] p-5 flex items-center gap-4 animate-in slide-in-from-bottom-10 duration-500">
-          <div className="w-12 h-12 rounded-2xl bg-[#a61d33] flex items-center justify-center text-white font-[1000] text-xl shadow-lg shadow-rose-200 italic">₹</div>
-          <div className="flex-1">
-            <h4 className="text-[11px] font-black text-[#1A2421] uppercase tracking-widest">Ritual Minimum</h4>
-            <p className="text-[12px] font-bold text-[#4F6F52]">{minCartError} more to checkout</p>
-            <div className="mt-2 w-full h-1 bg-[#f2f4ed] rounded-full overflow-hidden">
-                <div className="h-full bg-[#f7b614]" style={{ width: `${(cartTotal / MIN_CART_VALUE) * 100}%` }} />
-            </div>
-          </div>
-          <button onClick={() => setMinCartError("")} className="p-2 text-gray-300 hover:text-gray-900 transition-colors"><X size={18}/></button>
-        </div>
-      )}
+     {minCartError && (
+  <div
+    className="fixed bottom-19 left-1/2 -translate-x-1/2 z-[100]
+    w-[90%] max-w-xs
+    bg-white/70 backdrop-blur-2xl
+    border border-white/40
+    shadow-[0_10px_40px_rgba(0,0,0,0.12)]
+    rounded-2xl px-4 py-3
+    flex items-center gap-3
+    animate-in fade-in slide-in-from-bottom-4 duration-300"
+  >
+    {/* Gradient 3D Icon */}
+    <div className="relative shrink-0">
+      <div className="w-10 h-10 rounded-xl
+        bg-gradient-to-br from-[#8a9a5b] via-[#7f8f52] to-[#6f7f46]
+        flex items-center justify-center
+        text-white text-sm font-semibold
+        shadow-md shadow-blue-300/40"
+      >
+        ₹
+      </div>
+    </div>
+
+    {/* Text */}
+    <div className="flex-1">
+      <p className="text-xs font-semibold text-gray-900 leading-tight">
+         <span className="text-transparent bg-clip-text bg-gradient-to-br from-[#8a9a5b] via-[#7f8f52] to-[#6f7f46] font-bold">
+          {minCartError}
+        </span> more
+      </p>
+      <p className="text-[10px] text-gray-500 font-medium">
+        to proceed to checkout
+      </p>
+
+      {/* Minimal Progress */}
+      <div className="mt-2 h-[3px] w-full bg-gray-200/60 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-br from-[#8a9a5b] via-[#7f8f52] to-[#6f7f46]transition-all duration-700 ease-out rounded-full"
+          style={{ width: "70%" }} 
+        />
+      </div>
+    </div>
+  </div>
+)}
 
       <style jsx global>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
