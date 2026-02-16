@@ -110,7 +110,7 @@ export default function TrackBookingPage() {
       </div>
       <h2 className="text-2xl font-[1000] text-[#1A2421] mb-2 tracking-tight italic uppercase">Booking Not Found</h2>
       <p className="text-[#4F6F52] font-bold text-sm mb-8 opacity-60">We couldn't locate the ritual details you requested.</p>
-      <button onClick={() => router.push('/')} className="px-10 py-4 bg-[#3A4D39] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl">Return to Sanctuary</button>
+      <button onClick={() => router.push('/')} className="px-10 py-4 bg-[#3A4D39] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl">Return to Home</button>
     </div>
   );
 
@@ -159,49 +159,50 @@ export default function TrackBookingPage() {
       <main className="max-w-md mx-auto px-6 pt-8 space-y-6">
         
         {/* --- Live Status Card --- */}
-       <section className="bg-white rounded-[2.5rem] p-6 shadow-[0_20px_40px_rgba(58,77,57,0.08)] border border-[#f1f3eb] relative overflow-hidden">
+      <section className="bg-white rounded-2xl p-4 shadow-[0_8px_24px_rgba(58,77,57,0.06)] border border-[#f1f3eb] relative overflow-hidden">
   {/* Header */}
-  <div className="flex justify-between items-start mb-6 relative z-10">
+  <div className="flex justify-between items-start mb-4">
     
     {/* Status Info */}
     <div>
-      <div className="flex items-center gap-2 mb-2">
-        <span className="relative flex h-3 w-3">
+      <div className="flex items-center gap-2 mb-1">
+        <span className="relative flex h-2.5 w-2.5">
           {!task.is_completed && (
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gradient-to-r from-[#f7b614]/60 to-[#f7b614]/30 opacity-75"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gradient-to-r from-[#f7b614]/50 to-[#f7b614]/30 opacity-75"></span>
           )}
-          <span className={`relative inline-flex rounded-full h-3 w-3 ${task.is_completed ? 'bg-emerald-500' : 'bg-[#f7b614]'}`}></span>
+          <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${task.is_completed ? 'bg-emerald-500' : 'bg-[#f7b614]'}`}></span>
         </span>
-        <span className="text-[9px] font-extrabold uppercase tracking-[0.15em] text-[#a61d33]">
+        <span className="text-[8px] font-extrabold uppercase tracking-[0.1em] text-[#a61d33]">
           Live Progress
         </span>
       </div>
-      <h1 className="text-2xl md:text-3xl font-[1000] text-[#1A2421] tracking-tight leading-snug italic uppercase">
+      <h1 className="text-xl font-[1000] text-[#1A2421] tracking-tight leading-snug italic uppercase">
         {task.is_completed ? "Finished" : task.status}
       </h1>
     </div>
 
     {/* Status Icon */}
-    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shadow-[#3A4D39]/10 ${task.is_completed ? 'bg-emerald-50 text-emerald-600' : 'bg-[#f2f4ed] text-[#3A4D39]'}`}>
-      <CheckCircle2 size={28} />
+    <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-md shadow-[#3A4D39]/10 ${task.is_completed ? 'bg-emerald-50 text-emerald-600' : 'bg-[#f2f4ed] text-[#3A4D39]'}`}>
+      <CheckCircle2 size={24} />
     </div>
   </div>
 
   {/* Progress Bar */}
-  <div className="relative w-full h-3 bg-[#f2f4ed] rounded-full overflow-hidden shadow-inner">
+  <div className="relative w-full h-2.5 bg-[#f2f4ed] rounded-full overflow-hidden shadow-inner">
     <motion.div
       initial={{ width: 0 }}
       animate={{ width: getProgressWidth(task) }}
-      transition={{ duration: 2, ease: "circOut" }}
-      className="absolute h-full bg-gradient-to-r from-[#3A4D39] to-[#4F6F52] rounded-full shadow-[0_0_15px_rgba(58,77,57,0.25)]"
+      transition={{ duration: 1.5, ease: "circOut" }}
+      className="absolute h-full bg-gradient-to-r from-[#3A4D39] to-[#4F6F52] rounded-full shadow-[0_0_8px_rgba(58,77,57,0.2)]"
     />
   </div>
 
   {/* Footer Note */}
-  <p className="text-right text-[9px] font-bold uppercase tracking-widest text-gray-400 mt-3">
+  <p className="text-right text-[8px] font-bold uppercase tracking-widest text-gray-400 mt-2">
     Verified Sparky Pipeline
   </p>
 </section>
+
 
 
         {/* --- Premium OTP Verification --- */}
@@ -237,11 +238,53 @@ export default function TrackBookingPage() {
         </AnimatePresence>
 
         {/* --- Information Grid --- */}
-        <div className="grid grid-cols-2 gap-4">
-          <InfoCard icon={Calendar} label="Reserved Date" value={task.date} themeColor={THEME_GREEN} />
-          <InfoCard icon={Clock} label="Time Window" value={task.timeSlot} themeColor={THEME_GREEN} />
-          <InfoCard icon={MapPin} label="Service Address" value={task.address} fullWidth themeColor={THEME_GREEN} />
-        </div>
+       <div className="grid grid-cols-2 gap-4">
+  {/* Reserved Date */}
+  <div className="bg-white border border-[#f1f3eb] p-3 rounded-2xl flex items-start gap-3 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all">
+    <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#f2f4ed] to-[#e6f0e6] shadow-inner flex items-center justify-center text-[#3A4D39]">
+      <Calendar size={18} />
+    </div>
+    <div className="overflow-hidden">
+      <p className="text-[8px] font-extrabold uppercase tracking-[0.15em] text-[#4F6F52] opacity-60 mb-1">
+        Reserved Date
+      </p>
+      <p className="text-[13px] font-extrabold text-[#1A2421] truncate uppercase tracking-tight italic">
+        {task.date}
+      </p>
+    </div>
+  </div>
+
+  {/* Time Window */}
+  <div className="bg-white border border-[#f1f3eb] p-3 rounded-2xl flex items-start gap-3 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all">
+    <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#f2f4ed] to-[#e6f0e6] shadow-inner flex items-center justify-center text-[#3A4D39]">
+      <Clock size={18} />
+    </div>
+    <div className="overflow-hidden">
+      <p className="text-[8px] font-extrabold uppercase tracking-[0.15em] text-[#4F6F52] opacity-60 mb-1">
+        Time Window
+      </p>
+      <p className="text-[13px] font-extrabold text-[#1A2421] truncate uppercase tracking-tight italic">
+        {task.timeSlot}
+      </p>
+    </div>
+  </div>
+
+  {/* Service Address - Full Width */}
+  <div className="col-span-2 bg-white border border-[#f1f3eb] p-3 rounded-2xl flex items-start gap-3 shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all">
+    <div className="p-2.5 rounded-xl bg-gradient-to-br from-[#f2f4ed] to-[#e6f0e6] shadow-inner flex items-center justify-center text-[#3A4D39]">
+      <MapPin size={18} />
+    </div>
+    <div className="overflow-hidden">
+      <p className="text-[8px] font-extrabold uppercase tracking-[0.15em] text-[#4F6F52] opacity-60 mb-1">
+        Service Address
+      </p>
+      <p className="text-[13px] font-extrabold text-[#1A2421]  uppercase tracking-tight italic">
+        {task.address}
+      </p>
+    </div>
+  </div>
+</div>
+
 
         {/* --- Specialist Card --- */}
         <section className="bg-white border border-[#f1f3eb] rounded-[2.5rem] p-8 shadow-sm">
@@ -354,43 +397,71 @@ export default function TrackBookingPage() {
       </main>
 
       {/* --- Fixed Bottom Actions --- */}
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-2xl border-t border-[#f1f3eb] z-50 pb-10">
-        <div className="max-w-md mx-auto flex gap-4">
-          {task.invoiceUrl && (
-            <a
-              href={task.invoiceUrl}
-              target="_blank"
-              className="flex-[2] h-16 bg-[#1A2421] text-white rounded-[1.5rem] font-[1000] uppercase text-[11px] tracking-[0.2em] flex items-center justify-center gap-3 active:scale-[0.98] transition-all shadow-2xl shadow-black/10"
-            >
-              <Download size={18} className="text-[#f7b614]" /> Receipt
-            </a>
-          )}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-xl border-t border-[#f1f3eb] z-50 pb-6">
+  <div className="max-w-md mx-auto flex gap-3">
 
-          {!task.is_canceled && !task.is_completed && (
-            <button
-              onClick={cancelOrder}
-              className="flex-1 h-16 bg-rose-50 text-[#a61d33] border-2 border-rose-100 rounded-[1.5rem] font-[1000] uppercase text-[11px] tracking-[0.2em] flex items-center justify-center active:scale-[0.98] transition-all"
-            >
-              Abort
-            </button>
-          )}
-        </div>
-      </div>
+    {/* Receipt Button */}
+    {task.invoiceUrl && (
+      <a
+        href={task.invoiceUrl}
+        target="_blank"
+        className="flex-[2] h-12 bg-gradient-to-br from-[#3A4D39] to-[#4F6F52] text-white rounded-xl font-extrabold text-[10px] uppercase tracking-[0.15em] flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 transition-all"
+      >
+        <Download size={16} className="text-[#f7b614]" /> Receipt
+      </a>
+    )}
+
+    {/* Abort Button */}
+    {!task.is_canceled && !task.is_completed && (
+      <button
+        onClick={cancelOrder}
+        className="flex-1 h-12 bg-gradient-to-br from-red-500 to-red-400 text-white rounded-xl font-extrabold text-[10px] uppercase tracking-[0.15em] flex items-center justify-center shadow-md hover:shadow-lg active:scale-95 transition-all"
+      >
+        cancel
+      </button>
+    )}
+
+  </div>
+</div>
+
 
     </div>
   );
 }
 
 // Sub-component for theme-aligned info cards
-function InfoCard({ icon: Icon, label, value, fullWidth = false, themeColor }) {
+function InfoCard({ icon: Icon, label, value, fullWidth = false, themeColor = "#3A4D39" }) {
   return (
-    <div className={`bg-white border border-[#f1f3eb] p-6 rounded-[2rem] flex flex-col items-start gap-4 shadow-sm hover:shadow-md transition-shadow ${fullWidth ? 'col-span-2' : ''}`}>
-      <div className="p-3 bg-[#f2f4ed] text-[#3A4D39] rounded-2xl">
-        <Icon size={20} />
+    <div
+      className={`
+        bg-white border border-[#f1f3eb] p-4 rounded-2xl 
+        flex flex-col items-start gap-3 
+        shadow-[0_4px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.08)]
+        transition-all
+        ${fullWidth ? "col-span-2" : "w-max"}
+      `}
+    >
+      {/* Icon */}
+      <div
+        className={`
+          p-2.5 rounded-xl
+          bg-gradient-to-br from-[#f2f4ed] to-[#e6f0e6]
+          text-[${themeColor}]
+          shadow-inner
+          flex items-center justify-center
+        `}
+      >
+        <Icon size={18} />
       </div>
+
+      {/* Text */}
       <div className="overflow-hidden">
-        <p className="text-[9px] font-[1000] uppercase tracking-[0.2em] text-[#4F6F52] mb-1.5 opacity-60">{label}</p>
-        <p className="text-[14px] font-[1000] text-[#1A2421] truncate uppercase tracking-tighter italic">{value}</p>
+        <p className="text-[8px] font-extrabold uppercase tracking-[0.15em] text-[#4F6F52] opacity-60 mb-1">
+          {label}
+        </p>
+        <p className="text-[13px] font-extrabold text-[#1A2421] truncate uppercase tracking-tight italic">
+          {value}
+        </p>
       </div>
     </div>
   );

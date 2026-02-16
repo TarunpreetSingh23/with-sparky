@@ -83,15 +83,15 @@ export default function Checkout() {
 
 
   /* ================= AUTH & LOGIC (UNCHANGED) ================= */
-  useEffect(() => {
-    fetch("/api/me").then(res => res.json()).then(data => {
-      if (!data?.user) router.push("/login");
-      else {
-        setUser(data.user); setName(data.user.name || "");
-        setPhone(data.user.phone || ""); setloginPhone(data.user.phone);
-      }
-    }).catch(() => router.push("/login"));
-  }, [router]);
+  // useEffect(() => {
+  //   fetch("/api/me").then(res => res.json()).then(data => {
+  //     if (!data?.user) router.push("/login");
+  //     else {
+  //       setUser(data.user); setName(data.user.name || "");
+  //       setPhone(data.user.phone || ""); setloginPhone(data.user.phone);
+  //     }
+  //   }).catch(() => router.push("/login"));
+  // }, [router]);
 const UPI_ID = "sparkyservices.in@okaxis"; // 🔴 replace with YOUR real UPI ID
 const BRAND_NAME = "SPARKY";
 
@@ -273,9 +273,22 @@ const updateQuantity = (index, qty) => {
           
           {/* Cart Items */}
          <section className="space-y-4">
-  <h3 className="text-xs font-semibold uppercase tracking-widest text-green-800">
-    Checkout
-  </h3>
+ <h3
+  className="
+    inline-block
+    px-4 py-1.5
+    text-xs font-extrabold uppercase tracking-widest
+    text-white
+    rounded-xl
+    bg-gradient-to-r from-[#3A4D39] to-[#4F6F52]
+    shadow-[0_4px_12px_rgba(0,0,0,0.15)]
+    hover:shadow-[0_6px_20px_rgba(0,0,0,0.2)]
+    transition-all
+  "
+>
+  Checkout
+</h3>
+
 
   <div className="space-y-3">
     {cart.map((item, index) => (
