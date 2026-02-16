@@ -577,41 +577,83 @@ setShowMap(false);
       <main className="px-2 space-y-8 pt-2 ">
 
 
-     <section className="mt-4 px-2">
-  <div className="max-w-md mx-auto p-5 bg-white rounded-[2.5rem] shadow-sm">
-   <h2 className="text-center text-[26px] mb-0.5 font-serif font-light italic text-[#1A2421] tracking-tight">
-  Our Services
-</h2>
-{/* <div className="mx-auto mt-0.5 mb-0.5 w-10 h-[2px] bg-[#8A9A5B] rounded-full" /> */}
+   <section className="mt-6 px-3">
+  <div className="
+    max-w-md mx-auto
+    p-6
+    rounded-3xl
+    bg-gradient-to-b from-white via-[#fbfcfa] to-[#f2f4ed]
+    border border-[#f1f3eb]
+    shadow-[0_15px_40px_rgba(0,0,0,0.05)]
+  ">
 
+    {/* Heading */}
+    <div className="text-center mb-6">
+      <h2 className="
+        text-[24px]
+        font-serif
+        italic
+        tracking-tight
+        bg-gradient-to-r from-[#1A2421] to-[#3A4D39]
+        bg-clip-text text-transparent
+      ">
+        Our Services
+      </h2>
 
-
-   <div className="grid grid-cols-4 mb-2 w-full gap-4">
-         {want.map((cat, i) => (
-  <button
-    key={i}
-    onClick={() => handleWantClick(cat.name)}
-    className="flex flex-col items-center gap-2 text-left"
-  >
-    <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-[#ebf3d2] border border-rose-100 shadow-sm active:scale-95 transition-transform">
-      <Image
-        src={cat.image || "/images/sremovebg.png"}
-        fill
-        className="object-cover"
-        alt={cat.name}
+      <div className="mx-auto mt-2 w-12 h-[2px]
+        bg-gradient-to-r from-[#8A9A5B] to-[#6f7f46]
+        rounded-full opacity-70"
       />
     </div>
 
-    <span className="text-[13px] font-sans text-center leading-tight text-gray-800">
-      {cat.name}
-    </span>
-  </button>
-))}
+    {/* Grid */}
+    <div className="grid grid-cols-4 gap-4">
 
-        </div>
+      {want.map((cat, i) => (
+        <button
+          key={i}
+          onClick={() => handleWantClick(cat.name)}
+          className="group flex flex-col items-center gap-2"
+        >
+          {/* Image Tile */}
+          <div className="
+            relative w-full aspect-square
+            rounded-2xl overflow-hidden
+            bg-gradient-to-br from-[#ebf3d2] to-[#dfe9b9]
+            border border-[#e5ead7]
+            shadow-[0_8px_18px_rgba(0,0,0,0.06)]
+            group-hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)]
+            transition-all duration-300
+          ">
+            <Image
+              src={cat.image || "/images/sremovebg.png"}
+              fill
+              className="object-cover group-hover:scale-105 transition duration-500"
+              alt={cat.name}
+            />
+
+            {/* subtle overlay shine */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-40" />
+          </div>
+
+          {/* Label */}
+          <span className="
+            text-[12px]
+            font-medium
+            text-center
+            text-[#1A2421]
+            tracking-tight
+          ">
+            {cat.name}
+          </span>
+        </button>
+      ))}
+
+    </div>
 
   </div>
 </section>
+
 
 {minCartError && (
   <div
