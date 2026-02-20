@@ -18,7 +18,7 @@ import {
   LayoutGrid,
   Scissors, 
   User,
-  
+  AlertTriangle,
   Palette, 
   Wind, 
   CheckCircle2,
@@ -194,10 +194,10 @@ const mainbg = "#ebede9";       // Light Sage Grey (Sophisticated depth)
   const [selected, setSelected] = useState(null);
   const [minCartError, setMinCartError] = useState("");
 const AMRITSAR_BOUNDS = [
-  { lat: 31.709249, lng: 74.817049 },
-  { lat: 31.666412, lng: 74.959695 },
-  { lat: 31.569168, lng: 74.891628 },
-  { lat: 31.626615, lng: 74.756365 },
+  { lat: 31.670068, lng: 74.862815 },
+  { lat: 31.657253, lng: 74.919065 },
+  { lat: 31.596597, lng: 74.877805 },
+  { lat: 31.630555, lng: 74.779767 },
 ];
 
 const isInsidePolygon = (point, polygon) => {

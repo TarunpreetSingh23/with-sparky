@@ -3,14 +3,7 @@ export const runtime = "nodejs";
 import { connects } from "@/dbconfig/dbconfig";
 import Task from "@/models/task";
 import { generateInvoice } from "@/lib/generateInvoice";
-import { v2 as cloudinary } from "cloudinary";
-
-/* ---------- CLOUDINARY CONFIG ---------- */
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+import { supabase } from "@/lib/supabase"; // ✅ Using Supabase
 
 export async function POST(req) {
   try {
@@ -48,7 +41,9 @@ export async function POST(req) {
       name: addon.name,
       price: addon.price,
       quantity: addon.quantity || 1,
-      category: addon.category || "addon",
+      category: "addon",
+      earning: addon.earning,
+      profit: addon.profit,
     });
 
     /* ---------- RECALCULATE TOTALS ---------- */
@@ -71,34 +66,24 @@ export async function POST(req) {
       throw new Error("Invoice generation failed");
     }
 
-    /* ---------- UPLOAD TO CLOUDINARY ---------- */
-    await new Promise((resolve, reject) => {
-      const stream = cloudinary.uploader.upload_stream(
-        {
-          resource_type: "raw",
-          folder: "invoices",
-          public_id: task.order_id,
-          format: "pdf",
-          use_filename: true,
-          unique_filename: false,
-        },
-        (error) => {
-          if (error) reject(error);
-          else resolve();
-        }
-      );
+    /* ---------- UPLOAD PDF TO SUPABASE ---------- */
+    const fileName = `invoice-${task.order_id}.pdf`;
 
-      stream.end(pdfBuffer);
-    });
+    const { error } = await supabase.storage
+      .from("invoices")
+      .upload(fileName, pdfBuffer, {
+        contentType: "application/pdf",
+        upsert: true, // overwrite existing invoice
+      });
 
-    /* ---------- GENERATE DOWNLOAD URL ---------- */
-    const invoiceUrl = cloudinary.url(
-      `invoices/${task.order_id}.pdf`,
-      {
-        resource_type: "raw",
-        flags: "attachment",
-      }
-    );
+    if (error) throw error;
+
+    /* ---------- GET PUBLIC URL ---------- */
+    const { data } = supabase.storage
+      .from("invoices")
+      .getPublicUrl(fileName);
+
+    const invoiceUrl = data.publicUrl;
 
     /* ---------- SAVE TASK ---------- */
     task.invoiceUrl = invoiceUrl;
@@ -112,6 +97,7 @@ export async function POST(req) {
       invoiceUrl,
       task,
     });
+
   } catch (err) {
     console.error("❌ Add-on Error:", err);
     return Response.json(
