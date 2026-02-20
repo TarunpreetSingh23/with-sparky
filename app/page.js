@@ -576,13 +576,13 @@ setShowMap(false);
         </div>
       </section> */}
       {/* ================= MAIN CONTENT ================= */}
-      <main className="px-2 space-y-8 pt-2 ">
+      <main className="px-2 space-y-8 pt-0.5 ">
 
 
-   <section className="mt-6 px-3">
+   <section className="mt-2 px-3">
   <div className="
     max-w-md mx-auto
-    p-6
+    p-3.5
     rounded-3xl
     bg-gradient-to-b from-white via-[#fbfcfa] to-[#f2f4ed]
     border border-[#f1f3eb]
@@ -602,7 +602,7 @@ setShowMap(false);
         Our Services
       </h2>
 
-      <div className="mx-auto mt-2 w-12 h-[2px]
+      <div className="mx-auto mt-1 w-12 h-[2px]
         bg-gradient-to-r from-[#8A9A5B] to-[#6f7f46]
         rounded-full opacity-70"
       />
