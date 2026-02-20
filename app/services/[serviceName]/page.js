@@ -67,20 +67,33 @@ export default function ServiceDetailPage() {
     return cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
   };
 
-  const addToCart = (item) => {
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push({ ...item, quantity: 1 });
-    localStorage.setItem("cart", JSON.stringify(cart));
+  const addToCart = (service) => {
+   const itemToAdd = {
+    title: service.name || service.title,
+    price: typeof service.price === 'string'
+      ? parseInt(service.price.replace('₹', ''))
+      : service.price,
+    image: service.image,
+    quantity: 1,
+    category: service.category,
+    earning: service.earning,
+    profit: service.profit,
+  };
 
-    const total = getCartTotal();
-    if (total < MIN_CART_VALUE) {
-      setMinCartError(`Add ₹${MIN_CART_VALUE - total} more to proceed`);
-      return;
-    }
+  const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+  existingCart.push(itemToAdd);
+  localStorage.setItem("cart", JSON.stringify(existingCart));
 
-    setMinCartError("");
-    toast.success("Added to  Bag");
-    router.push("/checkout");
+  const total = getCartTotal();
+
+  if (total < MIN_CART_VALUE) {
+    const remaining = MIN_CART_VALUE - total;
+    setMinCartError(`Add at least ₹${remaining} service`);
+    return; // ❌ Stop navigation
+  }
+
+  setMinCartError("");
+  router.push("/checkout");
   };
 
   if (loading) return <ServiceDetailSkeleton />;

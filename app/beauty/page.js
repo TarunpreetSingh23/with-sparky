@@ -48,18 +48,33 @@ useEffect(() => {
     if (saved) setCart(JSON.parse(saved));
   }, []);
 
-  const addToCart = (item) => {
-    const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
-    currentCart.push({ ...item, quantity: 1, _id: item._id || Date.now() });
-    localStorage.setItem("cart", JSON.stringify(currentCart));
-    setCart(currentCart);
-    
-    if (getCartTotal() < MIN_CART_VALUE) {
-      setMinCartError(`Add ₹${MIN_CART_VALUE - getCartTotal()} more`);
-    } else {
-      setMinCartError("");
-      toast.success("Added to ritual bag");
-    }
+  const addToCart = (service) => {
+   const itemToAdd = {
+    title: service.name || service.title,
+    price: typeof service.price === 'string'
+      ? parseInt(service.price.replace('₹', ''))
+      : service.price,
+    image: service.image,
+    quantity: 1,
+    category: service.category,
+    earning: service.earning,
+    profit: service.profit,
+  };
+
+  const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
+  existingCart.push(itemToAdd);
+  localStorage.setItem("cart", JSON.stringify(existingCart));
+
+  const total = getCartTotal();
+
+  if (total < MIN_CART_VALUE) {
+    const remaining = MIN_CART_VALUE - total;
+    setMinCartError(`Add at least ₹${remaining} service`);
+    return; // ❌ Stop navigation
+  }
+
+  setMinCartError("");
+  // router.push("/checkout");
   };
 
   const getCartTotal = () => {
