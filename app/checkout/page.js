@@ -78,6 +78,10 @@ export default function Checkout() {
   const [invoiceUrl, setInvoiceUrl] = useState("");
   const [showSlotPicker, setShowSlotPicker] = useState(false);
   const [orderId, setOrderId] = useState("");
+  const [showReferralInput, setShowReferralInput] = useState(false);
+const [referralCode, setReferralCode] = useState("");
+const [referralError, setReferralError] = useState("");
+const [referralDiscount, setReferralDiscount] = useState(0);
   const isRecipientValid =
   name.trim().length > 0 && /^\d{10}$/.test(phone);
 
@@ -94,7 +98,20 @@ export default function Checkout() {
   // }, [router]);
 const UPI_ID = "sparkyservices.in@okaxis"; // 🔴 replace with YOUR real UPI ID
 const BRAND_NAME = "SPARKY";
+const applyReferralCode = () => {
+ const validCoupons = ["SP100", "SP200", "SP300"];
 
+const code = referralCode.trim().toUpperCase();
+
+if (!validCoupons.includes(code)) {
+  setReferralError("Invalid Coupon Code");
+  setReferralDiscount(0);
+  return;
+}
+
+  setReferralError("");
+  setReferralDiscount(validCoupons[code]);
+};
 const startUpiPayment = () => {
   const upiUrl =
     `upi://pay?pa=${UPI_ID}` +
@@ -148,6 +165,7 @@ const startUpiPayment = () => {
         body: JSON.stringify({
           cart: formattedCart, subtotal, discount, total,
           customerName: name, loginPhone, phone, address, pincode,
+          coupon:referralCode.toUpperCase()  || "NULL",
           date, timeSlot, paymentMethod:
           paymentMethod === "UPI" ? "UPI (SPARKY)" : "Pay After Service", status: "pending",
         }),
@@ -192,7 +210,17 @@ const updateQuantity = (index, qty) => {
   localStorage.setItem("cart", JSON.stringify(updated));
 };
  return (
-    <div className="min-h-screen bg-[#F9FAFB] font-sans text-[#1A2421] pb-40 selection:bg-[#3A4D39]/10">
+   <div className="
+  min-h-screen
+  bg-gradient-to-br
+  from-[#f8faf7]
+  via-[#f3f6ef]
+  to-[#eef2e9]
+  font-[500]
+  text-[#1A2421]
+  pb-40
+  selection:bg-[#3A4D39]/20
+">
       
       {/* --- Full Screen Map Overlay --- */}
       <AnimatePresence>
@@ -266,13 +294,33 @@ const updateQuantity = (index, qty) => {
         )}
       </AnimatePresence>
 
-      <main className="max-w-6xl mx-auto px-6 pt-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
+<main className="
+  max-w-6xl
+  mx-auto
+  px-6
+  pt-16
+  grid
+  grid-cols-1
+  lg:grid-cols-12
+  gap-14
+">
         
         {/* --- LEFT COLUMN --- */}
-        <div className="lg:col-span-8 space-y-10">
+        <div className="
+  lg:col-span-8
+  space-y-12
+">
           
           {/* Cart Items */}
-         <section className="space-y-4">
+         <section className="
+  space-y-6
+  bg-white/70
+  backdrop-blur-xl
+  rounded-[2.2rem]
+  border border-white/60
+  shadow-[0_10px_40px_rgba(0,0,0,0.06)]
+  p-8
+">
  <h3
   className="
     inline-block
@@ -297,8 +345,21 @@ const updateQuantity = (index, qty) => {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.05 }}
-        className="group flex items-center justify-between bg-white rounded-xl border border-gray-100 px-5 py-4 transition-all duration-200 hover:shadow-md hover:border-gray-200"
-      >
+className="
+  group
+  flex
+  items-center
+  justify-between
+  bg-white
+  rounded-2xl
+  border border-gray-100
+  px-6
+  py-5
+  transition-all
+  duration-300
+  hover:-translate-y-[2px]
+  hover:shadow-[0_10px_25px_rgba(0,0,0,0.08)]
+"      >
         {/* Left Content */}
         <div className="flex-1 pr-4">
           <p className="text-sm font-semibold text-gray-900 leading-snug">
@@ -332,14 +393,21 @@ const updateQuantity = (index, qty) => {
   initial={{ opacity: 0, y: 12 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.4, ease: "easeOut" }}
-  className="relative bg-white rounded-2xl border border-gray-200/70 p-8 shadow-[0_10px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_15px_40px_rgba(0,0,0,0.06)] transition-all duration-300"
->
+className="
+  relative
+  bg-white/80
+  backdrop-blur-2xl
+  rounded-[2.2rem]
+  border border-white/70
+  p-10
+  shadow-[0_15px_50px_rgba(0,0,0,0.06)]
+  transition-all
+">
   {/* Header */}
   <header className="space-y-2">
-    <h2 className="text-xl font-semibold text-gray-900 tracking-tight">
-      Service Recipient
+<h2 className="text-2xl font-semibold tracking-tight text-[#0f1c14]">      Service Recipient
     </h2>
-    <p className="text-xs text-gray-500 uppercase tracking-widest">
+    <p className="text-[11px] text-gray-400 uppercase tracking-[0.18em]">
       Contact details for your professional
     </p>
   </header>
@@ -375,7 +443,15 @@ const updateQuantity = (index, qty) => {
         {/* --- RIGHT COLUMN: SUMMARY --- */}
         <div className="lg:col-span-4">
           <div className="sticky top-28">
-            <div className="bg-white rounded-[2rem] border border-gray-100 p-8 shadow-sm space-y-6">
+           <div className="
+  bg-white/80
+  backdrop-blur-2xl
+  rounded-[2.5rem]
+  border border-white/70
+  p-10
+  shadow-[0_20px_60px_rgba(0,0,0,0.07)]
+  space-y-8
+">
               <h2 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">
                 Payment Summary
               </h2>
@@ -390,7 +466,75 @@ const updateQuantity = (index, qty) => {
                   <span className="text-emerald-600 font-bold">₹0</span>
                 </div>
               </div>
+{/* Referral Code Section */}
+<div className="
+  pt-6
+  border-t border-gray-100
+  space-y-4
+">
+  {!showReferralInput ? (
+    <button
+      onClick={() => setShowReferralInput(true)}
+      className="text-[11px] font-black uppercase tracking-widest text-[#3A4D39] hover:opacity-70"
+    >
+      Have a Referral Code?
+    </button>
+  ) : (
+  <div className="space-y-2">
+  <div className="flex flex-col sm:flex-row gap-3">
+    <input
+      value={referralCode}
+      onChange={(e) => setReferralCode(e.target.value)}
+      placeholder="Enter Code"
+      className="
+        w-full
+        bg-white
+        border border-gray-200
+        rounded-2xl
+        px-5
+        py-4
+        text-xs
+        font-semibold
+        tracking-wide
+        outline-none
+        focus:ring-2
+        focus:ring-[#3A4D39]/20
+      "
+    />
 
+    <button
+      onClick={applyReferralCode}
+      className="
+        w-full sm:w-auto
+        px-6
+        py-4
+        bg-gradient-to-r
+        from-[#1A2F25]
+        to-[#3A4D39]
+        text-white
+        text-[10px]
+        font-bold
+        rounded-2xl
+        uppercase
+        tracking-[0.2em]
+        shadow-lg
+        active:scale-95
+        transition-all
+        whitespace-nowrap
+      "
+    >
+      Apply
+    </button>
+  </div>
+
+  {referralError && (
+    <p className="text-red-500 text-[10px] font-black uppercase tracking-widest">
+      {referralError}
+    </p>
+  )}
+</div>
+  )}
+</div>
               <div className="pt-6 border-t border-gray-50">
                 <div className="flex justify-between items-baseline">
                   <span className="text-[11px] font-black uppercase tracking-wider text-gray-400">Total Payable</span>
@@ -580,10 +724,15 @@ const updateQuantity = (index, qty) => {
       </motion.div>
 
       <style jsx global>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-      `}</style>
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  body {
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.01em;
+  }
+`}</style>
     </div>
   );
 
