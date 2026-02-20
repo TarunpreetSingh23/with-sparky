@@ -172,7 +172,7 @@ export default function SparkyServiceApp() {
 const navcolour = "#8a9a5b";    // Near-Black Green (Very high-end feel)
 const herocolour = "#b8c398";   // Soft Clay (Elegant background for text)
 const herobutton = "#5c673c";   // Forest Green (Clear action button)
-const mainbg = "#ebede9";       // Light Sage Grey (Sophisticated depth)
+const mainbg = "white";       // Light Sage Grey (Sophisticated depth)
 // const router=useRouter();
 
   const beautyRef = useRef(null);
