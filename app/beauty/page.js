@@ -75,6 +75,7 @@ useEffect(() => {
 
   setMinCartError("");
   // router.push("/checkout");
+  router.refresh();
   };
 
   const getCartTotal = () => {
