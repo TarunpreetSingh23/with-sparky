@@ -111,7 +111,7 @@ const startUpiPayment = () => {
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0);
   const discount = subtotal * 0.1;
-  const total = subtotal - discount;
+  const total = subtotal;
 
   const validateStep = () => {
     const e = {};
@@ -387,7 +387,7 @@ const updateQuantity = (index, qty) => {
                 </div>
                 <div className="flex justify-between text-[13px] font-medium text-gray-600">
                   <span>Taxes and Fee</span>
-                  <span className="text-emerald-600 font-bold">FREE</span>
+                  <span className="text-emerald-600 font-bold">₹0</span>
                 </div>
               </div>
 

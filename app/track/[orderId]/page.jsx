@@ -80,7 +80,7 @@ export default function TrackBookingPage() {
       const res = await fetch("/api/orders/add-addon", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId, addon: { name: service.title, price: service.price, quantity: 1, category: service.category } }),
+        body: JSON.stringify({ orderId, addon: { name: service.title, price: service.price, quantity: 1, category: "addon", earning:service.earning,profit:service.profit} }),
       });
       if (res.ok) { await fetchOrder(); window.location.reload(); }
     } catch (err) { alert("Failed to add add-on"); } finally { setAdding(null); }
