@@ -172,7 +172,7 @@ export default function SparkyServiceApp() {
 const navcolour = "#8a9a5b";    // Near-Black Green (Very high-end feel)
 const herocolour = "#b8c398";   // Soft Clay (Elegant background for text)
 const herobutton = "#5c673c";   // Forest Green (Clear action button)
-const mainbg = "white";       // Light Sage Grey (Sophisticated depth)
+const mainbg = "#f8f8f6";       // Light Sage Grey (Sophisticated depth)
 // const router=useRouter();
 
   const beautyRef = useRef(null);
@@ -189,7 +189,8 @@ const mainbg = "white";       // Light Sage Grey (Sophisticated depth)
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [servicesLoading, setServicesLoading] = useState(true);
+const [ordersLoading, setOrdersLoading] = useState(true);
   const [selectedService, setSelectedService] = useState(null);
   const [selected, setSelected] = useState(null);
   const [minCartError, setMinCartError] = useState("");
@@ -225,9 +226,9 @@ const isInsidePolygon = (point, polygon) => {
         setServices(data);
       } catch (error) {
         console.error("Error fetching services:", error);
-      } finally {
-        setLoading(false);
-      }
+      }finally {
+  setServicesLoading(false);
+}
     };
     fetchServices();
   }, []);
@@ -241,8 +242,8 @@ const isInsidePolygon = (point, polygon) => {
       } catch (error) {
         console.error("Error fetching orders:", error);
       } finally {
-        setLoading(false);
-      }
+  setOrdersLoading(false);
+}
     };
     fetchOrders();
   }, []);
@@ -338,8 +339,9 @@ useEffect(() => {
       });
     }
   };
-
-  if (loading) return <SparkySkeletonPage />;
+if (servicesLoading || services.length === 0) {
+  return <SparkySkeletonPage />;
+}
 
   const handleWantClick = (wantName) => {
   setSelected(wantName); // Optional: if you want to highlight the clicked item
