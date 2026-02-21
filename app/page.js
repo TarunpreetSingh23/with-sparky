@@ -806,9 +806,9 @@ setShowMap(false);
         </div>
 
         {/* 🌈 SUBCATEGORY PROMO */}
-        <div className="mt-6 px-2">
+        {/* <div className="mt-6 px-2">
           <SubCategoryPromo subCat={subCat} />
-        </div>
+        </div> */}
       </div>
     );
   })}
@@ -1263,11 +1263,24 @@ function ServiceSectionSkeleton() {
 }
 function SparkySkeletonPage() {
   return (
-    <div className="min-h-screen bg-white pb-3">
-      <HeaderSkeleton />
-      <ServicesGridSkeleton />
-      <ServiceSectionSkeleton />
-      <ServiceSectionSkeleton />
+    <div className="min-h-screen bg-white flex justify-center">
+      <div
+        className="
+          w-full
+          max-w-[430px]
+          min-h-screen
+          bg-white
+          pb-3
+          relative
+          overflow-hidden
+          shadow-[0_0_60px_rgba(0,0,0,0.08)]
+        "
+      >
+        <HeaderSkeleton />
+        <ServicesGridSkeleton />
+        <ServiceSectionSkeleton />
+        <ServiceSectionSkeleton />
+      </div>
     </div>
   );
 }
