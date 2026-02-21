@@ -60,11 +60,13 @@ export async function POST(req) {
     task.total = total;
 
     /* ---------- GENERATE PDF ---------- */
-    const pdfBuffer = await generateInvoice(task.toObject());
+   const pdfBuffer = await generateInvoice(task.toObject(), {
+  backgroundImage: "public/bg.png", // or full absolute path
+});
 
-    if (!Buffer.isBuffer(pdfBuffer)) {
-      throw new Error("Invoice generation failed");
-    }
+if (!Buffer.isBuffer(pdfBuffer)) {
+  throw new Error("Invoice generation failed");
+}
 
     /* ---------- UPLOAD PDF TO SUPABASE ---------- */
     const fileName = `invoice-${task.order_id}.pdf`;

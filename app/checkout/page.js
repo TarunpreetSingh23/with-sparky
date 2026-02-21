@@ -84,18 +84,51 @@ const [referralError, setReferralError] = useState("");
 const [referralDiscount, setReferralDiscount] = useState(0);
   const isRecipientValid =
   name.trim().length > 0 && /^\d{10}$/.test(phone);
+  /* ================= AMRITSAR BOUND CHECK ================= */
+
+const [outOfBounds, setOutOfBounds] = useState(false);
+const [pendingLocation, setPendingLocation] = useState(null);
+
+const AMRITSAR_BOUNDS = [
+  { lat: 31.670068, lng: 74.862815 },
+  { lat: 31.657253, lng: 74.919065 },
+  { lat: 31.596597, lng: 74.877805 },
+  { lat: 31.630555, lng: 74.779767 },
+];
+
+const isInsidePolygon = (point, polygon) => {
+  let inside = false;
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const xi = polygon[i].lat, yi = polygon[i].lng;
+    const xj = polygon[j].lat, yj = polygon[j].lng;
+
+    const intersect =
+      yi > point.lng !== yj > point.lng &&
+      point.lat < ((xj - xi) * (point.lng - yi)) / (yj - yi) + xi;
+
+    if (intersect) inside = !inside;
+  }
+  return inside;
+};
+
+const checkAmritsar = (lat, lng) => {
+  if (!lat || !lng) return false;
+  const inside = isInsidePolygon({ lat, lng }, AMRITSAR_BOUNDS);
+  setOutOfBounds(!inside);
+  return inside;
+};
 
 
   /* ================= AUTH & LOGIC (UNCHANGED) ================= */
-  // useEffect(() => {
-  //   fetch("/api/me").then(res => res.json()).then(data => {
-  //     if (!data?.user) router.push("/login");
-  //     else {
-  //       setUser(data.user); setName(data.user.name || "");
-  //       setPhone(data.user.phone || ""); setloginPhone(data.user.phone);
-  //     }
-  //   }).catch(() => router.push("/login"));
-  // }, [router]);
+  useEffect(() => {
+    fetch("/api/me").then(res => res.json()).then(data => {
+      if (!data?.user) router.push("/login");
+      else {
+        setUser(data.user); setName(data.user.name || "");
+        setPhone(data.user.phone || ""); setloginPhone(data.user.phone);
+      }
+    }).catch(() => router.push("/login"));
+  }, [router]);
 const UPI_ID = "sparkyservices.in@okaxis"; // 🔴 replace with YOUR real UPI ID
 const BRAND_NAME = "SPARKY";
 const applyReferralCode = () => {
@@ -241,11 +274,65 @@ const updateQuantity = (index, qty) => {
               </button>
             </div>
             <div className="flex-1 w-full relative bg-[#F2F4ED]">
-              <UserMap setAddress={(addr) => setAddress(addr)} />
+              <UserMap
+  setAddress={(addr, lat, lng) => {
+    setAddress(addr);
+    setPendingLocation({ lat, lng });
+  }}
+/><AnimatePresence>
+  {outOfBounds && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[200] bg-[#030712]/95 backdrop-blur-xl flex flex-col items-center justify-center p-8 text-center"
+    >
+      <div className="relative mb-8">
+        <div className="absolute inset-0 bg-yellow-500/20 rounded-full animate-ping scale-150 opacity-20" />
+        <div className="relative w-24 h-24 bg-gradient-to-br from-yellow-400/20 to-orange-500/10 rounded-full flex items-center justify-center border border-yellow-500/30">
+          <AlertTriangle size={48} className="text-yellow-500" />
+        </div>
+      </div>
+
+      <h2 className="text-3xl font-black text-white mb-3 tracking-tighter uppercase italic">
+        Outside Our Zone
+      </h2>
+
+      <p className="text-slate-400 text-base max-w-[280px]">
+        Sparky currently only serves the heart of
+        <span className="text-blue-400 font-extrabold underline decoration-blue-500/30">
+          {" "}Amritsar
+        </span>.
+      </p>
+
+      <button
+        onClick={() => setOutOfBounds(false)}
+        className="mt-12 px-12 py-5 bg-white text-black font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl active:scale-95 shadow-xl"
+      >
+        Back to City
+      </button>
+    </motion.div>
+  )}
+</AnimatePresence>
             </div>
             <div className="absolute bottom-10 left-0 right-0 px-6 flex justify-center">
               <button 
-                onClick={() => setShowMap(false)} 
+                onClick={() => {
+  if (!pendingLocation) return;
+
+  const { lat, lng } = pendingLocation;
+
+  if (checkAmritsar(lat, lng)) {
+    localStorage.setItem(
+      "user_address",
+      JSON.stringify({ address, lat, lng })
+    );
+
+    localStorage.setItem("user_address_text", address);
+
+    setShowMap(false);
+  }
+}}
                 className="w-full max-w-md shadow-2xl bg-[#1A2F25] text-white py-5 rounded-2xl font-bold uppercase tracking-[0.15em] text-[11px] flex items-center justify-center gap-3 active:scale-95 transition-all"
               >
                 <CheckCircle2 size={18} className="text-emerald-400" /> Confirm Location
