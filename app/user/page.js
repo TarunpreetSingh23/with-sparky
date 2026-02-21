@@ -81,7 +81,21 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fbfcfa] pb-32 font-sans text-[#1A2421]">
+   <div className="min-h-screen bg-white flex justify-center">
+  <div
+    className="
+      w-full
+      max-w-[430px]
+      min-h-screen
+      bg-[#fbfcfa]
+      pb-32
+      font-sans
+      text-[#1A2421]
+      relative
+      overflow-hidden
+      shadow-[0_0_60px_rgba(0,0,0,0.08)]
+    "
+  >
       {/* 1. STICKY BRANDED HEADER */}
       {/* <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-2xl border-b border-[#f1f3eb] px-6 py-5 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-2">
@@ -96,7 +110,7 @@ export default function ProfilePage() {
         </button>
       </header> */}
 
-      <main className="max-w-2xl mx-auto  pt-0.5">
+     <main className="w-full pt-0.5">
         
         {/* 2. USER PROFILE CARD */}
        <header className="
@@ -107,7 +121,7 @@ export default function ProfilePage() {
   {/* Soft background glow */}
   <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.5),transparent_60%)] pointer-events-none" />
 
-  <div className="max-w-2xl mx-auto relative z-10 flex flex-col items-center">
+ <div className="w-full relative z-10 flex flex-col items-center">
 
     {/* Avatar Section */}
     <motion.div
@@ -375,6 +389,7 @@ export default function ProfilePage() {
 
       {/* Spacing for bottom navigation */}
       <div className="h-10" />
+    </div>
     </div>
   );
 }

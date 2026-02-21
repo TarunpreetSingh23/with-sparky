@@ -91,7 +91,21 @@ useEffect(() => {
 
 
   return (
-    <div className="bg-[#fbfcfa] min-h-screen text-[#1A2421] font-sans pb-32">
+   <div className="min-h-screen bg-white flex justify-center">
+  <div
+    className="
+      w-full
+      max-w-[430px]
+      min-h-screen
+      bg-[#fbfcfa]
+      text-[#1A2421]
+      font-sans
+      pb-32
+      relative
+      overflow-hidden
+      shadow-[0_0_60px_rgba(0,0,0,0.08)]
+    "
+  >
       
       {/* 1. PREMIUM STICKY HEADER */}
      <div
@@ -581,12 +595,14 @@ useEffect(() => {
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </div>
+    </div>
   );
 }
 
 // --- Professional Urban Loader ---
 function PageLoader() {
   return (
+    
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-[#fbfcfa] z-[100]">
       <div className="flex flex-col items-center">
         <Image src="/images/wLogo.png" alt="Logo" width={140} height={50} className="mb-10 object-contain" />

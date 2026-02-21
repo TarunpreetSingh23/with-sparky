@@ -260,77 +260,7 @@ useEffect(() => {
         )}
       </AnimatePresence>
       {/* ================= DESKTOP NAV ================= */}
-      <motion.nav
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className={`hidden md:flex fixed top-4 left-1/2 -translate-x-1/2 w-[94%] max-w-7xl px-8 py-4 z-50 rounded-2xl border transition-all ${
-          scrolled
-            ? "bg-white/80 backdrop-blur-xl border-blue-100 shadow-lg"
-            : "bg-white border-transparent"
-        }`}
-      >
-        {/* Logo */}
-        <Link href="/" className="flex items-center">
-          <Image
-            src="/images/wLogo.png"
-            alt="Logo"
-            width={140}
-            height={34}
-            className="object-contain"
-          />
-        </Link>
-
-        {/* Center Menu */}
-        <div className="mx-auto flex gap-1 bg-blue-50 p-1.5 rounded-xl border border-blue-100">
-          {desktopLinks.map((item) => (
-            <Link
-              key={item}
-              href={item === "Home" ? "/" : `/${item.toLowerCase().replace(/\s/g, "")}`}
-              onClick={() => setActive(item)}
-              className={`relative px-6 py-2.5 rounded-lg text-sm font-semibold transition ${
-                active === item
-                  ? "text-white"
-                  : "text-gray-600 hover:text-blue-600"
-              }`}
-            >
-              {active === item && (
-                <motion.div
-                  layoutId="active-pill"
-                  className="absolute inset-0 bg-blue-600 rounded-lg"
-                />
-              )}
-              <span className="relative z-10">{item}</span>
-            </Link>
-          ))}
-        </div>
-
-        {/* Right Actions */}
-        <div className="flex items-center gap-5">
-          <Link href="/cart" className="relative text-gray-600 hover:text-blue-600">
-            <IoBagHandleOutline className="text-2xl" />
-            <AnimatePresence>
-              {cartCount > 0 && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  className="absolute -top-1 -right-1 bg-blue-600 text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full font-bold"
-                >
-                  {cartCount}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </Link>
-
-          <Link
-            href={user ? "/user" : "/login"}
-            className="bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-black tracking-tight hover:bg-blue-700 transition"
-          >
-            {user ? "Account" : "Get Started"}
-          </Link>
-        </div>
-      </motion.nav>
+    
 
       {/* ================= MOBILE TOP NAV ================= */}
   
@@ -339,9 +269,15 @@ useEffect(() => {
  {/* <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none"> */}
       
       {/* Navigation Container */}
- <nav
+<nav
   className="
-    fixed bottom-0 left-0 right-0 z-50
+    fixed 
+    bottom-0 
+    left-1/2 
+    -translate-x-1/2
+    w-full
+    max-w-[430px]
+    z-50
     h-[60px]
     bg-white/85 backdrop-blur-xl
     border-t border-black/5

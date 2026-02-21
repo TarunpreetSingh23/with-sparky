@@ -73,7 +73,21 @@ export default function CartPage() {
   const total = subtotal + tax - subtotal * discount;
 
   return (
-    <div className="min-h-screen bg-[#f8f9f5] text-[#1A2421] pb-32 font-sans">
+   <div className="min-h-screen bg-white flex justify-center">
+  <div
+    className="
+      w-full
+      max-w-[430px]
+      min-h-screen
+      bg-[#f8f9f5]
+      text-[#1A2421]
+      pb-32
+      font-sans
+      relative
+      overflow-hidden
+      shadow-[0_0_60px_rgba(0,0,0,0.08)]
+    "
+  >
       {/* 1. PREMIUM HEADER */}
      <header className="relative z-20 px-5 pt-3 pb-9 rounded-b-[3rem]
   bg-gradient-to-br from-[#3A4D39] via-[#425b44] to-[#2f3a1f]
@@ -264,7 +278,23 @@ export default function CartPage() {
 </div>
 
             {/* 5. CHECKOUT ACTION BUTTON */}
-            <div className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-3 bg-white/85 backdrop-blur-xl border-t border-[#E0E5D2]">
+  <div
+  className="
+    fixed
+    bottom-0
+    left-1/2
+    -translate-x-1/2
+    w-full
+    max-w-[430px]
+    z-50
+    px-4
+    pb-4
+    pt-3
+    bg-white/85
+    backdrop-blur-xl
+    border-t border-[#E0E5D2]
+  "
+>
   <button
     onClick={handleCheckout}
     className="
@@ -293,6 +323,7 @@ export default function CartPage() {
           </>
         )}
       </div>
+    </div>
     </div>
   );
 }

@@ -382,6 +382,18 @@ if (servicesLoading || services.length === 0) {
 };
 
   return (
+    <div className="min-h-screen bg-white flex justify-center">
+  <div
+    className="
+      w-full 
+      max-w-[430px] 
+      min-h-screen 
+      bg-[#f8fafc] 
+      shadow-[0_0_60px_rgba(0,0,0,0.08)]
+      relative
+      overflow-hidden
+    "
+  >
     <div style={{ backgroundColor: mainbg }} className="min-h-screen  text-[#111827] pb-32 font-sans overflow-x-hidden">
          <AnimatePresence>
         {showMap && (
@@ -833,14 +845,20 @@ setShowMap(false);
       />
       
       {/* Drawer */}
-   <div
-  className={`fixed bottom-0 left-0 right-0 z-[70]
-  bg-gradient-to-b from-[#ffffff] via-[#fbfcf8] to-[#f4f6ef]
-  rounded-t-[2.75rem]
-  shadow-[0_-18px_45px_rgba(66,74,43,0.22)]
-  overflow-hidden
-  transition-transform duration-300 ease-out transform
-  ${selectedService ? "translate-y-0" : "translate-y-full"}`}
+<div
+  className={`fixed 
+    bottom-0 
+    left-1/2 
+    -translate-x-1/2
+    w-full
+    max-w-[430px]
+    z-[70]
+    bg-gradient-to-b from-[#ffffff] via-[#fbfcf8] to-[#f4f6ef]
+    rounded-t-[2.75rem]
+    shadow-[0_-18px_45px_rgba(66,74,43,0.22)]
+    overflow-hidden
+    transition-transform duration-300 ease-out transform
+    ${selectedService ? "translate-y-0" : "translate-y-full"}`}
 >
   {/* Drag Handle */}
   <div className="w-10 h-1.5 bg-[#8A9A5B]/40 rounded-full mx-auto mt-3 mb-3" />
@@ -966,6 +984,8 @@ setShowMap(false);
 </div>
 
     </div>
+      </div>
+</div>
   );
 }
 

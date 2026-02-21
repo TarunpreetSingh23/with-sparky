@@ -35,6 +35,12 @@ export const metadata = {
     "electrician near me",
     "Sparky services"
   ],
+
+  // ✅ GOOGLE SEARCH CONSOLE VERIFICATION ADDED HERE
+  verification: {
+    google: "00Tll4nTUIZo5sGMKKbG_aX1wr49ZgAbWgCconpIYUU",
+  },
+
   openGraph: {
     title: "Sparky | Trusted Home & Beauty Services",
     description:
@@ -43,7 +49,7 @@ export const metadata = {
     siteName: "Sparky",
     images: [
       {
-        url: "/images/og-image.jpg", // add this image
+        url: "/images/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Sparky Home Services"
@@ -52,6 +58,7 @@ export const metadata = {
     locale: "en_IN",
     type: "website"
   },
+
   twitter: {
     card: "summary_large_image",
     title: "Sparky | Home & Beauty Services",
@@ -59,6 +66,7 @@ export const metadata = {
       "Book trusted home services – beauty, salon, AC repair, cleaning & more with Sparky.",
     images: ["/images/og-image.jpg"]
   },
+
   manifest: "/manifest.json",
 };
 

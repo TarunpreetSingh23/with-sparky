@@ -101,19 +101,53 @@ export default function ServiceDetailPage() {
   if (!selected) return <div className="p-10 text-center font-black text-[#a61d33]">Service not found</div>;
 
   return (
-    <div className={`min-h-screen bg-[#fbfcfa] text-[#1A2421] pb-32 z-50 font-sans selection:bg-[#f2f4ed]`}>
+    <div className="min-h-screen bg-white flex justify-center">
+  <div
+    className="
+      w-full
+      max-w-[430px]
+      min-h-screen
+      bg-[#fbfcfa]
+      text-[#1A2421]
+      pb-32
+      font-sans
+      relative
+      overflow-hidden
+      shadow-[0_0_60px_rgba(0,0,0,0.08)]
+      selection:bg-[#f2f4ed]
+    "
+  >
       
       {/* 📍 Header Overlay */}
-      <header className="fixed top-0 inset-x-0 z-[50] flex justify-between items-center px-4 py-4">
-        <button onClick={() => router.back()} className="w-10 h-10 bg-white/80 backdrop-blur-md shadow-lg rounded-full flex items-center justify-center border border-white/20 active:scale-90 transition-all">
-          <ChevronLeft size={22} className="text-[#3A4D39]" />
-        </button>
-        <div className="flex gap-2">
- <button className="p-2 relative w-10 h-10 bg-white/90 backdrop-blur-md shadow-lg rounded-full flex items-center justify-center border border-white/20 active:scale-90 transition-all" onClick={() => router.push("/cart")}>
-             <ShoppingCart size={22} color={SAGA_GREEN} />
-             {/* {cart.length > 0 && <span className="absolute top-0 right-0 bg-[#a61d33] text-white text-[8px] w-4 h-4 rounded-full flex items-center justify-center font-black border-2 border-white">{cart.length}</span>} */}
-          </button>        </div>
-      </header>
+     <header
+  className="
+    fixed
+    top-0
+    left-1/2
+    -translate-x-1/2
+    w-full
+    max-w-[430px]
+    z-[50]
+    flex justify-between items-center
+    px-4 py-4
+  "
+>
+  <button
+    onClick={() => router.back()}
+    className="w-10 h-10 bg-white/80 backdrop-blur-md shadow-lg rounded-full flex items-center justify-center border border-white/20 active:scale-90 transition-all"
+  >
+    <ChevronLeft size={22} className="text-[#3A4D39]" />
+  </button>
+
+  <div className="flex gap-2">
+    <button
+      className="p-2 relative w-10 h-10 bg-white/90 backdrop-blur-md shadow-lg rounded-full flex items-center justify-center border border-white/20 active:scale-90 transition-all"
+      onClick={() => router.push("/cart")}
+    >
+      <ShoppingCart size={22} color={SAGA_GREEN} />
+    </button>
+  </div>
+</header>
 
       {/* 🖼️ Hero Visual with Arch Style */}
       <div className="relative w-full h-[420px] bg-white overflow-hidden flex items-center justify-center rounded-b-[3.5rem] shadow-xl">
@@ -282,14 +316,23 @@ export default function ServiceDetailPage() {
       </main>
 
       {/* 🚀 Saga Sticky Checkout Bar */}
-  <div className="fixed bottom-0 inset-x-0 z-60 
-  bg-white/90 backdrop-blur-xl 
-  border-t border-[#e6eadf] 
-  px-6 py-4 
-  flex items-center justify-between
-  shadow-[0_-12px_32px_rgba(58,77,57,0.08)]
-  transition-all
-">
+<div
+  className="
+    fixed
+    bottom-0
+    left-1/2
+    -translate-x-1/2
+    w-full
+    max-w-[430px]
+    z-60
+    bg-white/90 backdrop-blur-xl
+    border-t border-[#e6eadf]
+    px-6 py-4
+    flex items-center justify-between
+    shadow-[0_-12px_32px_rgba(58,77,57,0.08)]
+    transition-all
+  "
+>
 
   {/* LEFT — Price */}
   <div className="flex flex-col">
@@ -334,6 +377,7 @@ export default function ServiceDetailPage() {
 </div>
 
 
+    </div>
     </div>
   );
 }
