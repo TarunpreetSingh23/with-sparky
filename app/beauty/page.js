@@ -179,7 +179,7 @@ useEffect(() => {
   {/* CATEGORY PILLS */}
  <div className="flex overflow-x-auto no-scrollbar gap-3 px-5 pb-4 scroll-smooth">
 
-  {["ALL", "FACIAL", "CLEANUP", "WAXING", "MAKEUP", "MANICURE"].map((cat) => (
+  {["ALL", "FACIAL", "CLEANUP", "WAXING", "MAKEUP", "MANICURE","BLEACH","THREADING","HAIR"].map((cat) => (
     <button
       key={cat}
       onClick={() => setSelectedCategory(cat)}
