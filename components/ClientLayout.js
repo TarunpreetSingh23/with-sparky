@@ -7,19 +7,18 @@ import { Toaster } from "react-hot-toast";
 
 export default function ClientLayout({ children }) {
   const pathname = usePathname();
-  const hideLayout = pathname === "/checkout" || pathname === "/cart" || pathname ==="/beauty";
+
+  const hideLayout =
+    pathname === "/checkout" ||
+    pathname === "/cart" ||
+    pathname === "/beauty" ||
+    pathname.startsWith("/services/");
 
   return (
     <>
       {!hideLayout && <Navbar />}
 
-      <main
-        className={
-          !hideLayout
-            ? ""
-            : ""
-        }
-      >
+      <main>
         {children}
         <Toaster position="top-right" />
       </main>

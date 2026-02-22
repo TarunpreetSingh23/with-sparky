@@ -18,7 +18,7 @@ export default function CleaningPage() {
   // const searchParams = useSearchParams();
   const router = useRouter();
 
-  const MIN_CART_VALUE = 300;
+  const MIN_CART_VALUE = 299;
   // Theme Colors
   const SAGA_GREEN = "#3A4D39";
   const SAGA_SOFT = "#f2f4ed";

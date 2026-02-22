@@ -61,7 +61,7 @@ export default function Footer() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="lg:col-span-5"
           >
-            <div className="bg-white rounded-[2rem] p-8 border border-[#E0E5D2] shadow-sm">
+            {/* <div className="bg-white rounded-[2rem] p-8 border border-[#E0E5D2] shadow-sm">
               <p className="text-[11px] font-black uppercase tracking-[0.25em] text-[#8A9A5B] mb-3">
                 Saga Promise
               </p>
@@ -69,7 +69,7 @@ export default function Footer() {
                 Certified Experts • Single-Use Kits • Transparent Pricing •
                 Calm, Reliable Experiences
               </p>
-            </div>
+            </div> */}
           </motion.div>
         </div>
 

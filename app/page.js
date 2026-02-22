@@ -259,7 +259,7 @@ const isInsidePolygon = (point, polygon) => {
   return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 };
 
- const MIN_CART_VALUE = 300;
+ const MIN_CART_VALUE = 299;
 
 const handleBooking = (service) => {
   const itemToAdd = {
@@ -513,9 +513,9 @@ setShowMap(false);
       <span className="text-[14px] font-semibold tracking-[0.25em]">
         SPARKY
       </span>
-      <span className="text-[9px] text-white/70 tracking-widest">
+      {/* <span className="text-[9px] text-white/70 tracking-widest">
         in 40 mins
-      </span>
+      </span> */}
     </div>
   </div>
 

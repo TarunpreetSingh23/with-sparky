@@ -31,7 +31,7 @@ export default function ServiceDetailPage() {
   const [showDrawer, setShowDrawer] = useState(false);
   const [minCartError, setMinCartError] = useState("");
 
-  const MIN_CART_VALUE = 300;
+  const MIN_CART_VALUE = 299;
   
   // Theme Colors
   const SAGA_GREEN = "#3A4D39";
@@ -153,10 +153,7 @@ export default function ServiceDetailPage() {
       <div className="relative w-full h-[420px] bg-white overflow-hidden flex items-center justify-center rounded-b-[3.5rem] shadow-xl">
         <Image src={selected.image} alt={selected.title} fill className="object-cover" priority />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-        <div className="absolute bottom-10 left-6 bg-white/90 backdrop-blur px-4 py-2 rounded-2xl shadow-lg flex items-center gap-2 border border-white/20">
-           <Clock size={16} className="text-[#a61d33]" />
-           <span className="text-[12px] font-[1000] tracking-tight text-[#3A4D39] uppercase italic">Arriving in 40 mins</span>
-        </div>
+        
       </div>
 
       <main className="space-y-4 px-4 mt-[-30px] relative z-10">
@@ -208,7 +205,7 @@ export default function ServiceDetailPage() {
   <div
     className="fixed bottom-19 left-1/2 -translate-x-1/2 z-[100]
     w-[90%] max-w-xs
-    bg-white/70 backdrop-blur-2xl
+    bg-white
     border border-white/40
     shadow-[0_10px_40px_rgba(0,0,0,0.12)]
     rounded-2xl px-4 py-3
@@ -288,7 +285,7 @@ export default function ServiceDetailPage() {
         <section className="bg-white rounded-[2.5rem] p-8 border border-[#f1f3eb] shadow-sm">
            <h2 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#4F6F52] mb-6">Popular Add-ons</h2>
            <div className="grid grid-cols-2 gap-4">
-              {services.slice(0, 4).map((s, i) => (
+              {services.slice(0, 6).map((s, i) => (
                 <div key={i} onClick={() => router.push(`/services/${encodeURIComponent(s.title)}`)} className="bg-[#fbfcfa] border border-[#f1f3eb] rounded-[2rem] p-3 shadow-sm active:scale-95 transition-all group">
                   <div className="relative aspect-square rounded-[1.5rem] overflow-hidden mb-3">
                     <Image src={s.image} alt="Service" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />

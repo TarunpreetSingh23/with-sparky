@@ -100,7 +100,7 @@ export default function CartPage() {
   {/* Title */}
   <div className="flex justify-center mb-3 relative z-10">
     <h1 className="text-[20px] font-black tracking-tight italic text-white">
-      My <span className="text-[#f7b614] drop-shadow-sm">Basket</span>
+      My <span className="text-white drop-shadow-sm">Basket</span>
     </h1>
   </div>
 
@@ -114,7 +114,7 @@ export default function CartPage() {
       {/* Icon */}
       <div className="relative">
         <div className="absolute inset-0 bg-[#f7b614]/40 blur-lg rounded-full" />
-        <div className="relative w-11 h-11 bg-gradient-to-br from-[#f7b614] to-[#f5a623]
+        <div className="relative w-11 h-11 bg-gradient-to-br from-white to-grey-100
           rounded-full flex items-center justify-center shadow-xl"
         >
           <ShoppingBag size={20} className="text-[#3A4D39]" />
