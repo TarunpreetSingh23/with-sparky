@@ -429,10 +429,10 @@ if (servicesLoading || services.length === 0) {
                         <AlertTriangle size={48} className="text-yellow-500" />
                       </div>
                     </div>
-                    <h2 className="text-3xl font-black text-white mb-3 tracking-tighter uppercase italic">Outside Our Zone</h2>
+                    <h2 className="text-3xl font-black text-white mb-3 tracking-tighter uppercase italic">Not Serving In Your Area</h2>
                     <p className="text-slate-400 text-base max-w-[280px]">Sparky currently only serves the heart of <span className="text-blue-400 font-extrabold underline decoration-blue-500/30">Amritsar</span>.</p>
-                    <button onClick={() => setOutOfBounds(false)} className="mt-12 px-12 py-5 bg-white text-black font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl active:scale-95 shadow-xl">
-                      Back to City
+                    <button onClick={() => setOutOfBounds(false)} className="mt-12 px-7 py-5 bg-white text-black font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl active:scale-95 shadow-xl">
+                      Back
                     </button>
                   </motion.div>
                 )}
