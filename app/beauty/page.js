@@ -268,9 +268,9 @@ useEffect(() => {
             ₹{service.price}
           </span>
 
-          <span className="text-[11px] text-[#4F6F52] font-medium flex items-center gap-1 opacity-70">
+          {/* <span className="text-[11px] text-[#4F6F52] font-medium flex items-center gap-1 opacity-70">
             <Clock size={12} /> 45 Mins
-          </span>
+          </span> */}
         </div>
 
         {/* Description */}

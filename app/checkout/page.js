@@ -286,7 +286,7 @@ return (
     </button>
 
     <h1 className="text-[18px] font-bold tracking-tight text-white">
-      Secure <span className="text-[#f7b614]">Checkout</span>
+      Secure <span className="text-white">Checkout</span>
     </h1>
 
     <div className="w-9" />
@@ -306,7 +306,7 @@ return (
   >
     <div className="flex items-center gap-3">
       <div className="relative w-9 h-9 rounded-xl
-        bg-gradient-to-br from-[#f7b614] to-[#f5a623]
+        bg-gradient-to-br from-white to-grey-100
         flex items-center justify-center
         shadow-md"
       >

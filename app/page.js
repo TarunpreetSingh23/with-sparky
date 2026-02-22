@@ -871,12 +871,16 @@ setShowMap(false);
         shadow-[0_12px_28px_rgba(0,0,0,0.18)]
         border border-white/60"
       >
-        <Image
-          src={selectedService.image}
-          fill
-          className="object-cover"
-          alt="Service Detail"
-        />
+       <Image
+  src={selectedService.image}
+  fill
+  alt="Service Detail"
+  className="object-cover"
+  sizes="100vw"
+  quality={100}
+  style={{ imageRendering: "auto" }}
+  priority
+/>
 
         {/* Glass overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-white/10" />
@@ -955,7 +959,7 @@ setShowMap(false);
             flex items-center justify-center gap-2
           "
         >
-          Book <ArrowRight size={14} />
+          Book Now<ArrowRight size={14} />
         </button>
 
         {/* Secondary */}

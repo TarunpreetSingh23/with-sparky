@@ -151,8 +151,16 @@ export default function ServiceDetailPage() {
 
       {/* 🖼️ Hero Visual with Arch Style */}
       <div className="relative w-full h-[420px] bg-white overflow-hidden flex items-center justify-center rounded-b-[3.5rem] shadow-xl">
-        <Image src={selected.image} alt={selected.title} fill className="object-cover" priority />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+<Image
+  src={selected.image}
+  alt={selected.title}
+  fill
+  sizes="100vw"
+  quality={100}
+  priority
+  className="object-cover"
+  style={{ objectPosition: "center" }}
+/>        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
         
       </div>
 
@@ -190,7 +198,7 @@ export default function ServiceDetailPage() {
         ₹{selected.price}
       </span>
       <span className="text-[#a61d33] text-[14px] line-through font-bold">
-        ₹{selected.price + 200}
+        ₹{selected.price + 300}
       </span>
       <span className="ml-auto bg-gradient-to-br from-[#3A4D39] to-[#4F6F52] text-white text-[9px] font-extrabold px-3 py-1.5 rounded-xl shadow-lg uppercase italic tracking-widest">
         Best Value
@@ -247,39 +255,67 @@ export default function ServiceDetailPage() {
 )}
 
         {/* ✨ SERVICE STEPS: Saga Style */}
-        {selected.steps && selected.steps.length > 0 && (
-          <section className="bg-white rounded-[2.5rem] py-12 px-8 border border-[#f1f3eb] shadow-sm">
-            <div className="mb-10">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="h-[2px] w-8 bg-[#a61d33] rounded-full" />
-                <span className="text-[10px] font-black text-[#a61d33] uppercase tracking-[0.3em]">Protocol</span>
-              </div>
-              <h2 className="text-3xl font-[1000] text-[#1A2421] tracking-tight italic">Service <span className="text-[#4F6F52]">Journey</span></h2>
+      {selected.steps && selected.steps.length > 0 && (
+  <section className="mt-12 px-6">
+
+    {/* Header */}
+    <div className="mb-10">
+      <p className="text-[11px] font-semibold tracking-[0.25em] text-[#8A9A5B] uppercase mb-2">
+        How It Works
+      </p>
+
+      <h2 className="text-[24px] font-semibold text-[#1A2421] tracking-tight">
+        Service Journey
+      </h2>
+    </div>
+
+    {/* Steps */}
+    <div className="space-y-8 relative">
+
+      {/* Vertical Line */}
+      <div className="absolute left-3 top-0 bottom-0 w-px bg-[#E8ECE4]" />
+
+      {selected.steps.map((step, idx) => {
+        const [stepLabel, rest] = step.split(" – ");
+        const [title, desc] = rest ? rest.split(": ") : [rest, ""];
+
+        return (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: idx * 0.05 }}
+            viewport={{ once: true }}
+            className="relative pl-12"
+          >
+
+            {/* Step Dot */}
+            <div className="absolute left-0 top-1.5 w-6 h-6 rounded-full 
+              bg-white border border-[#DCE3D2] 
+              flex items-center justify-center
+              text-[11px] font-semibold text-[#3A4D39]
+              shadow-sm
+            ">
+              {idx + 1}
             </div>
 
-            <div className="space-y-6">
-              {selected.steps.map((step, idx) => {
-                const [stepLabel, rest] = step.split(" – ");
-                const [title, desc] = rest ? rest.split(": ") : [rest, ""];
+            {/* Content */}
+            <div className="space-y-2">
+              <h3 className="text-[16px] font-semibold text-[#1A2421] leading-snug">
+                {title}
+              </h3>
 
-                return (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }}
-                    className="group relative bg-[#fbfcfa] p-6 rounded-[2rem] border border-[#f1f3eb] hover:shadow-xl transition-all duration-500"
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] font-black text-[#4F6F52] uppercase tracking-[0.2em]">{stepLabel}</span>
-                      <span className="text-3xl font-[1000] text-[#E0E5D2] group-hover:text-[#4F6F52]/20 transition-colors italic">0{idx + 1}</span>
-                    </div>
-                    <h3 className="text-[17px] font-[1000] text-[#1A2421] mb-2">{title}</h3>
-                    <p className="text-[14px] font-bold text-gray-400 leading-relaxed italic border-l-2 border-[#E0E5D2] pl-4">{desc}</p>
-                  </motion.div>
-                );
-              })}
+              <p className="text-[14px] text-[#5f6b4a] leading-relaxed">
+                {desc}
+              </p>
             </div>
-          </section>
-        )}
+
+          </motion.div>
+        );
+      })}
+    </div>
+  </section>
+)}
 
         {/* Recommended: Saga Checkerboard */}
         <section className="bg-white rounded-[2.5rem] p-8 border border-[#f1f3eb] shadow-sm">
