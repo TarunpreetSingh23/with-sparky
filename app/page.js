@@ -871,17 +871,15 @@ setShowMap(false);
         shadow-[0_12px_28px_rgba(0,0,0,0.18)]
         border border-white/60"
       >
-       <Image
+      <Image
   src={selectedService.image}
   fill
   alt="Service Detail"
   className="object-cover"
-  sizes="100vw"
-  quality={100}
-  style={{ imageRendering: "auto" }}
+  sizes="(max-width: 768px) 100vw, 768px"
+  quality={85}
   priority
 />
-
         {/* Glass overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-white/10" />
 

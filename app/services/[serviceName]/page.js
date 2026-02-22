@@ -150,60 +150,78 @@ export default function ServiceDetailPage() {
 </header>
 
       {/* 🖼️ Hero Visual with Arch Style */}
-      <div className="relative w-full h-[420px] bg-white overflow-hidden flex items-center justify-center rounded-b-[3.5rem] shadow-xl">
-<Image
-  src={selected.image}
-  alt={selected.title}
-  fill
-  sizes="100vw"
-  quality={100}
-  priority
-  className="object-cover"
-  style={{ objectPosition: "center" }}
-/>        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-        
-      </div>
+      <div className="relative w-full aspect-[4/3] max-h-[360px] overflow-hidden rounded-b-[2.5rem] shadow-[0_12px_40px_rgba(0,0,0,0.12)] bg-[#f6f8f3]">
+
+  <Image
+    src={selected.image}
+    alt={selected.title}
+    fill
+    className="object-cover"
+    sizes="(max-width: 768px) 100vw, 600px"
+    quality={85}
+    priority
+  />
+
+  {/* Soft Gradient Overlay */}
+  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
+
+  {/* Minimal Title Overlay */}
+ 
+
+</div>
 
       <main className="space-y-4 px-4 mt-[-30px] relative z-10">
         
         {/* Card 1: Core Title & Pricing */}
-       <section className="bg-white rounded-[2rem] p-6 shadow-[0_10px_30px_rgba(58,77,57,0.08)] border border-[#f1f3eb] transition-all hover:shadow-[0_12px_40px_rgba(58,77,57,0.12)]">
-  <div className="space-y-3">
+    <section className="bg-white rounded-[1.8rem] px-6 py-7 border border-[#E8ECE4] shadow-[0_8px_24px_rgba(0,0,0,0.04)]">
 
-    {/* Tags & Rating */}
-    <div className="flex items-center gap-2">
-      <span className="text-[9px] font-extrabold text-[#a61d33] bg-rose-50 px-2.5 py-1 rounded-full uppercase tracking-widest shadow-inner">
-        Premium Services
+  <div className="space-y-5">
+
+    {/* Tag + Rating */}
+    <div className="flex items-center justify-between">
+
+      <span className="text-[11px] font-medium text-[#8A9A5B] tracking-wide">
+        Premium Service
       </span>
 
-      <div className="flex items-center gap-1 bg-gradient-to-br from-[#fff9e6] to-[#fff1c4] px-2.5 py-1 rounded-full border border-amber-100 shadow-sm">
-        <Star size={12} fill="#f7b614" className="text-[#f7b614]" />
-        <span className="text-[10px] font-extrabold text-[#3A4D39]">{selected.rating || "4.9"}</span>
+      <div className="flex items-center gap-1 text-[#f7b614]">
+        <Star size={13} fill="currentColor" />
+        <span className="text-[12px] font-medium text-[#1A2421]">
+          {selected.rating || "4.9"}
+        </span>
       </div>
+
     </div>
 
     {/* Title */}
-    <h1 className="text-[22px] md:text-[26px] font-[1000] tracking-tight text-[#1A2421] leading-snug italic uppercase">
+    <h1 className="text-[22px] font-semibold text-[#1A2421] leading-snug tracking-tight">
       {selected.title}
     </h1>
 
     {/* Description */}
-    <p className="text-[#4F6F52] text-[14px] md:text-[15px] font-bold leading-relaxed opacity-80">
+    <p className="text-[14px] text-[#5f6b4a] leading-relaxed">
       {selected.description}
     </p>
 
-    {/* Price & Badge */}
-    <div className="flex items-center gap-3 mt-4 pt-3 border-t border-white">
-      <span className="text-2xl md:text-3xl  font-[1000] text-[#3A4D39] ">
-        ₹{selected.price}
-      </span>
-      <span className="text-[#a61d33] text-[14px] line-through font-bold">
-        ₹{selected.price + 300}
-      </span>
-      <span className="ml-auto bg-gradient-to-br from-[#3A4D39] to-[#4F6F52] text-white text-[9px] font-extrabold px-3 py-1.5 rounded-xl shadow-lg uppercase italic tracking-widest">
+    {/* Price Row */}
+    <div className="flex items-end justify-between pt-4 border-t border-[#F0F2EC]">
+
+      <div className="flex items-baseline gap-3">
+        <span className="text-[24px] font-semibold text-[#1A2421]">
+          ₹{selected.price}
+        </span>
+
+        <span className="text-[13px] text-gray-400 line-through">
+          ₹{selected.price + 300}
+        </span>
+      </div>
+
+      <span className="text-[10px] font-medium text-white bg-[#3A4D39] px-3 py-1 rounded-full">
         Best Value
       </span>
+
     </div>
+
   </div>
 </section>
 
