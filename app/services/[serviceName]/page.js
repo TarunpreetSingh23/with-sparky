@@ -339,7 +339,7 @@ export default function ServiceDetailPage() {
         <section className="bg-white rounded-[2.5rem] p-8 border border-[#f1f3eb] shadow-sm">
            <h2 className="text-[12px] font-black uppercase tracking-[0.2em] text-[#4F6F52] mb-6">Popular Add-ons</h2>
            <div className="grid grid-cols-2 gap-4">
-              {services.slice(0, 6).map((s, i) => (
+              {services.slice(0, 4).map((s, i) => (
                 <div key={i} onClick={() => router.push(`/services/${encodeURIComponent(s.title)}`)} className="bg-[#fbfcfa] border border-[#f1f3eb] rounded-[2rem] p-3 shadow-sm active:scale-95 transition-all group">
                   <div className="relative aspect-square rounded-[1.5rem] overflow-hidden mb-3">
                     <Image src={s.image} alt="Service" fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
