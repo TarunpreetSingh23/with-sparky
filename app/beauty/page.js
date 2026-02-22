@@ -48,12 +48,13 @@ useEffect(() => {
     if (saved) setCart(JSON.parse(saved));
   }, []);
 
-  const addToCart = (service) => {
-   const itemToAdd = {
+ const addToCart = (service) => {
+  const itemToAdd = {
     title: service.name || service.title,
-    price: typeof service.price === 'string'
-      ? parseInt(service.price.replace('₹', ''))
-      : service.price,
+    price:
+      typeof service.price === "string"
+        ? parseInt(service.price.replace("₹", ""))
+        : service.price,
     image: service.image,
     quantity: 1,
     category: service.category,
@@ -61,22 +62,28 @@ useEffect(() => {
     profit: service.profit,
   };
 
+  // Get existing cart
   const existingCart = JSON.parse(localStorage.getItem("cart")) || [];
-  existingCart.push(itemToAdd);
-  localStorage.setItem("cart", JSON.stringify(existingCart));
 
-  const total = getCartTotal();
+  // Add new item
+  const updatedCart = [...existingCart, itemToAdd];
+
+  // Save to localStorage
+  localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+  // 🔥 IMPORTANT: Update React state
+  setCart(updatedCart);
+
+  const total = updatedCart.reduce((sum, i) => sum + i.price, 0);
 
   if (total < MIN_CART_VALUE) {
     const remaining = MIN_CART_VALUE - total;
     setMinCartError(`Add at least ₹${remaining} service`);
-    return; // ❌ Stop navigation
+    return;
   }
 
   setMinCartError("");
-  // router.push("/checkout");
-  router.refresh();
-  };
+};
 
   const getCartTotal = () => {
     const items = JSON.parse(localStorage.getItem("cart")) || [];
