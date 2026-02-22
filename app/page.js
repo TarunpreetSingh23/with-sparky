@@ -867,34 +867,25 @@ setShowMap(false);
     <div className="px-6 pb-7 pt-1">
 
       {/* Image */}
-     <div className="relative w-full h-56 rounded-[1.9rem] overflow-hidden mb-5
+      <div className="relative w-full h-56 rounded-[1.9rem] overflow-hidden mb-5
         shadow-[0_12px_28px_rgba(0,0,0,0.18)]
-        border border-white/60
-        bg-gray-100" // 1. Added a background color as a fallback
+        border border-white/60"
       >
-      <Image
-        src={selectedService.image}
-        fill
-        alt="Service Detail"
-        className="object-cover"
-        sizes="(max-width: 768px) 100vw, 768px"
-        quality={90} // Slightly higher quality
-        priority // 2. Keeps it as a high-priority fetch
-        loading="eager" // 3. Forces the browser to treat it as immediate
-        /* 4. Use a placeholder if you have a blurDataURL from your backend */
-        // placeholder="blur" 
-        // blurDataURL="data:image/png;base64,..." 
-      />
-        
+        <Image
+          src={selectedService.image}
+          fill
+          className="object-cover"
+          alt="Service Detail"
+        />
+
         {/* Glass overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-white/10" />
 
-        {/* Close Button */}
+        {/* Close */}
         <button
           onClick={() => setSelectedService(null)}
           className="
             absolute top-3 right-3
-            z-10 // 5. Ensure button is always on top
             bg-white/80 backdrop-blur
             p-2 rounded-full
             shadow-md
