@@ -132,7 +132,7 @@ const checkAmritsar = (lat, lng) => {
 const UPI_ID = "sparkyservices.in@okaxis"; // 🔴 replace with YOUR real UPI ID
 const BRAND_NAME = "SPARKY";
 const applyReferralCode = () => {
- const validCoupons = ["SP100", "SP200", "SP300"];
+ const validCoupons = ["SP1852", "SP2633", "SP3677"];
 
 const code = referralCode.trim().toUpperCase();
 
