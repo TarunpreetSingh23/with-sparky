@@ -36,12 +36,43 @@ export async function POST(req) {
       },
     });
 
-    await transporter.sendMail({
-      from: `"Secure Login" <${process.env.EMAIL_USER}>`,
-      to: normalizedEmail,
-      subject: "Your Verification Code",
-      html: `<h1>${otp}</h1><p>Expires in 5 minutes</p>`,
-    });
+   await transporter.sendMail({
+  from: `"Sparky" <${process.env.EMAIL_USER}>`,
+  to: normalizedEmail,
+  subject: "Your Sparky verification code",
+  html: `
+    <div style="font-family: Arial, sans-serif; color:#111;">
+      
+      <p style="font-size:16px; margin:0;">
+        Your Sparky verification code is:
+      </p>
+
+      <h2 style="
+        margin:10px 0;
+        letter-spacing:4px;
+        font-size:28px;
+        color:#1A2421;
+      ">
+        ${otp}
+      </h2>
+
+      <p style="font-size:14px; color:#555;">
+        This code expires in 5 minutes.
+      </p>
+
+      <p style="font-size:12px; color:#888; margin-top:20px;">
+        If you didn’t request this, please ignore this email.
+      </p>
+
+      <hr style="border:none;border-top:1px solid #eee;margin:20px 0;" />
+
+      <p style="font-size:11px; color:#999;">
+        Sparky Secure Login
+      </p>
+
+    </div>
+  `,
+});
 
     return Response.json({ success: true });
   } catch (err) {
