@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-const INITIAL_TIMER = 120;
+const INITIAL_TIMER = 20;
 
 export default function Login() {
   const [phone, setPhone] = useState("");
@@ -127,222 +127,270 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#fbfcfa] flex flex-col items-center px-6 font-sans overflow-hidden">
-      
-      {/* 1. BRAND LOGO */}
-      <div className="mt-16 mb-12 text-center">
-        {/* <Image 
-          src="/images/newlg.png" 
-          alt="Saga Logo" 
-          width={150} 
-          height={50} 
-          className="object-contain mx-auto" 
-        /> */}
-      </div>
+  <div className="min-h-screen bg-[#f7f8f6] flex flex-col items-center justify-center px-6 font-[Inter] overflow-hidden">
 
-      <div className="w-full max-w-md relative">
-        {/* Decorative elements */}
-        <div className="absolute -top-12 -right-12 w-32 h-32 bg-[#f2f4ed] rounded-full blur-3xl opacity-60" />
-        <div className="absolute -bottom-12 -left-12 w-32 h-32 bg-rose-50 rounded-full blur-3xl opacity-60" />
+{/* SOFT BACKGROUND */}
+<div className="absolute top-0 right-0 w-80 h-80 bg-rose-100 blur-[140px] opacity-40 rounded-full"/>
+<div className="absolute bottom-0 left-0 w-80 h-80 bg-emerald-100 blur-[140px] opacity-40 rounded-full"/>
 
-        {/* 2. AUTH CARD */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-[3rem] p-10 shadow-[0_20px_60px_rgba(58,77,57,0.08)] border border-[#f1f3eb] relative z-10"
-        >
-          <div className="text-center mb-10">
-            <h1 className="text-2xl font-[1000] text-[#1A2421] tracking-tight italic uppercase">
-               Welcome to <span className="text-[#a61d33]">SPARKY</span>
-            </h1>
-            <p className="text-[#4F6F52] text-[10px] font-black uppercase tracking-[0.2em] mt-2 opacity-60">
-              {step === "otp" ? "Identity Verification" : "Salon Access"}
-            </p>
-          </div>
+<div className="w-full max-w-md relative">
 
-          <AnimatePresence mode="wait">
-            {step === "phone" && (
-             <motion.div
-  key="phone"
-  initial={{ opacity: 0, x: 20 }}
-  animate={{ opacity: 1, x: 0 }}
-  exit={{ opacity: 0, x: -20 }}
-  transition={{ duration: 0.35, ease: "easeOut" }}
-  className="space-y-8"
+<motion.div
+initial={{ opacity:0, y:30 }}
+animate={{ opacity:1, y:0 }}
+className="
+bg-white/80 backdrop-blur-xl
+rounded-[2.2rem]
+p-8
+border border-neutral-200
+shadow-[0_25px_70px_rgba(0,0,0,0.06)]
+"
 >
-  {/* Label */}
-  <div className="space-y-3">
-    <div className="flex items-center justify-between">
-      <label className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-        Mobile Number
-      </label>
-      <Smartphone size={16} className="text-gray-300" />
-    </div>
 
-    {/* Input Field */}
-    <div className="relative group">
-      {/* Country Code */}
-      <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center gap-3 pr-4 border-r border-gray-200">
-        <span className="text-gray-900 font-semibold text-sm">+91</span>
-      </div>
+{/* HEADER */}
+<div className="text-center mb-8">
+<h1 className="text-lg font-semibold tracking-wide text-neutral-800">
+Welcome to
+<span className="ml-2 font-bold bg-gradient-to-r from-[#a61d33] to-[#ff7a59] bg-clip-text text-transparent">
+SPARKY
+</span>
+</h1>
 
-      <input
-        type="tel"
-        maxLength="10"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-        placeholder="Enter 10-digit number"
-        className="w-full pl-20 pr-6 py-5 rounded-2xl 
-                   bg-white border border-gray-200
-                   text-gray-900 text-base font-semibold
-                   placeholder:text-gray-400
-                   focus:border-[#3A4D39] focus:ring-4 focus:ring-[#3A4D39]/5
-                   transition-all outline-none"
-      />
-    </div>
-  </div>
+<p className="text-[10px] uppercase tracking-[0.25em] text-neutral-400 mt-1">
+{step==="otp" ? "Identity Verification" : "Salon Access"}
+</p>
+</div>
 
-  {/* CTA Button */}
-  <button
-    onClick={() => sendOtp("whatsapp")}
-    disabled={loading || phone.length !== 10}
-    className={`w-full py-5 rounded-2xl font-semibold uppercase tracking-[0.15em] text-xs
-      transition-all duration-300 flex items-center justify-center gap-3
-      ${
-        phone.length === 10
-          ? "bg-[#1A2F25] text-white hover:shadow-xl active:scale-95"
-          : "bg-gray-200 text-gray-400 cursor-not-allowed"
-      }
-    `}
-  >
-    {loading ? (
-      "Sending OTP..."
-    ) : (
-      <>
-        Send WhatsApp OTP
-        <ArrowRight size={16} className="opacity-70" />
-      </>
-    )}
-  </button>
+<AnimatePresence mode="wait">
+
+{/* ================= PHONE ================= */}
+{step==="phone" && (
+<motion.div
+key="phone"
+initial={{opacity:0,x:20}}
+animate={{opacity:1,x:0}}
+exit={{opacity:0,x:-20}}
+className="space-y-6"
+>
+
+<label className="text-[11px] uppercase tracking-widest text-neutral-500 flex justify-between">
+Mobile Number
+<Smartphone size={14} className="opacity-40"/>
+</label>
+
+<div className="relative">
+<div className="absolute left-4 top-1/2 -translate-y-1/2 border-r pr-3 text-sm font-medium text-neutral-700">
++91
+</div>
+
+<input
+type="tel"
+maxLength="10"
+value={phone}
+onChange={(e)=>setPhone(e.target.value.replace(/\D/g,""))}
+placeholder="Enter 10-digit number"
+className="
+w-full pl-14 pr-4 py-4
+rounded-xl text-sm
+bg-[#fafafa]
+border border-neutral-200
+focus:border-neutral-400
+focus:bg-white
+outline-none transition
+"
+/>
+</div>
+
+<button
+onClick={()=>sendOtp("whatsapp")}
+disabled={loading || phone.length!==10}
+className={`w-full py-4 rounded-xl text-[11px]
+uppercase tracking-[0.2em]
+font-semibold text-white
+flex items-center justify-center gap-2
+transition-all duration-300
+${
+phone.length===10
+? "bg-gradient-to-br from-[#1A2F25] to-[#0d1511] shadow-lg hover:shadow-2xl active:translate-y-[2px]"
+: "bg-neutral-200 text-neutral-400 cursor-not-allowed"
+}`}
+>
+{loading ? "Sending OTP..." :
+<>
+Send WhatsApp OTP
+<ArrowRight size={14}/>
+</>}
+</button>
+
 </motion.div>
+)}
 
-            )}
+{/* ================= EMAIL ================= */}
+{step==="email" && (
+<motion.div
+key="email"
+initial={{opacity:0,x:15}}
+animate={{opacity:1,x:0}}
+exit={{opacity:0,x:-15}}
+className="space-y-6"
+>
 
-            {step === "email" && (
-              <motion.div
-                key="email"
-                initial={{ opacity: 0, x: 15 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -15 }}
-                className="space-y-6"
-              >
-                <button
-                  onClick={() => setStep("phone")}
-                  className="text-[10px] font-[1000] uppercase tracking-widest text-gray-400 flex items-center gap-2 hover:text-[#3A4D39] transition-all"
-                >
-                  <ChevronLeft size={14} /> Back to Phone
-                </button>
+<button
+onClick={()=>setStep("phone")}
+className="text-[10px] uppercase tracking-widest text-neutral-400 flex items-center gap-1 hover:text-neutral-700"
+>
+<ChevronLeft size={14}/> Back
+</button>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-[1000] uppercase tracking-widest text-[#3A4D39] px-1">Email ID</label>
-                  <div className="relative">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-6 py-5 rounded-2xl bg-[#fbfcfa] text-[#1A2421] border-2 border-[#f1f3eb] focus:border-[#3A4D39] focus:bg-white outline-none font-[1000] transition-all text-base"
-                      placeholder="name@example.com"
-                    />
-                    <Mail className="absolute right-5 top-1/2 -translate-y-1/2 text-[#E0E5D2]" size={18} />
-                  </div>
-                </div>
+<label className="text-[11px] uppercase tracking-widest text-neutral-500">
+Email Address
+</label>
 
-                <button
-                  onClick={() => sendOtp("email")}
-                  disabled={loading}
-                  className="w-full py-5 bg-[#3A4D39] text-white rounded-[1.5rem] font-[1000] uppercase tracking-[0.2em] text-[11px] shadow-2xl shadow-[#3a4d39]/30 active:scale-95 transition-all"
-                >
-                  {loading ? "Sending..." : "Request Email Link"}
-                </button>
-              </motion.div>
-            )}
+<div className="relative">
+<input
+type="email"
+value={email}
+onChange={(e)=>setEmail(e.target.value)}
+placeholder="name@example.com"
+className="
+w-full px-5 py-4
+rounded-xl text-sm
+bg-[#fafafa]
+border border-neutral-200
+focus:border-neutral-400
+focus:bg-white
+outline-none transition
+"
+/>
+<Mail size={16}
+className="absolute right-4 top-1/2 -translate-y-1/2 text-neutral-300"/>
+</div>
 
-            {step === "otp" && (
-              <motion.div
-                key="otp"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="space-y-8 text-center"
-              >
-                <div className="flex flex-col items-center">
-                  <div className="bg-[#f2f4ed] px-5 py-2 rounded-full border border-[#E0E5D2] flex items-center gap-2 mb-2">
-                    <div className="w-2 h-2 rounded-full bg-[#a61d33] animate-pulse" />
-                    <span className="text-[#3A4D39] font-[1000] text-xs tracking-widest">{formatTime(timer)}</span>
-                  </div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Enter code from message</p>
-                </div>
+<button
+onClick={()=>sendOtp("email")}
+disabled={loading}
+className="
+w-full py-4 rounded-xl
+text-[11px]
+uppercase tracking-[0.2em]
+font-semibold text-white
+bg-gradient-to-br from-[#3A4D39] to-[#1b2520]
+shadow-lg hover:shadow-2xl
+active:translate-y-[2px]
+transition-all
+"
+>
+{loading ? "Sending..." : "Request Email Link"}
+</button>
 
-                <div className="relative">
-                  <input
-                    type="number"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    className="w-full px-6 py-6 text-center tracking-[0.8em] rounded-[1.5rem] bg-[#fbfcfa] text-[#1A2421] border-2 border-[#f1f3eb] focus:border-[#3A4D39] focus:bg-white outline-none font-[1000] text-3xl transition-all shadow-inner"
-                    placeholder="••••"
-                  />
-                  <Lock className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-2 text-[#E0E5D2]" size={20} />
-                </div>
+</motion.div>
+)}
 
-                <button
-                  onClick={verifyOtp}
-                  disabled={loading}
-                  className="w-full py-5 bg-[#a61d33] text-white rounded-[1.5rem] font-[1000] uppercase tracking-[0.2em] text-[11px] shadow-2xl shadow-rose-200 active:scale-95 transition-all"
-                >
-                  {loading ? "Verifying..." : "Confirm Otp"}
-                </button>
+{/* ================= OTP ================= */}
+{step==="otp" && (
+<motion.div
+key="otp"
+initial={{opacity:0,scale:.96}}
+animate={{opacity:1,scale:1}}
+className="space-y-7 text-center"
+>
 
-                {timer === 0 && (
-                  <div className="pt-2 flex justify-center gap-6">
-                    <button onClick={() => setStep("phone")} className="text-[9px] font-[1000] uppercase tracking-[0.2em] text-[#3A4D39] flex items-center gap-2">
-                      <RefreshCcw size={12} /> Resend SMS
-                    </button>
-                    <button onClick={() => setStep("email")} className="text-[9px] font-[1000] uppercase tracking-[0.2em] text-[#a61d33] flex items-center gap-2">
-                      <Mail size={12} /> Try Email
-                    </button>
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+<div className="flex flex-col items-center">
+<div className="px-4 py-1 rounded-full bg-neutral-100 text-neutral-600 text-[11px] tracking-widest">
+{formatTime(timer)}
+</div>
 
-          {message && (
-            <motion.div 
-              initial={{ opacity: 0, y: 5 }} 
-              animate={{ opacity: 1, y: 0 }}
-              className={`mt-8 p-4 rounded-2xl text-center text-[10px] font-[1000] uppercase tracking-widest border ${
-                message.toLowerCase().includes('fail') || message.toLowerCase().includes('valid')
-                ? 'bg-rose-50 border-rose-100 text-[#a61d33]' 
-                : 'bg-emerald-50 border-emerald-100 text-emerald-700'
-              }`}
-            >
-              {message}
-            </motion.div>
-          )}
-        </motion.div>
+<p className="text-[10px] uppercase text-neutral-400 mt-2">
+Enter code from message
+</p>
+</div>
 
-        {/* 3. TRUST FOOTER */}
-        {/* <div className="mt-12 flex flex-col items-center gap-4">
-          <div className="flex items-center gap-3 text-[#4F6F52] opacity-40">
-            <div className="h-[1px] w-8 bg-[#4F6F52]" />
-            <span className="text-[9px] font-[1000] uppercase tracking-[0.3em]">Secure Saga Protocol</span>
-            <div className="h-[1px] w-8 bg-[#4F6F52]" />
-          </div>
-          <div className="flex items-center gap-6 opacity-20">
-             <ShieldCheck size={20} className="text-[#3A4D39]" />
-             <Lock size={20} className="text-[#3A4D39]" />
-          </div>
-        </div> */}
-      </div>
-    </div>
+<div className="relative">
+<input
+type="number"
+value={otp}
+onChange={(e)=>setOtp(e.target.value)}
+placeholder="••••"
+className="
+w-full py-5
+text-center text-2xl
+tracking-[0.6em]
+rounded-xl
+bg-[#fafafa]
+border border-neutral-200
+focus:border-neutral-400
+outline-none
+"
+/>
+
+<Lock size={16}
+className="absolute -top-2 left-1/2 -translate-x-1/2 bg-white px-1 text-neutral-300"/>
+</div>
+
+<button
+onClick={verifyOtp}
+disabled={loading}
+className="
+w-full py-4 rounded-xl
+text-[11px]
+uppercase tracking-[0.2em]
+font-semibold text-white
+bg-gradient-to-r from-[#a61d33] to-[#ff7a59]
+shadow-lg hover:shadow-2xl
+active:translate-y-[2px]
+transition-all
+"
+>
+{loading ? "Verifying..." : "Confirm OTP"}
+</button>
+
+{/* TIMER LOGIC — UNCHANGED */}
+{timer===0 && (
+<div className="pt-2 flex justify-center gap-6">
+
+{/* <button
+onClick={()=>setStep("phone")}
+className="text-[10px] uppercase tracking-widest text-neutral-500 flex items-center gap-2 hover:text-neutral-800"
+>
+<RefreshCcw size={12}/> Resend SMS
+</button> */}
+
+<button
+  onClick={() => {
+    setStep("email");
+    setMessage("");
+  }}
+  className="text-[10px] uppercase tracking-widest text-[#a61d33] flex items-center gap-2"
+>
+  <Mail size={12}/> Try Email
+</button>
+
+</div>
+)}
+
+</motion.div>
+)}
+
+</AnimatePresence>
+
+{/* MESSAGE */}
+{message && (
+<motion.div
+initial={{opacity:0,y:5}}
+animate={{opacity:1,y:0}}
+className="
+mt-6 p-3 rounded-xl
+text-[10px]
+uppercase tracking-widest
+text-center border bg-neutral-50
+"
+>
+{message}
+</motion.div>
+)}
+
+</motion.div>
+</div>
+</div>
   );
 }

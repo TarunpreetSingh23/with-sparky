@@ -36,16 +36,20 @@ export const metadata = {
     "Sparky services"
   ],
 
-  // ✅ GOOGLE SEARCH CONSOLE VERIFICATION ADDED HERE
+  // ✅ Verification Section
   verification: {
     google: "00Tll4nTUIZo5sGMKKbG_aX1wr49ZgAbWgCconpIYUU",
+    other: {
+      "facebook-domain-verification":
+        "py7iw7ig6emuxdr7ms66a1q0kqr0go",
+    },
   },
 
   openGraph: {
     title: "Sparky | Trusted Home & Beauty Services",
     description:
       "From salon at home to AC repair and cleaning, Sparky connects you with verified professionals for fast, affordable home services.",
-    url: "https://sparky.in", // change to your real domain
+    url: "https://sparky.in",
     siteName: "Sparky",
     images: [
       {

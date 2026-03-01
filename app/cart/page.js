@@ -19,9 +19,15 @@ export default function CartPage() {
   const [discount, setDiscount] = useState(0);
   const [user, setUser] = useState(null);
   const router = useRouter();
+   const [minCartError, setMinCartError] = useState("");
 
   const TAX_RATE = 0.18;
+ const getCartTotal = () => {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+};
 
+ const MIN_CART_VALUE = 299;
   useEffect(() => {
     fetch("/api/me")
       .then((res) => res.json())
@@ -38,14 +44,27 @@ export default function CartPage() {
     }
   }, []);
 
-  const handleCheckout = () => {
-    if (!user) {
-      toast.error("Please login to continue");
-      router.push("/login");
-      return;
-    }
-    router.push("/checkout");
-  };
+ const handleCheckout = () => {
+
+  const total = getCartTotal();
+
+  // ✅ MIN CART VALIDATION
+  if (total < MIN_CART_VALUE) {
+    const remaining = MIN_CART_VALUE - total;
+    setMinCartError(`Add ₹${remaining} more service`);
+    return;
+  }
+
+  setMinCartError("");
+
+  if (!user) {
+    toast.error("Please login to continue");
+    router.push("/login");
+    return;
+  }
+
+  router.push("/checkout");
+};
 
   const removeItem = (index) => {
     const updated = [...cartItems];
@@ -68,7 +87,10 @@ export default function CartPage() {
     }
   };
 
-  const subtotal = cartItems.reduce((a, b) => a + b.price, 0);
+  const subtotal = cartItems.reduce(
+  (sum, item) => sum + item.price * (item.quantity || 1),
+  0
+);
   const tax = subtotal * TAX_RATE;
   const total = subtotal + tax - subtotal * discount;
 
@@ -87,7 +109,39 @@ export default function CartPage() {
       overflow-hidden
       shadow-[0_0_60px_rgba(0,0,0,0.08)]
     "
+  >{minCartError && (
+  <div
+    className="
+    fixed bottom-24 left-1/2 -translate-x-1/2
+    w-[90%] max-w-xs
+    bg-white/80 backdrop-blur-xl
+    border border-[#E0E5D2]
+    shadow-xl
+    rounded-2xl
+    px-4 py-3
+    flex items-center gap-3
+    z-[60]
+  "
   >
+    <div className="
+      w-9 h-9 rounded-xl
+      bg-gradient-to-br from-[#8A9A5B] to-[#6f7f46]
+      text-white flex items-center justify-center
+      shadow-md
+    ">
+      ₹
+    </div>
+
+    <div>
+      <p className="text-xs font-semibold text-[#1A2421]">
+        {minCartError}
+      </p>
+      <p className="text-[10px] text-gray-400">
+        Minimum cart value required
+      </p>
+    </div>
+  </div>
+)}
       {/* 1. PREMIUM HEADER */}
      <header className="relative z-20 px-5 pt-3 pb-9 rounded-b-[3rem]
   bg-gradient-to-br from-[#3A4D39] via-[#425b44] to-[#2f3a1f]
